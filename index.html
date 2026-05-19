@@ -1,1 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI4ERP — Architecture Agent AI Oracle ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-elev: #111111;
+    --bg-card: #161616;
+    --bg-deep: #050505;
+    --border: #262626;
+    --border-strong: #333333;
+    --fg: #ededed;
+    --fg-muted: #8a8a8a;
+    --fg-subtle: #525252;
+    --accent: #22d3ee;
+    --accent-dim: #155e75;
 
+    --c-1: #a78bfa;
+    --c-2: #60a5fa;
+    --c-3: #2dd4bf;
+    --c-4: #f59e0b;
+    --c-5: #4ade80;
+    --c-6: #fb7185;
+    --c-7: #94a3b8;
+    --c-8: #34d399;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 5rem 2rem 6rem;
+  }
+
+  header {
+    margin-bottom: 5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 3rem;
+  }
+
+  .eyebrow {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    margin-bottom: 1.25rem;
+  }
+
+  .lede {
+    font-size: 1.15rem;
+    color: var(--fg-muted);
+    max-width: 760px;
+    line-height: 1.55;
+  }
+
+  section { margin-bottom: 6rem; }
+
+  .section-head { margin-bottom: 3rem; }
+
+  h2 {
+    font-size: 1.85rem;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-sub {
+    color: var(--fg-muted);
+    font-size: 1rem;
+    max-width: 680px;
+  }
+
+  /* ───── Loop diagram ───── */
+  .loop-stage {
+    background: radial-gradient(ellipse at center, var(--bg-elev) 0%, var(--bg-deep) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .loop-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .node-box {
+    fill: var(--bg-card);
+    stroke: var(--border-strong);
+    stroke-width: 1;
+  }
+
+  .node-step {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-anchor: middle;
+  }
+
+  .node-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    fill: var(--fg);
+    text-anchor: middle;
+  }
+
+  .node-sub {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    fill: var(--fg-muted);
+    text-anchor: middle;
+    letter-spacing: 0.02em;
+  }
+
+  .arrow {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0.65;
+  }
+
+  .center-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    fill: var(--fg-subtle);
+    text-anchor: middle;
+    letter-spacing: 0.2em;
+  }
+
+  /* Stage colors per node */
+  .step-1 { fill: var(--c-1); }
+  .step-2 { fill: var(--c-2); }
+  .step-3 { fill: var(--c-3); }
+  .step-4 { fill: var(--c-4); }
+  .step-5 { fill: var(--c-5); }
+  .step-6 { fill: var(--c-6); }
+
+  /* ───── Loop legend ───── */
+  .loop-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+  }
+
+  .legend-item {
+    border-left: 2px solid var(--legend-color, var(--accent));
+    padding: 0.25rem 0 0.25rem 1.1rem;
+  }
+
+  .legend-step {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--legend-color);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+  }
+
+  .legend-name {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+  }
+
+  .legend-desc {
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+    line-height: 1.55;
+  }
+
+  /* ───── Component groups ───── */
+  .groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .group {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .group:hover {
+    border-color: var(--group-color);
+    transform: translateY(-1px);
+  }
+
+  .group::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--group-color);
+    opacity: 0.7;
+  }
+
+  .group-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .group-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--group-color);
+    letter-spacing: 0.18em;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .group-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .group-role {
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+    line-height: 1.5;
+  }
+
+  .components {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .component {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+
+  .component:hover {
+    border-color: var(--group-color);
+    background: var(--bg-deep);
+  }
+
+  .component-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .component-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.62rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--fg-muted);
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+  }
+
+  .component-desc {
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+    line-height: 1.55;
+  }
+
+  /* ───── Shortcut box ───── */
+  .shortcut {
+    background: linear-gradient(135deg, var(--bg-elev), var(--bg-card));
+    border: 1px solid var(--accent-dim);
+    border-radius: 12px;
+    padding: 2.25rem;
+    margin-top: 1rem;
+  }
+
+  .shortcut-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+
+  .shortcut h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .shortcut p {
+    color: var(--fg-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .shortcut-loop {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.92rem;
+    background: var(--bg-deep);
+    padding: 1.1rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin: 1.25rem 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    color: var(--fg);
+    line-height: 1.6;
+  }
+
+  .shortcut-loop .punct { color: var(--fg-subtle); }
+  .shortcut-loop .arrow-c { color: var(--accent); }
+  .shortcut-loop .stage-1 { color: var(--c-2); }
+  .shortcut-loop .stage-2 { color: var(--c-3); }
+  .shortcut-loop .stage-3 { color: var(--c-4); }
+  .shortcut-loop .stage-4 { color: var(--c-5); }
+  .shortcut-loop .stage-5 { color: var(--c-6); }
+
+  footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--fg-subtle);
+    font-size: 0.8rem;
+    font-family: 'Geist Mono', monospace;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 2.5rem 1rem; }
+    h1 { font-size: 2rem; }
+    .groups { grid-template-columns: 1fr; }
+    .loop-stage { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">AI4ERP · Oracle ERP Cloud AI Architecture</div>
+    <h1>La boucle Agent AI4ERP</h1>
+    <p class="lede">Toute plateforme Agent AI de production suit une boucle en six étapes. Les composants ci-dessous s’insèrent dans cette boucle. Pour AI4ERP, l’objectif est de connecter un agent intelligent à Oracle ERP Cloud, OIC, Jira et aux connaissances projet, tout en gardant sécurité, audit et validation humaine.</p>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>La boucle</h2>
+      <p class="section-sub">Six étapes. La sortie d’une étape devient l’entrée de la suivante. Le cycle se répète à chaque interaction - c’est pourquoi la mémoire est à la fois le point de départ et le point d’arrivée.</p>
+    </div>
+
+    <div class="loop-stage">
+      <svg class="loop-svg" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#22d3ee" opacity="0.85"/>
+          </marker>
+        </defs>
+
+        <!-- Curved arrows clockwise between hex node centers -->
+        <!-- Hex centers: 1=(450,75) 2=(720,210) 3=(720,400) 4=(450,485) 5=(180,400) 6=(180,210) -->
+
+        <path class="arrow" d="M 555 95 Q 680 105 700 175" marker-end="url(#arrowhead)"/>
+        <path class="arrow" d="M 740 245 Q 800 305 740 365" marker-end="url(#arrowhead)"/>
+        <path class="arrow" d="M 700 435 Q 680 478 555 470" marker-end="url(#arrowhead)"/>
+        <path class="arrow" d="M 345 470 Q 220 478 200 435" marker-end="url(#arrowhead)"/>
+        <path class="arrow" d="M 160 365 Q 100 305 160 245" marker-end="url(#arrowhead)"/>
+        <path class="arrow" d="M 200 175 Q 220 105 345 95" marker-end="url(#arrowhead)"/>
+
+        <!-- Node 1: INPUT (top) -->
+        <g>
+          <rect class="node-box" x="345" y="40" width="210" height="70" rx="10"/>
+          <text class="node-step step-1" x="450" y="62">01 · INPUT</text>
+          <text class="node-title" x="450" y="83">Utilisateur / Trigger</text>
+          <text class="node-sub" x="450" y="100">prompt · webhook · cron · email</text>
+        </g>
+
+        <!-- Node 2: LOAD (top right) -->
+        <g>
+          <rect class="node-box" x="615" y="175" width="210" height="70" rx="10"/>
+          <text class="node-step step-2" x="720" y="197">02 · LOAD</text>
+          <text class="node-title" x="720" y="218">Memory + RAG</text>
+          <text class="node-sub" x="720" y="235">contexte pour ce tour</text>
+        </g>
+
+        <!-- Node 3: REASON (bottom right) -->
+        <g>
+          <rect class="node-box" x="615" y="365" width="210" height="70" rx="10"/>
+          <text class="node-step step-3" x="720" y="387">03 · REASON</text>
+          <text class="node-title" x="720" y="408">LLM</text>
+          <text class="node-sub" x="720" y="425">décider la prochaine action</text>
+        </g>
+
+        <!-- Node 4: FILTER (bottom) -->
+        <g>
+          <rect class="node-box" x="345" y="450" width="210" height="70" rx="10"/>
+          <text class="node-step step-4" x="450" y="472">04 · FILTER</text>
+          <text class="node-title" x="450" y="493">Tools + Rails + Guardrails</text>
+          <text class="node-sub" x="450" y="510">ce qui est autorisé</text>
+        </g>
+
+        <!-- Node 5: ACT (bottom left) -->
+        <g>
+          <rect class="node-box" x="75" y="365" width="210" height="70" rx="10"/>
+          <text class="node-step step-5" x="180" y="387">05 · ACT</text>
+          <text class="node-title" x="180" y="408">Action / Execution</text>
+          <text class="node-sub" x="180" y="425">tool call · API · write · respond</text>
+        </g>
+
+        <!-- Node 6: LEARN (top left) -->
+        <g>
+          <rect class="node-box" x="75" y="175" width="210" height="70" rx="10"/>
+          <text class="node-step step-6" x="180" y="197">06 · LEARN</text>
+          <text class="node-title" x="180" y="218">Audit + Eval + Feedback</text>
+          <text class="node-sub" x="180" y="235">tracer · scorer · améliorer</text>
+        </g>
+
+        <!-- Center label -->
+        <text class="center-label" x="450" y="280">LA BOUCLE</text>
+        <text class="center-label" x="450" y="300" style="font-size: 9px; opacity: 0.6;">SE RÉPÈTE À CHAQUE TOUR</text>
+
+      </svg>
+    </div>
+
+    <div class="loop-legend">
+      <div class="legend-item" style="--legend-color: var(--c-1);">
+        <div class="legend-step">01 · INPUT</div>
+        <div class="legend-name">Utilisateur / Trigger</div>
+        <div class="legend-desc">Un prompt, un webhook, une exécution planifiée, un email entrant ou un ticket Jira. Quelque chose déclenche un tour.</div>
+      </div>
+
+      <div class="legend-item" style="--legend-color: var(--c-2);">
+        <div class="legend-step">02 · LOAD</div>
+        <div class="legend-name">Memory + RAG</div>
+        <div class="legend-desc">Charger le contexte pertinent avant que le LLM ne raisonne. Memory = ce qui est connu de l’utilisateur ou du projet. RAG = ce qui se trouve dans le corpus documentaire.</div>
+      </div>
+
+      <div class="legend-item" style="--legend-color: var(--c-3);">
+        <div class="legend-step">03 · REASON</div>
+        <div class="legend-name">LLM</div>
+        <div class="legend-desc">Le modèle utilise le contexte chargé et décide : répondre directement, appeler un tool, ou planifier une séquence multi-étapes.</div>
+      </div>
+
+      <div class="legend-item" style="--legend-color: var(--c-4);">
+        <div class="legend-step">04 · FILTER</div>
+        <div class="legend-name">Tools + Rails + Guardrails</div>
+        <div class="legend-desc">L’intention du modèle est contrôlée. Les rails appliquent les règles métier. Les guardrails bloquent les usages non sûrs. Les tools sont les capacités réellement connectées.</div>
+      </div>
+
+      <div class="legend-item" style="--legend-color: var(--c-5);">
+        <div class="legend-step">05 · ACT</div>
+        <div class="legend-name">Action / Execution</div>
+        <div class="legend-desc">Quelque chose se produit réellement : appel API Fusion/OIC/Jira, écriture, message envoyé, fichier généré ou réponse streamée à l’utilisateur.</div>
+      </div>
+
+      <div class="legend-item" style="--legend-color: var(--c-6);">
+        <div class="legend-step">06 · LEARN</div>
+        <div class="legend-name">Audit + Eval + Feedback</div>
+        <div class="legend-desc">Tracer tout le tour, évaluer la qualité, journaliser pour audit/compliance et réinjecter les apprentissages utiles dans la mémoire.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Les composants clés</h2>
+      <p class="section-sub">Regroupés par rôle. Chaque composant de notre plateforme Agent AI de production s’insère dans l’un de ces groupes.</p>
+    </div>
+
+    <div class="groups">
+
+      <!-- Group 1: Reasoning Core -->
+      <div class="group" style="--group-color: var(--c-1);">
+        <div class="group-header">
+          <div class="group-num">GROUP 01 · STAGE 03</div>
+          <div class="group-name">Reasoning Core</div>
+          <div class="group-role">La couche de raisonnement. Génère, vectorise et route vers le bon modèle.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">LLM <span class="component-tag">claude · gpt · gemini</span></div>
+            <div class="component-desc">Le générateur. Il prend le contexte et retourne une réponse ou un tool call.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Embeddings <span class="component-tag">vectors</span></div>
+            <div class="component-desc">Transforme le texte en vecteurs numériques. Alimente le RAG et la recherche sémantique.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Model routing / gateway <span class="component-tag">cf ai gateway</span></div>
+            <div class="component-desc">Choisit le modèle adapté selon la tâche. Gère fallback, cache, coût et rate limits entre providers.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 2: Knowledge & State -->
+      <div class="group" style="--group-color: var(--c-2);">
+        <div class="group-header">
+          <div class="group-num">GROUP 02 · STAGE 02</div>
+          <div class="group-name">Knowledge &amp; State</div>
+          <div class="group-role">Ce que le modèle connaît avant de générer. Corpus + memory + storage.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">RAG <span class="component-tag">vectorize</span></div>
+            <div class="component-desc">Récupère l’information depuis un corpus contrôlé : docs Oracle, specs, schémas, procédures, tickets Jira, emails projet.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Memory <span class="component-tag">short + long term</span></div>
+            <div class="component-desc">Différent du RAG. Short-term = la conversation en cours. Long-term = contexte utilisateur/projet conservé entre sessions.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Storage <span class="component-tag">d1 · r2 · kv</span></div>
+            <div class="component-desc">État durable pour le reste : base structurée, stockage de fichiers, configuration rapide.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 3: Capability -->
+      <div class="group" style="--group-color: var(--c-3);">
+        <div class="group-header">
+          <div class="group-num">GROUP 03 · STAGE 04 → 05</div>
+          <div class="group-name">Capability</div>
+          <div class="group-role">Ce que le modèle peut <em>faire</em> au-delà de parler : tools, sandbox, multimodal.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">Tool use / function calling <span class="component-tag">mcp · native</span></div>
+            <div class="component-desc">Le pattern général. MCP est un mode de transport ; le function calling natif en est un autre. Les deux peuvent coexister.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Sandbox / execution env <span class="component-tag">iox</span></div>
+            <div class="component-desc">Code interpreter, automation ou computer use. L’espace où l’agent peut travailler sans toucher directement la production.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Multimodal layer <span class="component-tag">stt · tts · vision</span></div>
+            <div class="component-desc">Voix entrante/sortante, vision, image generation. Dans AI4ERP : module speech type ElevenLabs et interactions vocales.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 4: Control -->
+      <div class="group" style="--group-color: var(--c-4);">
+        <div class="group-header">
+          <div class="group-num">GROUP 04 · STAGE 04</div>
+          <div class="group-name">Control</div>
+          <div class="group-role">La couche sécurité + policy. Ce que l’agent a le droit ou non de faire.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">Rails / rules <span class="component-tag">policy</span></div>
+            <div class="component-desc">La policy métier : qui peut faire quoi, quand, avec quelles contraintes.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Guardrails <span class="component-tag">i/o filter</span></div>
+            <div class="component-desc">Distinct des rails. Filtrage input/output : PII, prompt injection, jailbreak, contenu non conforme.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Identity, auth, RBAC, tenancy <span class="component-tag">authjs</span></div>
+            <div class="component-desc">Qui est l’utilisateur, quelles BU/ledgers/données il peut voir, et ce que son agent peut faire en son nom. Point critique en B2B/ERP.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Human-in-the-loop / approval gates <span class="component-tag">hitl</span></div>
+            <div class="component-desc">Quand l’agent doit s’arrêter et demander une validation humaine avant une action sensible ou irréversible.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 5: Orchestration -->
+      <div class="group" style="--group-color: var(--c-5);">
+        <div class="group-header">
+          <div class="group-num">GROUP 05 · WHOLE LOOP</div>
+          <div class="group-name">Orchestration</div>
+          <div class="group-role">Le harnais autour de la boucle : durabilité, async, erreurs, streaming.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">Agent loop / planner <span class="component-tag">harness</span></div>
+            <div class="component-desc">Le wrapper autour du LLM qui décide la prochaine étape, déclenche les tools, gère les erreurs et maintient le scratchpad.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Workflows / durable execution <span class="component-tag">cf workflows</span></div>
+            <div class="component-desc">Pour les tâches longues : ESS jobs, traitements OIC, rapprochements, suivis batch, reprise après erreur.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Queues / async <span class="component-tag">cf queues</span></div>
+            <div class="component-desc">Ingestion webhook, batch processing, retry, découplage des traitements longs.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Streaming layer <span class="component-tag">sse · ws</span></div>
+            <div class="component-desc">UX temps réel : token streaming, réponses partielles, annulation, événements de progression.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 6: Operations -->
+      <div class="group" style="--group-color: var(--c-6);">
+        <div class="group-header">
+          <div class="group-num">GROUP 06 · STAGE 06</div>
+          <div class="group-name">Operations</div>
+          <div class="group-role">Savoir si ça fonctionne : eval, trace, audit, coût.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">Evals <span class="component-tag">offline + online</span></div>
+            <div class="component-desc">Tests de non-régression sur jeux de référence + scoring LLM-as-judge sur trafic réel.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Observability / tracing <span class="component-tag">braintrust · langsmith</span></div>
+            <div class="component-desc">Chaque prompt, chaque tool call, chaque coût. Traces de bout en bout rejouables.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Audit log <span class="component-tag">soc2 · gdpr · ai act</span></div>
+            <div class="component-desc">Séparé de l’observability. Journal immuable pour audit, GDPR, AI Act, SOX-like controls.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Caching <span class="component-tag">prompt · semantic</span></div>
+            <div class="component-desc">Prompt cache + cache sémantique. Levier important de performance et de coût.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Cost / metering / rate limits <span class="component-tag">tokens</span></div>
+            <div class="component-desc">Suivi tokens par user/tenant, plafonds, throttling. Indispensable pour contrôler les coûts.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 7: Surface -->
+      <div class="group" style="--group-color: var(--c-7);">
+        <div class="group-header">
+          <div class="group-num">GROUP 07 · STAGE 01 + 05</div>
+          <div class="group-name">Surface</div>
+          <div class="group-role">Ce que l’utilisateur voit et comment il corrige ou valide.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">UI / chat / action surface <span class="component-tag">next.js · shadcn</span></div>
+            <div class="component-desc">Frontend, citations, confirmations d’action, streaming, visualisation des tool calls.</div>
+          </div>
+          <div class="component">
+            <div class="component-name">Feedback loop <span class="component-tag">thumbs · corrections</span></div>
+            <div class="component-desc">Feedback utilisateur, corrections structurées, données réinjectées dans evals et memory.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 8: Data Ingestion -->
+      <div class="group" style="--group-color: var(--c-8);">
+        <div class="group-header">
+          <div class="group-num">GROUP 08 · FEEDS STAGE 02</div>
+          <div class="group-name">Data Ingestion</div>
+          <div class="group-role">Le pipeline qui alimente le RAG. Sans lui, le modèle est aveugle.</div>
+        </div>
+        <div class="components">
+          <div class="component">
+            <div class="component-name">Document pipeline <span class="component-tag">parse · chunk · embed</span></div>
+            <div class="component-desc">Parser PDF/HTML/transcripts, chunker, embedder, indexer, versionner et rafraîchir les contenus.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="shortcut">
+    <div class="shortcut-eyebrow">RACCOURCI MENTAL</div>
+    <h3>Toute plateforme Agent AI enterprise suit la même boucle</h3>
+    <p>À retenir pour cadrer rapidement l'architecture AI4ERP :</p>
+    <div class="shortcut-loop"><span class="punct">(</span><span class="stage-1">memory + RAG</span><span class="punct">)</span> <span class="arrow-c">→</span> <span class="stage-2">LLM</span> <span class="arrow-c">→</span> <span class="punct">(</span><span class="stage-3">tools + rails + guardrails</span><span class="punct">)</span> <span class="arrow-c">→</span> <span class="stage-4">action</span> <span class="arrow-c">→</span> <span class="punct">(</span><span class="stage-5">audit + eval + feedback</span><span class="punct">)</span> <span class="arrow-c">→</span> <span class="stage-1">memory</span></div>
+    <p>Chaque composant ci-dessus s’insère dans cette boucle. S’il manque une étape, il y a un risque d’architecture. Si deux composants font le même travail, il y a duplication.</p>
+  </div>
+
+  <footer>
+    <span>AI4ERP · version FR · 2026-05-19</span>
+    <span>Oracle ERP Cloud · Agent AI reference architecture</span>
+  </footer>
+
+</div>
+</body>
+</html>
