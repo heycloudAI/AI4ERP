@@ -1,722 +1,682 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI4ERP — Architecture Agent AI Oracle ERP</title>
+<title>HeyCloud · AI4ERP — Intelligent ERP Operations & AI Agent Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a;
-    --bg-elev: #111111;
-    --bg-card: #161616;
-    --bg-deep: #050505;
-    --border: #262626;
-    --border-strong: #333333;
-    --fg: #ededed;
-    --fg-muted: #8a8a8a;
-    --fg-subtle: #525252;
-    --accent: #22d3ee;
-    --accent-dim: #155e75;
-
-    --c-1: #a78bfa;
-    --c-2: #60a5fa;
-    --c-3: #2dd4bf;
-    --c-4: #f59e0b;
-    --c-5: #4ade80;
-    --c-6: #fb7185;
-    --c-7: #94a3b8;
-    --c-8: #34d399;
+    --sky:#0EA5E9;--sky-dark:#0284C7;--sky-light:#E0F2FE;
+    --navy:#0F172A;--slate:#334155;--muted:#64748B;
+    --border:#E2E8F0;--surface:#F8FAFC;--white:#FFFFFF;
+    --accent:#6366F1;--accent-light:#EEF2FF;--green:#10B981;
+    --c1:#a78bfa;--c2:#60a5fa;--c3:#2dd4bf;--c4:#f59e0b;
+    --c5:#4ade80;--c6:#fb7185;--c7:#94a3b8;--c8:#34d399;--c9:#22d3ee;
   }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;color:var(--navy);background:var(--white);overflow-x:hidden;line-height:1.6}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:68px}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--navy);letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:.5rem}
+  .logo span{color:var(--sky)}
+  .logo-tag{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);border:1px solid var(--border);padding:.1rem .4rem;border-radius:4px;letter-spacing:.08em;font-weight:400}
+  .nav-links{display:flex;gap:1.6rem;list-style:none;align-items:center}
+  .nav-links a{font-size:.85rem;font-weight:500;color:var(--slate);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--sky)}
+  .nav-cta{background:var(--sky);color:var(--white)!important;padding:.45rem 1.2rem;border-radius:8px;font-weight:600!important;transition:background .2s!important}
+  .nav-cta:hover{background:var(--sky-dark)!important}
+  .lang-switcher{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-left:.5rem}
+  .lang-btn{background:var(--white);border:none;cursor:pointer;padding:.3rem .65rem;font-size:.74rem;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted);transition:background .15s,color .15s;letter-spacing:.04em}
+  .lang-btn.active{background:var(--navy);color:var(--white)}
+  .lang-btn:hover:not(.active){background:var(--surface)}
 
-  html { scroll-behavior: smooth; }
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 5% 80px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,#BAE6FD 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 80%,#EEF2FF 0%,transparent 50%)}
+  .hero-bg::after{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.45;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black,transparent)}
+  .hero-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.5rem;background:var(--white);border:1px solid var(--border);border-radius:100px;padding:.35rem 1rem;font-size:.78rem;font-weight:500;color:var(--slate);margin-bottom:2rem;box-shadow:0 2px 12px rgba(0,0,0,.06);animation:fadeUp .6s ease both}
+  .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.2)}
+  .hero h1{position:relative;z-index:1;font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5vw,4rem);line-height:1.1;letter-spacing:-.03em;color:var(--navy);max-width:840px;margin-bottom:1.5rem;animation:fadeUp .6s .1s ease both}
+  .hl{color:var(--sky);position:relative}
+  .hl::after{content:'';position:absolute;bottom:4px;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--sky),var(--accent));border-radius:2px;opacity:.3}
+  .hero p{position:relative;z-index:1;font-size:1.1rem;font-weight:300;color:var(--muted);max-width:600px;margin-bottom:2.5rem;animation:fadeUp .6s .18s ease both}
+  .hero-actions{position:relative;z-index:1;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .6s .26s ease both}
+  .btn-primary{background:var(--sky);color:var(--white);padding:.85rem 2rem;border-radius:10px;font-size:.93rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(14,165,233,.35);transition:transform .2s,box-shadow .2s,background .2s}
+  .btn-primary:hover{background:var(--sky-dark);transform:translateY(-2px);box-shadow:0 8px 28px rgba(14,165,233,.4)}
+  .btn-secondary{background:var(--white);color:var(--navy);padding:.85rem 2rem;border-radius:10px;font-size:.93rem;font-weight:500;text-decoration:none;border:1.5px solid var(--border);cursor:pointer;transition:border-color .2s,transform .2s}
+  .btn-secondary:hover{border-color:var(--sky);transform:translateY(-2px)}
+  .trust-bar{margin-top:4.5rem;position:relative;z-index:1;animation:fadeUp .6s .36s ease both}
+  .trust-bar p{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.1rem}
+  .trust-logos{display:flex;gap:2rem;align-items:center;justify-content:center;flex-wrap:wrap}
+  .trust-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#94A3B8;opacity:.65}
 
-  body {
-    font-family: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--fg);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+  /* UTILS */
+  section{padding:96px 5%}
+  .section-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--sky);margin-bottom:1rem}
+  .section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.75rem,2.8vw,2.5rem);line-height:1.15;letter-spacing:-.025em;color:var(--navy);margin-bottom:1rem}
+  .section-sub{font-size:1rem;color:var(--muted);font-weight:300;max-width:540px;line-height:1.7}
+  .center{text-align:center}.center .section-sub{margin:0 auto}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* WHY US */
+  .why-section{background:var(--surface)}
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-top:3.5rem}
+  .why-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.75rem;text-align:center;transition:transform .2s,box-shadow .2s}
+  .why-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.08)}
+  .why-icon{font-size:2rem;margin-bottom:1rem}
+  .why-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.5rem}
+  .why-card p{font-size:.83rem;color:var(--muted);line-height:1.6}
+  .why-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:var(--sky);line-height:1;margin-bottom:.3rem}
+  .why-num span{color:var(--accent)}
+
+  /* SERVICES */
+  .services{background:var(--white)}
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.4rem;margin-top:3.5rem}
+  .service-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem;transition:transform .25s,box-shadow .25s,border-color .25s;position:relative;overflow:hidden}
+  .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sky),var(--accent));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .service-card:hover::before{transform:scaleX(1)}
+  .service-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08);border-color:var(--sky-light);background:var(--white)}
+  .svc-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.1rem}
+  .svc-icon.blue{background:var(--sky-light)}.svc-icon.indigo{background:var(--accent-light)}
+  .svc-icon.green{background:rgba(16,185,129,.1)}.svc-icon.orange{background:rgba(249,115,22,.1)}
+  .svc-icon.purple{background:rgba(167,139,250,.15)}.svc-icon.teal{background:rgba(45,212,191,.12)}
+  .service-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.5rem;color:var(--navy)}
+  .service-card p{font-size:.85rem;color:var(--muted);line-height:1.65}
+
+  /* AI SPLIT */
+  .ai-split{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .av-dark{background:#0a0a0a;border-radius:20px;padding:2.25rem;position:relative;overflow:hidden;min-height:340px;display:flex;flex-direction:column;gap:.85rem}
+  .av-dark::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.25),transparent 70%)}
+  .av-dark::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.2),transparent 70%)}
+  .av-label{color:rgba(255,255,255,.28);font-size:.63rem;text-transform:uppercase;letter-spacing:.18em;font-family:'DM Mono',monospace;margin-bottom:.15rem;position:relative;z-index:1}
+  .arow{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.75rem 1rem;display:flex;align-items:center;gap:.7rem;position:relative;z-index:1;transition:border-color .3s}
+  .arow:hover{border-color:rgba(14,165,233,.35)}
+  .adot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .adot.sky{background:#22d3ee;box-shadow:0 0 6px #22d3ee}
+  .adot.violet{background:#a78bfa;box-shadow:0 0 6px #a78bfa}
+  .adot.lime{background:#4ade80;box-shadow:0 0 6px #4ade80}
+  .adot.amber{background:#f59e0b;box-shadow:0 0 6px #f59e0b}
+  .alabel{font-size:.8rem;color:rgba(255,255,255,.68)}
+  .astatus{margin-left:auto;font-size:.67rem;font-weight:600;white-space:nowrap}
+  .astatus.ok{color:#4ade80}.astatus.warn{color:#f59e0b}.astatus.run{color:#22d3ee}
+  .ai-insight{margin-top:auto;position:relative;z-index:1;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);border-radius:10px;padding:.8rem 1rem}
+  .ai-insight-label{font-size:.63rem;color:#22d3ee;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.12em;margin-bottom:.28rem}
+  .ai-insight p{font-size:.78rem;color:rgba(255,255,255,.52);line-height:1.55}
+  .ai-features{list-style:none;margin-top:1.75rem;display:flex;flex-direction:column;gap:.85rem}
+  .ai-features li{display:flex;align-items:flex-start;gap:.7rem;font-size:.88rem;color:var(--slate)}
+  .ai-features li::before{content:'✓';width:20px;height:20px;border-radius:50%;background:var(--sky-light);color:var(--sky);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+  /* STATS */
+  .stats{background:var(--navy);display:flex;justify-content:center;padding:0}
+  .stat-item{flex:1;max-width:260px;text-align:center;padding:3.5rem 1.75rem;border-right:1px solid rgba(255,255,255,.08)}
+  .stat-item:last-child{border-right:none}
+  .stat-number{font-family:'Syne',sans-serif;font-weight:800;font-size:2.8rem;color:var(--white);letter-spacing:-.04em;line-height:1;margin-bottom:.5rem}
+  .stat-number span{color:var(--sky)}
+  .stat-desc{font-size:.82rem;color:rgba(255,255,255,.4);font-weight:300}
+
+  /* LOOP */
+  .loop-section{background:var(--surface)}
+  .loop-wrap{background:#0F172A;border-radius:20px;padding:2.75rem 2rem;margin:3rem 0 2rem;overflow:hidden}
+  .loop-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.2em;text-align:center;margin-bottom:1.5rem}
+  .loop-svg{width:100%;max-width:840px;display:block;margin:0 auto;height:auto}
+  .loop-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-top:2.5rem}
+  .ll-item{border-left:2px solid var(--lc);padding:.25rem 0 .25rem 1rem}
+  .ll-step{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--lc);letter-spacing:.15em;margin-bottom:.28rem;font-weight:500}
+  .ll-name{font-weight:600;font-size:.92rem;color:var(--navy);margin-bottom:.2rem}
+  .ll-desc{font-size:.82rem;color:var(--muted);line-height:1.55}
+  .shortcut-box{background:var(--navy);border-radius:16px;padding:2.25rem;margin-top:3.5rem;position:relative;overflow:hidden}
+  .shortcut-box::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:480px;height:240px;border-radius:50%;background:radial-gradient(ellipse,rgba(14,165,233,.15),transparent 70%)}
+  .sc-eye{font-family:'DM Mono',monospace;font-size:.65rem;color:#22d3ee;letter-spacing:.15em;margin-bottom:.7rem;position:relative;z-index:1}
+  .shortcut-box h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:.9rem;position:relative;z-index:1}
+  .shortcut-box p{color:rgba(255,255,255,.42);font-size:.86rem;margin-bottom:.7rem;position:relative;z-index:1}
+  .sc-loop{font-family:'DM Mono',monospace;font-size:.84rem;background:rgba(0,0,0,.4);padding:1rem 1.4rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);margin:1.1rem 0;overflow-x:auto;white-space:nowrap;position:relative;z-index:1;line-height:1.7}
+  .sl-1{color:#60a5fa}.sl-2{color:#2dd4bf}.sl-3{color:#f59e0b}.sl-4{color:#4ade80}.sl-5{color:#fb7185}
+  .sl-arrow{color:#22d3ee}.sl-punct{color:rgba(255,255,255,.2)}
+
+  /* GROUPS */
+  .groups-section{background:var(--white)}
+  .groups-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:1.4rem;margin-top:3rem}
+  .gcard{border:1px solid var(--border);border-radius:14px;padding:1.6rem;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .gcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gc)}
+  .gcard:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,0,0,.07)}
+  .gcard-num{font-family:'DM Mono',monospace;font-size:.61rem;color:var(--gc);letter-spacing:.18em;margin-bottom:.45rem;font-weight:500}
+  .gcard-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:var(--navy);margin-bottom:.3rem}
+  .gcard-role{font-size:.8rem;color:var(--muted);margin-bottom:1.1rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
+  .gcard-comps{display:flex;flex-direction:column;gap:.6rem}
+  .gcomp{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;transition:border-color .15s}
+  .gcomp:hover{border-color:var(--gc)}
+  .gcomp-name{font-weight:500;font-size:.84rem;color:var(--navy);margin-bottom:.22rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+  .gtag{font-family:'DM Mono',monospace;font-size:.57rem;background:var(--white);border:1px solid var(--border);color:var(--muted);padding:.08rem .38rem;border-radius:3px;letter-spacing:.04em}
+  .gcomp-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+  /* TOOLS */
+  .tools-section{background:var(--surface)}
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:3rem}
+  .tool-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:transform .2s,box-shadow .2s}
+  .tool-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.07)}
+  .tool-layer{font-family:'DM Mono',monospace;font-size:.61rem;color:var(--sky);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.55rem}
+  .tool-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.45rem}
+  .tool-desc{font-size:.8rem;color:var(--muted);line-height:1.55}
+  .tool-desc strong{color:var(--slate);font-weight:500}
+
+  /* EXPERTISE ERP */
+  .erp-section{background:var(--surface)}
+  .erp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:3rem}
+  .erp-pill{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.1rem;text-align:center;transition:border-color .2s,transform .2s}
+  .erp-pill:hover{border-color:var(--sky);transform:translateY(-3px)}
+  .erp-pill .picon{font-size:1.7rem;margin-bottom:.45rem}
+  .erp-pill h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;color:var(--navy);margin-bottom:.18rem}
+  .erp-pill p{font-size:.72rem;color:var(--muted)}
+
+  /* PROCESS */
+  .process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:3.5rem;position:relative}
+  .process-steps::before{content:'';position:absolute;top:24px;left:12.5%;right:12.5%;height:1px;background:var(--border);z-index:0}
+  .pstep{text-align:center;position:relative;z-index:1}
+  .pnum{width:48px;height:48px;border-radius:50%;background:var(--white);border:2px solid var(--border);font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--sky);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem;transition:background .2s,border-color .2s}
+  .pstep:hover .pnum{background:var(--sky);border-color:var(--sky);color:var(--white)}
+  .pstep h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.35rem}
+  .pstep p{font-size:.8rem;color:var(--muted)}
+
+  /* CTA */
+  .cta-section{text-align:center;background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 100%);position:relative;overflow:hidden}
+  .cta-section::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(14,165,233,.2),transparent 70%)}
+  .cta-section .section-title{color:var(--white);position:relative;z-index:1}
+  .cta-section .section-sub{color:rgba(255,255,255,.5);margin:0 auto 2.5rem;position:relative;z-index:1}
+  .cta-section .section-label{position:relative;z-index:1}
+  .cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+  .btn-white{background:var(--white);color:var(--navy);padding:.85rem 2rem;border-radius:10px;font-size:.93rem;font-weight:600;text-decoration:none;transition:transform .2s,box-shadow .2s}
+  .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .btn-ghost{background:transparent;color:rgba(255,255,255,.7);padding:.85rem 2rem;border-radius:10px;font-size:.93rem;font-weight:500;text-decoration:none;border:1.5px solid rgba(255,255,255,.2);transition:border-color .2s,color .2s}
+  .btn-ghost:hover{border-color:rgba(255,255,255,.5);color:var(--white)}
+
+  /* FOOTER */
+  footer{background:var(--navy);color:rgba(255,255,255,.35);padding:2rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:.8rem}
+  footer .logo{color:var(--white);font-size:1.05rem}
+  footer a{color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
+  footer a:hover{color:var(--sky)}
+  .footer-links{display:flex;gap:1.5rem}
+  .footer-domains{font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.18);margin-top:.3rem}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  @media(max-width:960px){
+    .ai-split{grid-template-columns:1fr;gap:3rem}
+    .process-steps{grid-template-columns:repeat(2,1fr)}
+    .process-steps::before{display:none}
+    nav .nav-links li:not(:last-child):not(:nth-last-child(2)){display:none}
+    .stats{flex-wrap:wrap}
+    .stat-item{flex:1 1 50%;border:none;border-bottom:1px solid rgba(255,255,255,.08)}
   }
-
-  .container {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 5rem 2rem 6rem;
-  }
-
-  header {
-    margin-bottom: 5rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 3rem;
-  }
-
-  .eyebrow {
-    font-family: 'Geist Mono', ui-monospace, monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-
-  h1 {
-    font-size: clamp(2rem, 4vw, 3.25rem);
-    font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 1.05;
-    margin-bottom: 1.25rem;
-  }
-
-  .lede {
-    font-size: 1.15rem;
-    color: var(--fg-muted);
-    max-width: 760px;
-    line-height: 1.55;
-  }
-
-  section { margin-bottom: 6rem; }
-
-  .section-head { margin-bottom: 3rem; }
-
-  h2 {
-    font-size: 1.85rem;
-    font-weight: 500;
-    letter-spacing: -0.025em;
-    margin-bottom: 0.5rem;
-  }
-
-  .section-sub {
-    color: var(--fg-muted);
-    font-size: 1rem;
-    max-width: 680px;
-  }
-
-  /* ───── Loop diagram ───── */
-  .loop-stage {
-    background: radial-gradient(ellipse at center, var(--bg-elev) 0%, var(--bg-deep) 100%);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
-    overflow: hidden;
-  }
-
-  .loop-svg {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .node-box {
-    fill: var(--bg-card);
-    stroke: var(--border-strong);
-    stroke-width: 1;
-  }
-
-  .node-step {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-anchor: middle;
-  }
-
-  .node-title {
-    font-family: 'Geist', sans-serif;
-    font-weight: 500;
-    font-size: 15px;
-    fill: var(--fg);
-    text-anchor: middle;
-  }
-
-  .node-sub {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10.5px;
-    fill: var(--fg-muted);
-    text-anchor: middle;
-    letter-spacing: 0.02em;
-  }
-
-  .arrow {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.5;
-    opacity: 0.65;
-  }
-
-  .center-label {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    fill: var(--fg-subtle);
-    text-anchor: middle;
-    letter-spacing: 0.2em;
-  }
-
-  /* Stage colors per node */
-  .step-1 { fill: var(--c-1); }
-  .step-2 { fill: var(--c-2); }
-  .step-3 { fill: var(--c-3); }
-  .step-4 { fill: var(--c-4); }
-  .step-5 { fill: var(--c-5); }
-  .step-6 { fill: var(--c-6); }
-
-  /* ───── Loop legend ───── */
-  .loop-legend {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-top: 2.5rem;
-  }
-
-  .legend-item {
-    border-left: 2px solid var(--legend-color, var(--accent));
-    padding: 0.25rem 0 0.25rem 1.1rem;
-  }
-
-  .legend-step {
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--legend-color);
-    letter-spacing: 0.15em;
-    margin-bottom: 0.35rem;
-    font-weight: 500;
-  }
-
-  .legend-name {
-    font-weight: 500;
-    margin-bottom: 0.3rem;
-    font-size: 1rem;
-  }
-
-  .legend-desc {
-    font-size: 0.88rem;
-    color: var(--fg-muted);
-    line-height: 1.55;
-  }
-
-  /* ───── Component groups ───── */
-  .groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .group {
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.75rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 200ms ease, transform 200ms ease;
-  }
-
-  .group:hover {
-    border-color: var(--group-color);
-    transform: translateY(-1px);
-  }
-
-  .group::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--group-color);
-    opacity: 0.7;
-  }
-
-  .group-header {
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .group-num {
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--group-color);
-    letter-spacing: 0.18em;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-  }
-
-  .group-name {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-bottom: 0.4rem;
-    letter-spacing: -0.01em;
-  }
-
-  .group-role {
-    font-size: 0.85rem;
-    color: var(--fg-muted);
-    line-height: 1.5;
-  }
-
-  .components {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .component {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.85rem 1rem;
-    transition: border-color 120ms ease, background 120ms ease;
-  }
-
-  .component:hover {
-    border-color: var(--group-color);
-    background: var(--bg-deep);
-  }
-
-  .component-name {
-    font-weight: 500;
-    font-size: 0.95rem;
-    margin-bottom: 0.35rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .component-tag {
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.62rem;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    color: var(--fg-muted);
-    padding: 0.1rem 0.45rem;
-    border-radius: 3px;
-    letter-spacing: 0.05em;
-    font-weight: 400;
-  }
-
-  .component-desc {
-    font-size: 0.85rem;
-    color: var(--fg-muted);
-    line-height: 1.55;
-  }
-
-  /* ───── Shortcut box ───── */
-  .shortcut {
-    background: linear-gradient(135deg, var(--bg-elev), var(--bg-card));
-    border: 1px solid var(--accent-dim);
-    border-radius: 12px;
-    padding: 2.25rem;
-    margin-top: 1rem;
-  }
-
-  .shortcut-eyebrow {
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    margin-bottom: 0.75rem;
-  }
-
-  .shortcut h3 {
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    letter-spacing: -0.01em;
-  }
-
-  .shortcut p {
-    color: var(--fg-muted);
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .shortcut-loop {
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.92rem;
-    background: var(--bg-deep);
-    padding: 1.1rem 1.25rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    margin: 1.25rem 0;
-    overflow-x: auto;
-    white-space: nowrap;
-    color: var(--fg);
-    line-height: 1.6;
-  }
-
-  .shortcut-loop .punct { color: var(--fg-subtle); }
-  .shortcut-loop .arrow-c { color: var(--accent); }
-  .shortcut-loop .stage-1 { color: var(--c-2); }
-  .shortcut-loop .stage-2 { color: var(--c-3); }
-  .shortcut-loop .stage-3 { color: var(--c-4); }
-  .shortcut-loop .stage-4 { color: var(--c-5); }
-  .shortcut-loop .stage-5 { color: var(--c-6); }
-
-  footer {
-    margin-top: 6rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-    color: var(--fg-subtle);
-    font-size: 0.8rem;
-    font-family: 'Geist Mono', monospace;
-    letter-spacing: 0.05em;
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 768px) {
-    .container { padding: 2.5rem 1rem; }
-    h1 { font-size: 2rem; }
-    .groups { grid-template-columns: 1fr; }
-    .loop-stage { padding: 1rem; }
+  @media(max-width:560px){
+    .process-steps,.groups-grid{grid-template-columns:1fr}
   }
 </style>
 </head>
 <body>
-<div class="container">
 
-  <header>
-    <div class="eyebrow">AI4ERP · Oracle ERP Cloud AI Architecture</div>
-    <h1>La boucle Agent AI4ERP</h1>
-    <p class="lede">Toute plateforme Agent AI de production suit une boucle en six étapes. Les composants ci-dessous s’insèrent dans cette boucle. Pour AI4ERP, l’objectif est de connecter un agent intelligent à Oracle ERP Cloud, OIC, Jira et aux connaissances projet, tout en gardant sécurité, audit et validation humaine.</p>
-  </header>
-
-  <section>
-    <div class="section-head">
-      <h2>La boucle</h2>
-      <p class="section-sub">Six étapes. La sortie d’une étape devient l’entrée de la suivante. Le cycle se répète à chaque interaction - c’est pourquoi la mémoire est à la fois le point de départ et le point d’arrivée.</p>
-    </div>
-
-    <div class="loop-stage">
-      <svg class="loop-svg" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#22d3ee" opacity="0.85"/>
-          </marker>
-        </defs>
-
-        <!-- Curved arrows clockwise between hex node centers -->
-        <!-- Hex centers: 1=(450,75) 2=(720,210) 3=(720,400) 4=(450,485) 5=(180,400) 6=(180,210) -->
-
-        <path class="arrow" d="M 555 95 Q 680 105 700 175" marker-end="url(#arrowhead)"/>
-        <path class="arrow" d="M 740 245 Q 800 305 740 365" marker-end="url(#arrowhead)"/>
-        <path class="arrow" d="M 700 435 Q 680 478 555 470" marker-end="url(#arrowhead)"/>
-        <path class="arrow" d="M 345 470 Q 220 478 200 435" marker-end="url(#arrowhead)"/>
-        <path class="arrow" d="M 160 365 Q 100 305 160 245" marker-end="url(#arrowhead)"/>
-        <path class="arrow" d="M 200 175 Q 220 105 345 95" marker-end="url(#arrowhead)"/>
-
-        <!-- Node 1: INPUT (top) -->
-        <g>
-          <rect class="node-box" x="345" y="40" width="210" height="70" rx="10"/>
-          <text class="node-step step-1" x="450" y="62">01 · INPUT</text>
-          <text class="node-title" x="450" y="83">Utilisateur / Trigger</text>
-          <text class="node-sub" x="450" y="100">prompt · webhook · cron · email</text>
-        </g>
-
-        <!-- Node 2: LOAD (top right) -->
-        <g>
-          <rect class="node-box" x="615" y="175" width="210" height="70" rx="10"/>
-          <text class="node-step step-2" x="720" y="197">02 · LOAD</text>
-          <text class="node-title" x="720" y="218">Memory + RAG</text>
-          <text class="node-sub" x="720" y="235">contexte pour ce tour</text>
-        </g>
-
-        <!-- Node 3: REASON (bottom right) -->
-        <g>
-          <rect class="node-box" x="615" y="365" width="210" height="70" rx="10"/>
-          <text class="node-step step-3" x="720" y="387">03 · REASON</text>
-          <text class="node-title" x="720" y="408">LLM</text>
-          <text class="node-sub" x="720" y="425">décider la prochaine action</text>
-        </g>
-
-        <!-- Node 4: FILTER (bottom) -->
-        <g>
-          <rect class="node-box" x="345" y="450" width="210" height="70" rx="10"/>
-          <text class="node-step step-4" x="450" y="472">04 · FILTER</text>
-          <text class="node-title" x="450" y="493">Tools + Rails + Guardrails</text>
-          <text class="node-sub" x="450" y="510">ce qui est autorisé</text>
-        </g>
-
-        <!-- Node 5: ACT (bottom left) -->
-        <g>
-          <rect class="node-box" x="75" y="365" width="210" height="70" rx="10"/>
-          <text class="node-step step-5" x="180" y="387">05 · ACT</text>
-          <text class="node-title" x="180" y="408">Action / Execution</text>
-          <text class="node-sub" x="180" y="425">tool call · API · write · respond</text>
-        </g>
-
-        <!-- Node 6: LEARN (top left) -->
-        <g>
-          <rect class="node-box" x="75" y="175" width="210" height="70" rx="10"/>
-          <text class="node-step step-6" x="180" y="197">06 · LEARN</text>
-          <text class="node-title" x="180" y="218">Audit + Eval + Feedback</text>
-          <text class="node-sub" x="180" y="235">tracer · scorer · améliorer</text>
-        </g>
-
-        <!-- Center label -->
-        <text class="center-label" x="450" y="280">LA BOUCLE</text>
-        <text class="center-label" x="450" y="300" style="font-size: 9px; opacity: 0.6;">SE RÉPÈTE À CHAQUE TOUR</text>
-
-      </svg>
-    </div>
-
-    <div class="loop-legend">
-      <div class="legend-item" style="--legend-color: var(--c-1);">
-        <div class="legend-step">01 · INPUT</div>
-        <div class="legend-name">Utilisateur / Trigger</div>
-        <div class="legend-desc">Un prompt, un webhook, une exécution planifiée, un email entrant ou un ticket Jira. Quelque chose déclenche un tour.</div>
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Hey<span>Cloud</span> <span class="logo-tag">AI4ERP</span></a>
+  <ul class="nav-links">
+    <li><a href="#services" data-i18n="nav.services">Services</a></li>
+    <li><a href="#ai-platform" data-i18n="nav.ai">AI4ERP</a></li>
+    <li><a href="#architecture" data-i18n="nav.arch">Architecture</a></li>
+    <li><a href="#expertise" data-i18n="nav.expertise">Expertise</a></li>
+    <li><a href="#contact" class="nav-cta" data-i18n="nav.contact">Contact</a></li>
+    <li>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('fr')">FR</button>
       </div>
+    </li>
+  </ul>
+</nav>
 
-      <div class="legend-item" style="--legend-color: var(--c-2);">
-        <div class="legend-step">02 · LOAD</div>
-        <div class="legend-name">Memory + RAG</div>
-        <div class="legend-desc">Charger le contexte pertinent avant que le LLM ne raisonne. Memory = ce qui est connu de l’utilisateur ou du projet. RAG = ce qui se trouve dans le corpus documentaire.</div>
-      </div>
-
-      <div class="legend-item" style="--legend-color: var(--c-3);">
-        <div class="legend-step">03 · REASON</div>
-        <div class="legend-name">LLM</div>
-        <div class="legend-desc">Le modèle utilise le contexte chargé et décide : répondre directement, appeler un tool, ou planifier une séquence multi-étapes.</div>
-      </div>
-
-      <div class="legend-item" style="--legend-color: var(--c-4);">
-        <div class="legend-step">04 · FILTER</div>
-        <div class="legend-name">Tools + Rails + Guardrails</div>
-        <div class="legend-desc">L’intention du modèle est contrôlée. Les rails appliquent les règles métier. Les guardrails bloquent les usages non sûrs. Les tools sont les capacités réellement connectées.</div>
-      </div>
-
-      <div class="legend-item" style="--legend-color: var(--c-5);">
-        <div class="legend-step">05 · ACT</div>
-        <div class="legend-name">Action / Execution</div>
-        <div class="legend-desc">Quelque chose se produit réellement : appel API Fusion/OIC/Jira, écriture, message envoyé, fichier généré ou réponse streamée à l’utilisateur.</div>
-      </div>
-
-      <div class="legend-item" style="--legend-color: var(--c-6);">
-        <div class="legend-step">06 · LEARN</div>
-        <div class="legend-name">Audit + Eval + Feedback</div>
-        <div class="legend-desc">Tracer tout le tour, évaluer la qualité, journaliser pour audit/compliance et réinjecter les apprentissages utiles dans la mémoire.</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="section-head">
-      <h2>Les composants clés</h2>
-      <p class="section-sub">Regroupés par rôle. Chaque composant de notre plateforme Agent AI de production s’insère dans l’un de ces groupes.</p>
-    </div>
-
-    <div class="groups">
-
-      <!-- Group 1: Reasoning Core -->
-      <div class="group" style="--group-color: var(--c-1);">
-        <div class="group-header">
-          <div class="group-num">GROUP 01 · STAGE 03</div>
-          <div class="group-name">Reasoning Core</div>
-          <div class="group-role">La couche de raisonnement. Génère, vectorise et route vers le bon modèle.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">LLM <span class="component-tag">claude · gpt · gemini</span></div>
-            <div class="component-desc">Le générateur. Il prend le contexte et retourne une réponse ou un tool call.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Embeddings <span class="component-tag">vectors</span></div>
-            <div class="component-desc">Transforme le texte en vecteurs numériques. Alimente le RAG et la recherche sémantique.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Model routing / gateway <span class="component-tag">cf ai gateway</span></div>
-            <div class="component-desc">Choisit le modèle adapté selon la tâche. Gère fallback, cache, coût et rate limits entre providers.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 2: Knowledge & State -->
-      <div class="group" style="--group-color: var(--c-2);">
-        <div class="group-header">
-          <div class="group-num">GROUP 02 · STAGE 02</div>
-          <div class="group-name">Knowledge &amp; State</div>
-          <div class="group-role">Ce que le modèle connaît avant de générer. Corpus + memory + storage.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">RAG <span class="component-tag">vectorize</span></div>
-            <div class="component-desc">Récupère l’information depuis un corpus contrôlé : docs Oracle, specs, schémas, procédures, tickets Jira, emails projet.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Memory <span class="component-tag">short + long term</span></div>
-            <div class="component-desc">Différent du RAG. Short-term = la conversation en cours. Long-term = contexte utilisateur/projet conservé entre sessions.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Storage <span class="component-tag">d1 · r2 · kv</span></div>
-            <div class="component-desc">État durable pour le reste : base structurée, stockage de fichiers, configuration rapide.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 3: Capability -->
-      <div class="group" style="--group-color: var(--c-3);">
-        <div class="group-header">
-          <div class="group-num">GROUP 03 · STAGE 04 → 05</div>
-          <div class="group-name">Capability</div>
-          <div class="group-role">Ce que le modèle peut <em>faire</em> au-delà de parler : tools, sandbox, multimodal.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">Tool use / function calling <span class="component-tag">mcp · native</span></div>
-            <div class="component-desc">Le pattern général. MCP est un mode de transport ; le function calling natif en est un autre. Les deux peuvent coexister.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Sandbox / execution env <span class="component-tag">iox</span></div>
-            <div class="component-desc">Code interpreter, automation ou computer use. L’espace où l’agent peut travailler sans toucher directement la production.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Multimodal layer <span class="component-tag">stt · tts · vision</span></div>
-            <div class="component-desc">Voix entrante/sortante, vision, image generation. Dans AI4ERP : module speech type ElevenLabs et interactions vocales.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 4: Control -->
-      <div class="group" style="--group-color: var(--c-4);">
-        <div class="group-header">
-          <div class="group-num">GROUP 04 · STAGE 04</div>
-          <div class="group-name">Control</div>
-          <div class="group-role">La couche sécurité + policy. Ce que l’agent a le droit ou non de faire.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">Rails / rules <span class="component-tag">policy</span></div>
-            <div class="component-desc">La policy métier : qui peut faire quoi, quand, avec quelles contraintes.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Guardrails <span class="component-tag">i/o filter</span></div>
-            <div class="component-desc">Distinct des rails. Filtrage input/output : PII, prompt injection, jailbreak, contenu non conforme.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Identity, auth, RBAC, tenancy <span class="component-tag">authjs</span></div>
-            <div class="component-desc">Qui est l’utilisateur, quelles BU/ledgers/données il peut voir, et ce que son agent peut faire en son nom. Point critique en B2B/ERP.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Human-in-the-loop / approval gates <span class="component-tag">hitl</span></div>
-            <div class="component-desc">Quand l’agent doit s’arrêter et demander une validation humaine avant une action sensible ou irréversible.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 5: Orchestration -->
-      <div class="group" style="--group-color: var(--c-5);">
-        <div class="group-header">
-          <div class="group-num">GROUP 05 · WHOLE LOOP</div>
-          <div class="group-name">Orchestration</div>
-          <div class="group-role">Le harnais autour de la boucle : durabilité, async, erreurs, streaming.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">Agent loop / planner <span class="component-tag">harness</span></div>
-            <div class="component-desc">Le wrapper autour du LLM qui décide la prochaine étape, déclenche les tools, gère les erreurs et maintient le scratchpad.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Workflows / durable execution <span class="component-tag">cf workflows</span></div>
-            <div class="component-desc">Pour les tâches longues : ESS jobs, traitements OIC, rapprochements, suivis batch, reprise après erreur.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Queues / async <span class="component-tag">cf queues</span></div>
-            <div class="component-desc">Ingestion webhook, batch processing, retry, découplage des traitements longs.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Streaming layer <span class="component-tag">sse · ws</span></div>
-            <div class="component-desc">UX temps réel : token streaming, réponses partielles, annulation, événements de progression.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 6: Operations -->
-      <div class="group" style="--group-color: var(--c-6);">
-        <div class="group-header">
-          <div class="group-num">GROUP 06 · STAGE 06</div>
-          <div class="group-name">Operations</div>
-          <div class="group-role">Savoir si ça fonctionne : eval, trace, audit, coût.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">Evals <span class="component-tag">offline + online</span></div>
-            <div class="component-desc">Tests de non-régression sur jeux de référence + scoring LLM-as-judge sur trafic réel.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Observability / tracing <span class="component-tag">braintrust · langsmith</span></div>
-            <div class="component-desc">Chaque prompt, chaque tool call, chaque coût. Traces de bout en bout rejouables.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Audit log <span class="component-tag">soc2 · gdpr · ai act</span></div>
-            <div class="component-desc">Séparé de l’observability. Journal immuable pour audit, GDPR, AI Act, SOX-like controls.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Caching <span class="component-tag">prompt · semantic</span></div>
-            <div class="component-desc">Prompt cache + cache sémantique. Levier important de performance et de coût.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Cost / metering / rate limits <span class="component-tag">tokens</span></div>
-            <div class="component-desc">Suivi tokens par user/tenant, plafonds, throttling. Indispensable pour contrôler les coûts.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 7: Surface -->
-      <div class="group" style="--group-color: var(--c-7);">
-        <div class="group-header">
-          <div class="group-num">GROUP 07 · STAGE 01 + 05</div>
-          <div class="group-name">Surface</div>
-          <div class="group-role">Ce que l’utilisateur voit et comment il corrige ou valide.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">UI / chat / action surface <span class="component-tag">next.js · shadcn</span></div>
-            <div class="component-desc">Frontend, citations, confirmations d’action, streaming, visualisation des tool calls.</div>
-          </div>
-          <div class="component">
-            <div class="component-name">Feedback loop <span class="component-tag">thumbs · corrections</span></div>
-            <div class="component-desc">Feedback utilisateur, corrections structurées, données réinjectées dans evals et memory.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 8: Data Ingestion -->
-      <div class="group" style="--group-color: var(--c-8);">
-        <div class="group-header">
-          <div class="group-num">GROUP 08 · FEEDS STAGE 02</div>
-          <div class="group-name">Data Ingestion</div>
-          <div class="group-role">Le pipeline qui alimente le RAG. Sans lui, le modèle est aveugle.</div>
-        </div>
-        <div class="components">
-          <div class="component">
-            <div class="component-name">Document pipeline <span class="component-tag">parse · chunk · embed</span></div>
-            <div class="component-desc">Parser PDF/HTML/transcripts, chunker, embedder, indexer, versionner et rafraîchir les contenus.</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="shortcut">
-    <div class="shortcut-eyebrow">RACCOURCI MENTAL</div>
-    <h3>Toute plateforme Agent AI enterprise suit la même boucle</h3>
-    <p>À retenir pour cadrer rapidement l'architecture AI4ERP :</p>
-    <div class="shortcut-loop"><span class="punct">(</span><span class="stage-1">memory + RAG</span><span class="punct">)</span> <span class="arrow-c">→</span> <span class="stage-2">LLM</span> <span class="arrow-c">→</span> <span class="punct">(</span><span class="stage-3">tools + rails + guardrails</span><span class="punct">)</span> <span class="arrow-c">→</span> <span class="stage-4">action</span> <span class="arrow-c">→</span> <span class="punct">(</span><span class="stage-5">audit + eval + feedback</span><span class="punct">)</span> <span class="arrow-c">→</span> <span class="stage-1">memory</span></div>
-    <p>Chaque composant ci-dessus s’insère dans cette boucle. S’il manque une étape, il y a un risque d’architecture. Si deux composants font le même travail, il y a duplication.</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge"><span class="dot"></span><span data-i18n="hero.badge">Cloud ERP Consulting & AI Agent Platform</span></div>
+  <h1 data-i18n="hero.h1">Intelligent ERP operations,<br>powered by <span class="hl">agentic AI</span></h1>
+  <p data-i18n="hero.sub">HeyCloud is a team of senior Cloud ERP and AI experts helping large enterprises transform their ERP operations — from implementation to autonomous AI agents that supervise, analyse and act inside Oracle, SAP and Microsoft environments.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary" data-i18n="hero.cta1">Start a project →</a>
+    <a href="#ai-platform" class="btn-secondary" data-i18n="hero.cta2">Discover AI4ERP</a>
   </div>
+  <div class="trust-bar">
+    <p data-i18n="hero.trust">Trusted by leading organisations</p>
+    <div class="trust-logos">
+      <span class="trust-logo">Orange Business</span>
+      <span class="trust-logo">BNP Paribas</span>
+      <span class="trust-logo">TechnipFMC</span>
+      <span class="trust-logo">Faurecia</span>
+      <span class="trust-logo">RATP</span>
+      <span class="trust-logo">L'Oréal</span>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <span>AI4ERP · version FR · 2026-05-19</span>
-    <span>Oracle ERP Cloud · Agent AI reference architecture</span>
-  </footer>
+<!-- WHY US -->
+<section class="why-section" id="about">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="why.label">Why HeyCloud</div>
+    <h2 class="section-title" data-i18n="why.h2">A team of senior experts<br>at the intersection of ERP and AI</h2>
+    <p class="section-sub" data-i18n="why.sub">We combine deep Oracle Fusion expertise across Finance, Projects, PPM, Supply Chain and Procurement with cutting-edge AI agent capabilities to modernise ERP operations at scale.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-num">25<span>+</span></div>
+      <h3 data-i18n="why.1.title">Years of Oracle experience</h3>
+      <p data-i18n="why.1.desc">Finance, PPM, Projects, Procurement and Supply Chain across Oracle Fusion Cloud and legacy platforms.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🌍</div>
+      <h3 data-i18n="why.2.title">International programmes</h3>
+      <p data-i18n="why.2.desc">Delivered complex ERP rollouts across Europe, Middle East and Asia-Pacific for global organisations.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🤖</div>
+      <h3 data-i18n="why.3.title">AI-native approach</h3>
+      <p data-i18n="why.3.desc">We build AI agents natively connected to your ERP — not bolted on — with full audit trail and business guardrails.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🏆</div>
+      <h3 data-i18n="why.4.title">Reference clients</h3>
+      <p data-i18n="why.4.desc">Orange Business, BNP Paribas, TechnipFMC, Faurecia, RATP, L'Oréal — across banking, energy, industry and services.</p>
+    </div>
+  </div>
+</section>
 
-</div>
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="svc.label">Services</div>
+    <h2 class="section-title" data-i18n="svc.h2">Consulting & technology<br>for your Cloud ERP</h2>
+    <p class="section-sub" data-i18n="svc.sub">From implementation to continuous optimisation, we cover the full lifecycle of your Cloud ERP — with AI at the core.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="svc-icon blue">☁️</div>
+      <h3 data-i18n="svc.1.title">Cloud ERP Implementation</h3>
+      <p data-i18n="svc.1.desc">Deployment and migration to Oracle Fusion, SAP S/4HANA or Microsoft D365. Proven methodology, structured deliverables, controlled go-live.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="svc-icon purple">📋</div>
+      <h3 data-i18n="svc.2.title">PPM — Project Portfolio Management</h3>
+      <p data-i18n="svc.2.desc">End-to-end PPM programme leadership: scoping, benchmarking, RFP, governance and Oracle PPM Cloud deployment for international organisations.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="svc-icon indigo">🤖</div>
+      <h3 data-i18n="svc.3.title">AI4ERP — Agent Platform</h3>
+      <p data-i18n="svc.3.desc">Design and deployment of autonomous AI agents connected to your ERP via a 6-step agentic loop across 9 production-grade component groups.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="svc-icon green">⚡</div>
+      <h3 data-i18n="svc.4.title">Optimisation & Run</h3>
+      <p data-i18n="svc.4.desc">Proactive supervision of ESS/batch jobs via AI agents, performance audit, post-go-live support levels 2 and 3, and hypercare management.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="svc-icon orange">📊</div>
+      <h3 data-i18n="svc.5.title">Data & Reporting</h3>
+      <p data-i18n="svc.5.desc">BI architecture, operational dashboards, BIP/OTBI exports and business data integration via RAG agents into your decision-making tools.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="svc-icon teal">🔒</div>
+      <h3 data-i18n="svc.6.title">ERP Governance & Security</h3>
+      <p data-i18n="svc.6.desc">Oracle Fusion Cloud security, SOD controls, role design, compliance audits and ERP support model modernisation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AI PLATFORM -->
+<section style="background:var(--surface)" id="ai-platform">
+  <div class="ai-split">
+    <div class="av-dark reveal">
+      <div class="av-label">AI4ERP Platform — Live agents</div>
+      <div class="arow"><span class="adot sky"></span><span class="alabel">ESS Supervision Agent — Oracle Fusion</span><span class="astatus run">● Running</span></div>
+      <div class="arow"><span class="adot amber"></span><span class="alabel">Accounting Close Agent — GL Anomaly</span><span class="astatus warn">● Analysing</span></div>
+      <div class="arow"><span class="adot violet"></span><span class="alabel">PPM Agent — Portfolio scoring updated</span><span class="astatus run">● Active</span></div>
+      <div class="arow"><span class="adot lime"></span><span class="alabel">Monthly Reporting Agent — BIP/OTBI</span><span class="astatus ok">● Done</span></div>
+      <div class="ai-insight">
+        <div class="ai-insight-label">AI INSIGHT · AUDIT TRAIL</div>
+        <p>3 ESS jobs failed at 04:12. Root cause: OIC timeout. Guardrail validated. Restart scheduled — human approval required before write.</p>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="section-label">AI4ERP Platform</div>
+      <h2 class="section-title" data-i18n="ai.h2">AI agents working<br>inside your ERP</h2>
+      <p class="section-sub" data-i18n="ai.sub">Our autonomous agents integrate natively into your Oracle or SAP environment to monitor, analyse and act — 24/7, with business guardrails and a complete audit trail.</p>
+      <ul class="ai-features">
+        <li data-i18n="ai.f1">6-step agentic loop: Input → Memory/RAG → LLM → Guardrails → Action → Learn</li>
+        <li data-i18n="ai.f2">Native Oracle Fusion connectivity via OIC, ESS, BIP, OTBI, REST/SOAP</li>
+        <li data-i18n="ai.f3">Human-in-the-loop on all sensitive or irreversible actions</li>
+        <li data-i18n="ai.f4">Full observability: LangSmith / Braintrust / OpenTelemetry</li>
+        <li data-i18n="ai.f5">Immutable audit log — SOC2 / GDPR / AI Act compliant</li>
+        <li data-i18n="ai.f6">Enterprise deployment: OCI + Terraform, Cloudflare edge, Next.js UI on Vercel</li>
+      </ul>
+      <div style="margin-top:1.75rem"><a href="#architecture" class="btn-primary" data-i18n="ai.cta">View architecture →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat-item reveal"><div class="stat-number">25<span>+</span></div><div class="stat-desc" data-i18n="stat.1">Years Oracle experience</div></div>
+  <div class="stat-item reveal"><div class="stat-number">6</div><div class="stat-desc" data-i18n="stat.2">Agentic loop stages</div></div>
+  <div class="stat-item reveal"><div class="stat-number">9</div><div class="stat-desc" data-i18n="stat.3">AI4ERP component groups</div></div>
+  <div class="stat-item reveal"><div class="stat-number">3<span>x</span></div><div class="stat-desc" data-i18n="stat.4">Average productivity gain</div></div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="loop-section" id="architecture">
+  <div class="center reveal">
+    <div class="section-label">AI4ERP Architecture</div>
+    <h2 class="section-title" data-i18n="arch.h2">The agentic loop<br>at the heart of the platform</h2>
+    <p class="section-sub" data-i18n="arch.sub">Every enterprise AI agent platform follows the same loop. AI4ERP implements it end-to-end, with each component precisely positioned in the flow.</p>
+  </div>
+  <div class="loop-wrap reveal">
+    <div class="loop-eyebrow" id="loop-eyebrow-text">AI4ERP · AGENT LOOP · REPEATS EVERY TURN</div>
+    <svg class="loop-svg" viewBox="0 0 840 540" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#22d3ee" opacity=".7"/>
+        </marker>
+      </defs>
+      <path d="M 490 88 Q 660 106 680 190" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 702 268 Q 702 326 682 348" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 622 404 Q 562 440 514 424" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 326 424 Q 266 440 212 404" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 134 348 Q 116 282 134 208" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 212 162 Q 262 110 346 96" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <rect x="346" y="58" width="148" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/>
+      <text x="420" y="82" font-family="monospace" font-size="9" fill="#a78bfa" text-anchor="middle" letter-spacing="2">01 · INPUT</text>
+      <text x="420" y="100" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Trigger / User</text>
+      <text x="420" y="115" font-family="monospace" font-size="8.5" fill="#555" text-anchor="middle">prompt · webhook · cron</text>
+      <rect x="592" y="162" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/>
+      <text x="677" y="186" font-family="monospace" font-size="9" fill="#60a5fa" text-anchor="middle" letter-spacing="2">02 · LOAD</text>
+      <text x="677" y="204" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Memory + RAG</text>
+      <text x="677" y="219" font-family="monospace" font-size="8.5" fill="#555" text-anchor="middle">context · Oracle corpus</text>
+      <rect x="592" y="326" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/>
+      <text x="677" y="350" font-family="monospace" font-size="9" fill="#2dd4bf" text-anchor="middle" letter-spacing="2">03 · REASON</text>
+      <text x="677" y="368" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">LLM</text>
+      <text x="677" y="383" font-family="monospace" font-size="8.5" fill="#555" text-anchor="middle">claude · gpt · gemini</text>
+      <rect x="346" y="400" width="148" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/>
+      <text x="420" y="424" font-family="monospace" font-size="9" fill="#f59e0b" text-anchor="middle" letter-spacing="2">04 · FILTER</text>
+      <text x="420" y="442" font-family="sans-serif" font-size="11.5" fill="#ededed" text-anchor="middle" font-weight="500">Tools + Guardrails</text>
+      <text x="420" y="457" font-family="monospace" font-size="8.5" fill="#555" text-anchor="middle">rails · HITL · RBAC</text>
+      <rect x="78" y="326" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/>
+      <text x="163" y="350" font-family="monospace" font-size="9" fill="#4ade80" text-anchor="middle" letter-spacing="2">05 · ACT</text>
+      <text x="163" y="368" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Action / Execution</text>
+      <text x="163" y="383" font-family="monospace" font-size="8.5" fill="#555" text-anchor="middle">API Fusion · OIC · write</text>
+      <rect x="78" y="162" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/>
+      <text x="163" y="186" font-family="monospace" font-size="9" fill="#fb7185" text-anchor="middle" letter-spacing="2">06 · LEARN</text>
+      <text x="163" y="204" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Audit + Eval</text>
+      <text x="163" y="219" font-family="monospace" font-size="8.5" fill="#555" text-anchor="middle">trace · score · memory</text>
+      <text id="loop-center-label" x="420" y="256" font-family="monospace" font-size="11" fill="#3a3a3a" text-anchor="middle" letter-spacing="3">THE LOOP</text>
+      <text x="420" y="275" font-family="monospace" font-size="9" fill="#2a2a2a" text-anchor="middle" letter-spacing="3">AI4ERP</text>
+    </svg>
+  </div>
+  <div class="loop-legend">
+    <div class="ll-item reveal" style="--lc:#a78bfa"><div class="ll-step">01 · INPUT</div><div class="ll-name" data-i18n="loop.1.name">Trigger / User</div><div class="ll-desc" data-i18n="loop.1.desc">A prompt, webhook, scheduled ESS job or inbound email. Something triggers a loop turn.</div></div>
+    <div class="ll-item reveal" style="--lc:#60a5fa"><div class="ll-step">02 · LOAD</div><div class="ll-name" data-i18n="loop.2.name">Memory + RAG</div><div class="ll-desc" data-i18n="loop.2.desc">Load relevant context before reasoning. Memory = user/project state. RAG = Oracle docs, specs, procedures, Jira tickets.</div></div>
+    <div class="ll-item reveal" style="--lc:#2dd4bf"><div class="ll-step">03 · REASON</div><div class="ll-name" data-i18n="loop.3.name">LLM</div><div class="ll-desc" data-i18n="loop.3.desc">The model uses loaded context and decides: answer directly, call a tool, or plan a multi-step sequence.</div></div>
+    <div class="ll-item reveal" style="--lc:#f59e0b"><div class="ll-step">04 · FILTER</div><div class="ll-name" data-i18n="loop.4.name">Tools + Rails + Guardrails</div><div class="ll-desc" data-i18n="loop.4.desc">Rails = business policy. Guardrails = PII/injection filtering. HITL = human approval before sensitive actions.</div></div>
+    <div class="ll-item reveal" style="--lc:#4ade80"><div class="ll-step">05 · ACT</div><div class="ll-name" data-i18n="loop.5.name">Action / Execution</div><div class="ll-desc" data-i18n="loop.5.desc">Something actually happens: Fusion/OIC API call, write, ESS restart, BIP report generated, or streamed response.</div></div>
+    <div class="ll-item reveal" style="--lc:#fb7185"><div class="ll-step">06 · LEARN</div><div class="ll-name" data-i18n="loop.6.name">Audit + Eval + Feedback</div><div class="ll-desc" data-i18n="loop.6.desc">Trace the full turn, evaluate quality, log for SOC2/GDPR/AI Act compliance, reinject learnings into memory.</div></div>
+  </div>
+  <div class="shortcut-box reveal">
+    <div class="sc-eye" data-i18n="shortcut.eye">MENTAL SHORTCUT · AI4ERP</div>
+    <h3 data-i18n="shortcut.h3">Every enterprise AI agent platform follows the same loop</h3>
+    <p data-i18n="shortcut.p">Keep this in mind to frame the AI4ERP architecture quickly:</p>
+    <div class="sc-loop"><span class="sl-punct">(</span><span class="sl-1">memory + RAG</span><span class="sl-punct">)</span><span class="sl-arrow"> → </span><span class="sl-2">LLM</span><span class="sl-arrow"> → </span><span class="sl-punct">(</span><span class="sl-3">tools + rails + guardrails</span><span class="sl-punct">)</span><span class="sl-arrow"> → </span><span class="sl-4">action</span><span class="sl-arrow"> → </span><span class="sl-punct">(</span><span class="sl-5">audit + eval + feedback</span><span class="sl-punct">)</span><span class="sl-arrow"> → </span><span class="sl-1">memory</span></div>
+    <p data-i18n="shortcut.p2">If a component is missing, there is an architecture risk. If two components do the same job, there is duplication. AI4ERP covers all 9 groups without overlap.</p>
+  </div>
+</section>
+
+<!-- 9 GROUPS -->
+<section class="groups-section">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="groups.label">9 Component Groups</div>
+    <h2 class="section-title" data-i18n="groups.h2">Production-grade architecture<br>with no blind spots</h2>
+    <p class="section-sub" data-i18n="groups.sub">Every AI4ERP component fits into one of these 9 groups. Full agentic loop coverage for enterprise Oracle environments.</p>
+  </div>
+  <div class="groups-grid">
+    <div class="gcard reveal" style="--gc:var(--c1)"><div class="gcard-num">GROUP 01 · STAGE 03</div><div class="gcard-name">Reasoning Core</div><div class="gcard-role" data-i18n="g1.role">The reasoning layer. Generates, vectorises and routes to the right model.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">LLM <span class="gtag">claude · gpt · gemini</span></div><div class="gcomp-desc" data-i18n="g1.c1">The generator. Takes context and returns a response or tool call.</div></div><div class="gcomp"><div class="gcomp-name">Embeddings <span class="gtag">vectors</span></div><div class="gcomp-desc" data-i18n="g1.c2">Transforms text into vectors. Feeds RAG and semantic search.</div></div><div class="gcomp"><div class="gcomp-name">Model routing <span class="gtag">cf ai gateway</span></div><div class="gcomp-desc" data-i18n="g1.c3">Selects the right model per task. Manages fallback, cache, cost and rate limits.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c2)"><div class="gcard-num">GROUP 02 · STAGE 02</div><div class="gcard-name">Knowledge & State</div><div class="gcard-role" data-i18n="g2.role">What the model knows before generating. Corpus + memory + storage.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">RAG <span class="gtag">vectorize</span></div><div class="gcomp-desc" data-i18n="g2.c1">Controlled corpus: Oracle docs, specs, schemas, procedures, Jira tickets.</div></div><div class="gcomp"><div class="gcomp-name">Memory <span class="gtag">short + long term</span></div><div class="gcomp-desc" data-i18n="g2.c2">Short-term = current session. Long-term = user/project context persisted across sessions.</div></div><div class="gcomp"><div class="gcomp-name">Storage <span class="gtag">d1 · r2 · kv</span></div><div class="gcomp-desc" data-i18n="g2.c3">Durable state: structured database, file storage, fast config.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c3)"><div class="gcard-num">GROUP 03 · STAGE 04→05</div><div class="gcard-name">Capability</div><div class="gcard-role" data-i18n="g3.role">What the model can do beyond talking: tools, sandbox, multimodal.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Tool use / function calling <span class="gtag">mcp · native</span></div><div class="gcomp-desc" data-i18n="g3.c1">MCP is one transport mode; native function calling is another. Both coexist.</div></div><div class="gcomp"><div class="gcomp-name">Sandbox / execution env <span class="gtag">iox</span></div><div class="gcomp-desc" data-i18n="g3.c2">Code interpreter, automation. Agent works without touching production directly.</div></div><div class="gcomp"><div class="gcomp-name">Multimodal layer <span class="gtag">stt · tts · vision</span></div><div class="gcomp-desc" data-i18n="g3.c3">Voice in/out, vision. ElevenLabs speech module for AI4ERP voice interactions.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c4)"><div class="gcard-num">GROUP 04 · STAGE 04</div><div class="gcard-name">Control</div><div class="gcard-role" data-i18n="g4.role">The security + policy layer. What the agent is and isn't allowed to do.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Rails / rules <span class="gtag">policy</span></div><div class="gcomp-desc" data-i18n="g4.c1">Business policy: who can do what, when, with which BU/ledger constraints.</div></div><div class="gcomp"><div class="gcomp-name">Guardrails <span class="gtag">i/o filter</span></div><div class="gcomp-desc" data-i18n="g4.c2">Input/output filtering: PII, prompt injection, jailbreak, non-compliant content.</div></div><div class="gcomp"><div class="gcomp-name">Identity + RBAC <span class="gtag">authjs</span></div><div class="gcomp-desc" data-i18n="g4.c3">Who the user is, which BUs/data they can see. Critical in B2B/ERP contexts.</div></div><div class="gcomp"><div class="gcomp-name">Human-in-the-loop <span class="gtag">hitl</span></div><div class="gcomp-desc" data-i18n="g4.c4">Agent pauses and requests human approval before any sensitive or irreversible action.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c5)"><div class="gcard-num">GROUP 05 · WHOLE LOOP</div><div class="gcard-name">Orchestration</div><div class="gcard-role" data-i18n="g5.role">The harness around the loop: durability, async, errors, streaming.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Agent loop / planner <span class="gtag">harness</span></div><div class="gcomp-desc" data-i18n="g5.c1">Wrapper around the LLM, decides next step, triggers tools, maintains scratchpad.</div></div><div class="gcomp"><div class="gcomp-name">Durable execution <span class="gtag">cf workflows</span></div><div class="gcomp-desc" data-i18n="g5.c2">Long-running tasks: ESS jobs, OIC, reconciliations, batch follow-ups, error recovery.</div></div><div class="gcomp"><div class="gcomp-name">Queues / async <span class="gtag">cf queues</span></div><div class="gcomp-desc" data-i18n="g5.c3">Webhook ingestion, batch processing, retry, decoupling of long-running processes.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c6)"><div class="gcard-num">GROUP 06 · STAGE 06</div><div class="gcard-name">Operations</div><div class="gcard-role" data-i18n="g6.role">Knowing if it works: eval, trace, audit, cost.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Evals <span class="gtag">offline + online</span></div><div class="gcomp-desc" data-i18n="g6.c1">Regression tests + LLM-as-judge scoring on live traffic.</div></div><div class="gcomp"><div class="gcomp-name">Observability / tracing <span class="gtag">langsmith · braintrust</span></div><div class="gcomp-desc" data-i18n="g6.c2">Every prompt, tool call, cost. End-to-end replayable traces.</div></div><div class="gcomp"><div class="gcomp-name">Audit log <span class="gtag">soc2 · gdpr · ai act</span></div><div class="gcomp-desc" data-i18n="g6.c3">Immutable journal. For audit, GDPR, AI Act, SOX-like controls.</div></div><div class="gcomp"><div class="gcomp-name">Cost / metering <span class="gtag">tokens</span></div><div class="gcomp-desc" data-i18n="g6.c4">Token tracking per user/tenant, caps, throttling. Key cost control lever.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c7)"><div class="gcard-num">GROUP 07 · STAGE 01+05</div><div class="gcard-name">Surface</div><div class="gcard-role" data-i18n="g7.role">What the user sees and how they correct or validate.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">UI / chat / action surface <span class="gtag">next.js · react · shadcn</span></div><div class="gcomp-desc" data-i18n="g7.c1">AI4ERP portal, chat, action screens, confirmations, citations, streaming, tool call visualisation, admin.</div></div><div class="gcomp"><div class="gcomp-name">Feedback loop <span class="gtag">thumbs · corrections</span></div><div class="gcomp-desc" data-i18n="g7.c2">User feedback, structured corrections, data reinjected into evals and memory.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c8)"><div class="gcard-num">GROUP 08 · FEEDS STAGE 02</div><div class="gcard-name">Data Ingestion</div><div class="gcard-role" data-i18n="g8.role">The pipeline that feeds RAG. Without it, the model is blind.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Document pipeline <span class="gtag">parse · chunk · embed</span></div><div class="gcomp-desc" data-i18n="g8.c1">Parse PDF/HTML/transcripts, chunk, embed, index, version and refresh Oracle content.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c9)"><div class="gcard-num">GROUP 09 · CROSS-CUTTING</div><div class="gcard-name">Hosting, Edge & Deployment</div><div class="gcard-role" data-i18n="g9.role">Where the interface runs, how it's deployed, secured and exposed.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Vercel <span class="gtag">next.js hosting</span></div><div class="gcomp-desc" data-i18n="g9.c1">Next.js UI hosting, GitHub preview deployments, lightweight API routes.</div></div><div class="gcomp"><div class="gcomp-name">Cloudflare <span class="gtag">dns · cdn · workers · waf</span></div><div class="gcomp-desc" data-i18n="g9.c2">Edge: DNS, CDN, WAF, Workers, AI Gateway, DDoS protection, secure endpoints.</div></div><div class="gcomp"><div class="gcomp-name">OCI + Terraform <span class="gtag">enterprise infra · iac</span></div><div class="gcomp-desc" data-i18n="g9.c3">Enterprise Oracle backend: IAM, OKE, API Gateway, Vault, Functions. Reproducible DEV/UAT/PROD.</div></div></div></div>
+  </div>
+</section>
+
+<!-- BEST TOOLS -->
+<section class="tools-section" id="tools">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="tools.label">AI4ERP Best Tools</div>
+    <h2 class="section-title" data-i18n="tools.h2">Tools positioned<br>in the platform</h2>
+    <p class="section-sub" data-i18n="tools.sub">Each tool at its precise place in the loop. Next.js on Surface, Vercel on Hosting, Cloudflare on Edge, OCI on enterprise Oracle backend.</p>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card reveal"><div class="tool-layer">Surface / UI</div><div class="tool-name">Next.js + React + shadcn/ui</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.1">AI4ERP portal, chat, action screens, confirmations, citations, streaming, monitoring dashboard.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Hosting / Deployment</div><div class="tool-name">Vercel</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.2">Host the Next.js app, GitHub previews, lightweight API routes, accelerate client demos.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Edge / Security</div><div class="tool-name">Cloudflare</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.3">DNS, CDN, WAF, Workers, AI Gateway, cache, rate limiting, public endpoint protection.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Enterprise Cloud</div><div class="tool-name">OCI</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.4">Enterprise Oracle backend, IAM, API Gateway, Vault, Functions, OKE, observability.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">AI Orchestration</div><div class="tool-name">LangChain / LlamaIndex</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.5">Agent loop, RAG, tool calling, memory, routing, document connectors, multi-step orchestration.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Oracle Integration</div><div class="tool-name">OIC + Fusion APIs + BIP/OTBI</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.6">Real Oracle ERP Cloud connectivity: REST/SOAP, ESS jobs, interfaces, webhooks, extractions.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Security / Control</div><div class="tool-name">JWT + OAuth + RBAC + Guardrails</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.7">Authentication, BU/ledger permissions, tenant segmentation, human approval gates.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Infra as Code</div><div class="tool-name">Terraform</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.8">Industrialise infra, reproduce DEV/UAT/PROD, version policies and OCI components.</span></div></div>
+    <div class="tool-card reveal"><div class="tool-layer">Observability</div><div class="tool-name">LangSmith / Braintrust / OpenTelemetry</div><div class="tool-desc"><strong data-i18n="tools.role">Role:</strong> <span data-i18n="tools.9">Trace prompts, tool calls, costs, agent decisions, errors, quality and full auditability.</span></div></div>
+  </div>
+</section>
+
+<!-- EXPERTISE ERP -->
+<section class="erp-section" id="expertise">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="erp.label">ERP Expertise</div>
+    <h2 class="section-title" data-i18n="erp.h2">Mastery of key modules</h2>
+    <p class="section-sub" data-i18n="erp.sub">Full functional and technical coverage across Oracle Fusion, with AI agents natively connected to each module.</p>
+  </div>
+  <div class="erp-grid">
+    <div class="erp-pill reveal"><div class="picon">💰</div><h4 data-i18n="erp.1.title">Finance & Accounting</h4><p>GL, AP, AR, FA, Cash</p></div>
+    <div class="erp-pill reveal"><div class="picon">📋</div><h4 data-i18n="erp.2.title">PPM</h4><p data-i18n="erp.2.desc">Projects, Portfolio, Governance</p></div>
+    <div class="erp-pill reveal"><div class="picon">🏭</div><h4 data-i18n="erp.3.title">Supply Chain</h4><p>Procurement, Inventory, MFG</p></div>
+    <div class="erp-pill reveal"><div class="picon">👥</div><h4 data-i18n="erp.4.title">Human Resources</h4><p>HCM, Payroll, Talent</p></div>
+    <div class="erp-pill reveal"><div class="picon">🔧</div><h4 data-i18n="erp.5.title">Integrations & APIs</h4><p>OIC, REST, SOAP, ETL</p></div>
+    <div class="erp-pill reveal"><div class="picon">📦</div><h4 data-i18n="erp.6.title">Order Management</h4><p>OMS, Contracts, Billing</p></div>
+    <div class="erp-pill reveal"><div class="picon">🔐</div><h4 data-i18n="erp.7.title">Security & Compliance</h4><p>Roles, SOD, Audit Trail</p></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section style="background:var(--white)" id="process">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="process.label">Our Approach</div>
+    <h2 class="section-title" data-i18n="process.h2">Precise scoping,<br>frictionless execution</h2>
+  </div>
+  <div class="process-steps">
+    <div class="pstep reveal"><div class="pnum">01</div><h4 data-i18n="p1.title">Diagnostic</h4><p data-i18n="p1.desc">Current state analysis, challenge identification and AI4ERP scope definition.</p></div>
+    <div class="pstep reveal"><div class="pnum">02</div><h4 data-i18n="p2.title">Architecture</h4><p data-i18n="p2.desc">Agentic loop design, component group selection and deployment plan.</p></div>
+    <div class="pstep reveal"><div class="pnum">03</div><h4 data-i18n="p3.title">Deployment</h4><p data-i18n="p3.desc">Agile implementation, testing, guardrails, training and change management.</p></div>
+    <div class="pstep reveal"><div class="pnum">04</div><h4 data-i18n="p4.title">AI Supervision</h4><p data-i18n="p4.desc">Continuous AI agent monitoring, optimisation and ongoing support with full audit trail.</p></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-label" data-i18n="cta.label">Let's talk about your project</div>
+  <h2 class="section-title" data-i18n="cta.h2">Ready to modernise your ERP<br>with artificial intelligence?</h2>
+  <p class="section-sub" data-i18n="cta.sub">Our experts are available for a first no-commitment conversation. Describe your context and we'll get back to you within 24 hours.</p>
+  <div class="cta-actions">
+    <a href="mailto:hello@heycloud.io" class="btn-white">📩 hello@heycloud.io</a>
+    <a href="#architecture" class="btn-ghost" data-i18n="cta.btn2">View AI4ERP architecture</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a href="#" class="logo">Hey<span style="color:var(--sky)">Cloud</span> <span class="logo-tag">AI4ERP</span></a>
+    <div class="footer-domains">ai4erpcloud.com · ai4erp-cloud.com · ai4erpcloud.fr · heycloud4erp.com</div>
+  </div>
+  <div class="footer-links">
+    <a href="#" data-i18n="footer.legal">Legal</a>
+    <a href="#" data-i18n="footer.privacy">Privacy</a>
+    <a href="mailto:hello@heycloud.io">hello@heycloud.io</a>
+  </div>
+  <div>© 2026 HeyCloud · AI4ERP</div>
+</footer>
+
+<script>
+const i18n = {
+  en: {
+    "nav.services":"Services","nav.ai":"AI4ERP","nav.arch":"Architecture","nav.expertise":"Expertise","nav.contact":"Contact",
+    "hero.badge":"Cloud ERP Consulting & AI Agent Platform",
+    "hero.h1":"Intelligent ERP operations,<br>powered by <span class='hl'>agentic AI</span>",
+    "hero.sub":"HeyCloud is a team of senior Cloud ERP and AI experts helping large enterprises transform their ERP operations — from implementation to autonomous AI agents that supervise, analyse and act inside Oracle, SAP and Microsoft environments.",
+    "hero.cta1":"Start a project →","hero.cta2":"Discover AI4ERP","hero.trust":"Trusted by leading organisations",
+    "why.label":"Why HeyCloud","why.h2":"A team of senior experts<br>at the intersection of ERP and AI",
+    "why.sub":"We combine deep Oracle Fusion expertise across Finance, Projects, PPM, Supply Chain and Procurement with cutting-edge AI agent capabilities to modernise ERP operations at scale.",
+    "why.1.title":"Years of Oracle experience","why.1.desc":"Finance, PPM, Projects, Procurement and Supply Chain across Oracle Fusion Cloud and legacy platforms.",
+    "why.2.title":"International programmes","why.2.desc":"Delivered complex ERP rollouts across Europe, Middle East and Asia-Pacific for global organisations.",
+    "why.3.title":"AI-native approach","why.3.desc":"We build AI agents natively connected to your ERP — not bolted on — with full audit trail and business guardrails.",
+    "why.4.title":"Reference clients","why.4.desc":"Orange Business, BNP Paribas, TechnipFMC, Faurecia, RATP, L'Oréal — across banking, energy, industry and services.",
+    "svc.label":"Services","svc.h2":"Consulting & technology<br>for your Cloud ERP","svc.sub":"From implementation to continuous optimisation, we cover the full lifecycle of your Cloud ERP — with AI at the core.",
+    "svc.1.title":"Cloud ERP Implementation","svc.1.desc":"Deployment and migration to Oracle Fusion, SAP S/4HANA or Microsoft D365. Proven methodology, structured deliverables, controlled go-live.",
+    "svc.2.title":"PPM — Project Portfolio Management","svc.2.desc":"End-to-end PPM programme leadership: scoping, benchmarking, RFP, governance and Oracle PPM Cloud deployment for international organisations.",
+    "svc.3.title":"AI4ERP — Agent Platform","svc.3.desc":"Design and deployment of autonomous AI agents connected to your ERP via a 6-step agentic loop across 9 production-grade component groups.",
+    "svc.4.title":"Optimisation & Run","svc.4.desc":"Proactive supervision of ESS/batch jobs via AI agents, performance audit, post-go-live support levels 2 and 3, and hypercare management.",
+    "svc.5.title":"Data & Reporting","svc.5.desc":"BI architecture, operational dashboards, BIP/OTBI exports and business data integration via RAG agents into your decision-making tools.",
+    "svc.6.title":"ERP Governance & Security","svc.6.desc":"Oracle Fusion Cloud security, SOD controls, role design, compliance audits and ERP support model modernisation.",
+    "ai.h2":"AI agents working<br>inside your ERP","ai.sub":"Our autonomous agents integrate natively into your Oracle or SAP environment to monitor, analyse and act — 24/7, with business guardrails and a complete audit trail.",
+    "ai.f1":"6-step agentic loop: Input → Memory/RAG → LLM → Guardrails → Action → Learn","ai.f2":"Native Oracle Fusion connectivity via OIC, ESS, BIP, OTBI, REST/SOAP",
+    "ai.f3":"Human-in-the-loop on all sensitive or irreversible actions","ai.f4":"Full observability: LangSmith / Braintrust / OpenTelemetry",
+    "ai.f5":"Immutable audit log — SOC2 / GDPR / AI Act compliant","ai.f6":"Enterprise deployment: OCI + Terraform, Cloudflare edge, Next.js UI on Vercel","ai.cta":"View architecture →",
+    "stat.1":"Years Oracle experience","stat.2":"Agentic loop stages","stat.3":"AI4ERP component groups","stat.4":"Average productivity gain",
+    "arch.h2":"The agentic loop<br>at the heart of the platform","arch.sub":"Every enterprise AI agent platform follows the same loop. AI4ERP implements it end-to-end, with each component precisely positioned in the flow.",
+    "loop.1.name":"Trigger / User","loop.1.desc":"A prompt, webhook, scheduled ESS job or inbound email. Something triggers a loop turn.",
+    "loop.2.name":"Memory + RAG","loop.2.desc":"Load relevant context before reasoning. Memory = user/project state. RAG = Oracle docs, specs, procedures, Jira tickets.",
+    "loop.3.name":"LLM","loop.3.desc":"The model uses loaded context and decides: answer directly, call a tool, or plan a multi-step sequence.",
+    "loop.4.name":"Tools + Rails + Guardrails","loop.4.desc":"Rails = business policy. Guardrails = PII/injection filtering. HITL = human approval before sensitive actions.",
+    "loop.5.name":"Action / Execution","loop.5.desc":"Something actually happens: Fusion/OIC API call, write, ESS restart, BIP report generated, or streamed response.",
+    "loop.6.name":"Audit + Eval + Feedback","loop.6.desc":"Trace the full turn, evaluate quality, log for SOC2/GDPR/AI Act compliance, reinject learnings into memory.",
+    "shortcut.eye":"MENTAL SHORTCUT · AI4ERP","shortcut.h3":"Every enterprise AI agent platform follows the same loop",
+    "shortcut.p":"Keep this in mind to frame the AI4ERP architecture quickly:","shortcut.p2":"If a component is missing, there is an architecture risk. If two components do the same job, there is duplication. AI4ERP covers all 9 groups without overlap.",
+    "groups.label":"9 Component Groups","groups.h2":"Production-grade architecture<br>with no blind spots","groups.sub":"Every AI4ERP component fits into one of these 9 groups. Full agentic loop coverage for enterprise Oracle environments.",
+    "tools.label":"AI4ERP Best Tools","tools.h2":"Tools positioned<br>in the platform","tools.sub":"Each tool at its precise place in the loop. Next.js on Surface, Vercel on Hosting, Cloudflare on Edge, OCI on enterprise Oracle backend.",
+    "tools.role":"Role:","tools.1":"AI4ERP portal, chat, action screens, confirmations, citations, streaming, monitoring dashboard.","tools.2":"Host the Next.js app, GitHub previews, lightweight API routes, accelerate client demos.","tools.3":"DNS, CDN, WAF, Workers, AI Gateway, cache, rate limiting, public endpoint protection.","tools.4":"Enterprise Oracle backend, IAM, API Gateway, Vault, Functions, OKE, observability.","tools.5":"Agent loop, RAG, tool calling, memory, routing, document connectors, multi-step orchestration.","tools.6":"Real Oracle ERP Cloud connectivity: REST/SOAP, ESS jobs, interfaces, webhooks, extractions.","tools.7":"Authentication, BU/ledger permissions, tenant segmentation, human approval gates.","tools.8":"Industrialise infra, reproduce DEV/UAT/PROD, version policies and OCI components.","tools.9":"Trace prompts, tool calls, costs, agent decisions, errors, quality and full auditability.",
+    "erp.label":"ERP Expertise","erp.h2":"Mastery of key modules","erp.sub":"Full functional and technical coverage across Oracle Fusion, with AI agents natively connected to each module.",
+    "erp.1.title":"Finance & Accounting","erp.2.title":"PPM","erp.2.desc":"Projects, Portfolio, Governance","erp.3.title":"Supply Chain","erp.4.title":"Human Resources","erp.5.title":"Integrations & APIs","erp.6.title":"Order Management","erp.7.title":"Security & Compliance",
+    "process.label":"Our Approach","process.h2":"Precise scoping,<br>frictionless execution",
+    "p1.title":"Diagnostic","p1.desc":"Current state analysis, challenge identification and AI4ERP scope definition.",
+    "p2.title":"Architecture","p2.desc":"Agentic loop design, component group selection and deployment plan.",
+    "p3.title":"Deployment","p3.desc":"Agile implementation, testing, guardrails, training and change management.",
+    "p4.title":"AI Supervision","p4.desc":"Continuous AI agent monitoring, optimisation and ongoing support with full audit trail.",
+    "cta.label":"Let's talk about your project","cta.h2":"Ready to modernise your ERP<br>with artificial intelligence?","cta.sub":"Our experts are available for a first no-commitment conversation. Describe your context and we'll get back to you within 24 hours.","cta.btn2":"View AI4ERP architecture",
+    "footer.legal":"Legal","footer.privacy":"Privacy",
+    "g1.role":"The reasoning layer. Generates, vectorises and routes to the right model.","g1.c1":"The generator. Takes context and returns a response or tool call.","g1.c2":"Transforms text into vectors. Feeds RAG and semantic search.","g1.c3":"Selects the right model per task. Manages fallback, cache, cost and rate limits.",
+    "g2.role":"What the model knows before generating. Corpus + memory + storage.","g2.c1":"Controlled corpus: Oracle docs, specs, schemas, procedures, Jira tickets.","g2.c2":"Short-term = current session. Long-term = user/project context persisted across sessions.","g2.c3":"Durable state: structured database, file storage, fast config.",
+    "g3.role":"What the model can do beyond talking: tools, sandbox, multimodal.","g3.c1":"MCP is one transport mode; native function calling is another. Both coexist.","g3.c2":"Code interpreter, automation. Agent works without touching production directly.","g3.c3":"Voice in/out, vision. ElevenLabs speech module for AI4ERP voice interactions.",
+    "g4.role":"The security + policy layer. What the agent is and isn't allowed to do.","g4.c1":"Business policy: who can do what, when, with which BU/ledger constraints.","g4.c2":"Input/output filtering: PII, prompt injection, jailbreak, non-compliant content.","g4.c3":"Who the user is, which BUs/data they can see. Critical in B2B/ERP contexts.","g4.c4":"Agent pauses and requests human approval before any sensitive or irreversible action.",
+    "g5.role":"The harness around the loop: durability, async, errors, streaming.","g5.c1":"Wrapper around the LLM, decides next step, triggers tools, maintains scratchpad.","g5.c2":"Long-running tasks: ESS jobs, OIC, reconciliations, batch follow-ups, error recovery.","g5.c3":"Webhook ingestion, batch processing, retry, decoupling of long-running processes.",
+    "g6.role":"Knowing if it works: eval, trace, audit, cost.","g6.c1":"Regression tests + LLM-as-judge scoring on live traffic.","g6.c2":"Every prompt, tool call, cost. End-to-end replayable traces.","g6.c3":"Immutable journal. For audit, GDPR, AI Act, SOX-like controls.","g6.c4":"Token tracking per user/tenant, caps, throttling. Key cost control lever.",
+    "g7.role":"What the user sees and how they correct or validate.","g7.c1":"AI4ERP portal, chat, action screens, confirmations, citations, streaming, tool call visualisation, admin.","g7.c2":"User feedback, structured corrections, data reinjected into evals and memory.",
+    "g8.role":"The pipeline that feeds RAG. Without it, the model is blind.","g8.c1":"Parse PDF/HTML/transcripts, chunk, embed, index, version and refresh Oracle content.",
+    "g9.role":"Where the interface runs, how it's deployed, secured and exposed.","g9.c1":"Next.js UI hosting, GitHub preview deployments, lightweight API routes.","g9.c2":"Edge: DNS, CDN, WAF, Workers, AI Gateway, DDoS protection, secure endpoints.","g9.c3":"Enterprise Oracle backend: IAM, OKE, API Gateway, Vault, Functions. Reproducible DEV/UAT/PROD."
+  },
+  fr: {
+    "nav.services":"Services","nav.ai":"AI4ERP","nav.arch":"Architecture","nav.expertise":"Expertise","nav.contact":"Contact",
+    "hero.badge":"Consulting ERP Cloud & Plateforme d'Agents IA",
+    "hero.h1":"Des opérations ERP intelligentes,<br>propulsées par l'<span class='hl'>IA agentique</span>",
+    "hero.sub":"HeyCloud est une équipe d'experts seniors ERP Cloud et IA qui accompagne les grandes entreprises dans la transformation de leurs opérations ERP — de l'implémentation aux agents IA autonomes qui supervisent, analysent et agissent dans vos environnements Oracle, SAP et Microsoft.",
+    "hero.cta1":"Démarrer un projet →","hero.cta2":"Découvrir AI4ERP","hero.trust":"Références clients",
+    "why.label":"Pourquoi HeyCloud","why.h2":"Une équipe d'experts seniors<br>à l'intersection de l'ERP et de l'IA",
+    "why.sub":"Nous combinons une expertise profonde d'Oracle Fusion en Finance, Projets, PPM, Supply Chain et Achats avec des capacités d'agents IA de pointe pour moderniser les opérations ERP à grande échelle.",
+    "why.1.title":"Ans d'expérience Oracle","why.1.desc":"Finance, PPM, Projets, Achats et Supply Chain sur Oracle Fusion Cloud et les plateformes legacy.",
+    "why.2.title":"Programmes internationaux","why.2.desc":"Déploiements ERP complexes en Europe, Moyen-Orient et Asie-Pacifique pour des organisations mondiales.",
+    "why.3.title":"Approche AI-native","why.3.desc":"Nos agents IA sont connectés nativement à votre ERP — pas rajoutés — avec audit trail complet et guardrails métier.",
+    "why.4.title":"Clients de référence","why.4.desc":"Orange Business, BNP Paribas, TechnipFMC, Faurecia, RATP, L'Oréal — banque, énergie, industrie et services.",
+    "svc.label":"Services","svc.h2":"Consulting & technologie<br>au service de votre ERP Cloud","svc.sub":"De l'implémentation à l'optimisation continue, nous couvrons l'ensemble du cycle de vie de votre ERP Cloud — avec l'IA au cœur.",
+    "svc.1.title":"Implémentation ERP Cloud","svc.1.desc":"Déploiement et migration vers Oracle Fusion, SAP S/4HANA ou Microsoft D365. Méthodologie éprouvée, livrables structurés, go-live maîtrisé.",
+    "svc.2.title":"PPM — Gestion de Portefeuille Projets","svc.2.desc":"Pilotage de bout en bout des programmes PPM : cadrage, benchmarking, RFP, gouvernance et déploiement Oracle PPM Cloud pour les organisations internationales.",
+    "svc.3.title":"AI4ERP — Plateforme d'Agents","svc.3.desc":"Conception et déploiement d'agents IA autonomes connectés à votre ERP via une boucle agentique en 6 étapes et 9 groupes de composants production-grade.",
+    "svc.4.title":"Optimisation & Run","svc.4.desc":"Supervision proactive des jobs ESS/batch par agents IA, audit de performance, support post-go-live niveaux 2 et 3, et gestion de l'hypercare.",
+    "svc.5.title":"Data & Reporting","svc.5.desc":"Architecture BI, tableaux de bord opérationnels, exports BIP/OTBI et intégration des données métiers via agents RAG dans vos outils décisionnels.",
+    "svc.6.title":"Gouvernance & Sécurité ERP","svc.6.desc":"Sécurité Oracle Fusion Cloud, contrôles SOD, conception des rôles, audits de conformité et modernisation du modèle de support ERP.",
+    "ai.h2":"Des agents IA qui travaillent<br>dans votre ERP","ai.sub":"Nos agents autonomes s'intègrent nativement dans votre environnement Oracle ou SAP pour surveiller, analyser et agir — 24h/24, avec des guardrails métier et un audit trail complet.",
+    "ai.f1":"Boucle agentique en 6 étapes : Input → Memory/RAG → LLM → Guardrails → Action → Learn","ai.f2":"Connexion native Oracle Fusion via OIC, ESS, BIP, OTBI, REST/SOAP",
+    "ai.f3":"Human-in-the-loop sur toutes les actions sensibles ou irréversibles","ai.f4":"Observabilité complète : LangSmith / Braintrust / OpenTelemetry",
+    "ai.f5":"Audit log immuable — SOC2 / RGPD / AI Act","ai.f6":"Déploiement enterprise : OCI + Terraform, edge Cloudflare, UI Next.js sur Vercel","ai.cta":"Voir l'architecture →",
+    "stat.1":"Ans d'expérience Oracle","stat.2":"Étapes de boucle agentique","stat.3":"Groupes de composants AI4ERP","stat.4":"Gain de productivité moyen",
+    "arch.h2":"La boucle agentique<br>au cœur de la plateforme","arch.sub":"Toute plateforme agent IA enterprise suit la même boucle. AI4ERP l'implémente de bout en bout, chaque composant positionné précisément dans le flux.",
+    "loop.1.name":"Trigger / Utilisateur","loop.1.desc":"Un prompt, un webhook, un job ESS planifié ou un email entrant. Quelque chose déclenche un tour de boucle.",
+    "loop.2.name":"Memory + RAG","loop.2.desc":"Chargement du contexte pertinent avant raisonnement. Memory = état utilisateur/projet. RAG = docs Oracle, specs, procédures, tickets Jira.",
+    "loop.3.name":"LLM","loop.3.desc":"Le modèle utilise le contexte chargé et décide : répondre directement, appeler un tool ou planifier une séquence multi-étapes.",
+    "loop.4.name":"Tools + Rails + Guardrails","loop.4.desc":"Rails = policy métier. Guardrails = filtrage PII/injection. HITL = validation humaine avant action sensible.",
+    "loop.5.name":"Action / Exécution","loop.5.desc":"Quelque chose se produit : appel API Fusion/OIC, écriture, relance ESS, rapport BIP généré ou réponse streamée.",
+    "loop.6.name":"Audit + Eval + Feedback","loop.6.desc":"Tracer tout le tour, évaluer la qualité, journaliser pour SOC2/RGPD/AI Act, réinjecter les apprentissages en mémoire.",
+    "shortcut.eye":"RACCOURCI MENTAL · AI4ERP","shortcut.h3":"Toute plateforme agent IA enterprise suit la même boucle",
+    "shortcut.p":"À retenir pour cadrer rapidement l'architecture AI4ERP :","shortcut.p2":"Si un composant manque, il y a un risque d'architecture. Si deux composants font le même travail, il y a duplication. AI4ERP couvre les 9 groupes sans overlap.",
+    "groups.label":"9 Groupes de Composants","groups.h2":"Architecture production-grade<br>sans zone grise","groups.sub":"Chaque composant AI4ERP s'insère dans l'un de ces 9 groupes. Couverture complète de la boucle agentique enterprise Oracle.",
+    "tools.label":"Best Tools AI4ERP","tools.h2":"Les outils positionnés<br>dans la plateforme","tools.sub":"Chaque outil à sa place précise dans la boucle. Next.js en Surface, Vercel en Hosting, Cloudflare en Edge, OCI en backend enterprise Oracle.",
+    "tools.role":"Rôle :","tools.1":"Portail AI4ERP, chat, écrans d'action, confirmations, citations, streaming, dashboard monitoring.","tools.2":"Héberger l'app Next.js, previews GitHub, API routes légères, accélérer les démos client.","tools.3":"DNS, CDN, WAF, Workers, AI Gateway, cache, rate limiting, protection des endpoints publics.","tools.4":"Backend enterprise Oracle, IAM, API Gateway, Vault, Functions, OKE, observabilité.","tools.5":"Agent loop, RAG, tool calling, memory, routing, connecteurs documentaires, orchestration multi-step.","tools.6":"Connexion réelle Oracle ERP Cloud : REST/SOAP, ESS jobs, interfaces, webhooks, extractions.","tools.7":"Authentification, permissions BU/ledger, segmentation tenant, validation humaine.","tools.8":"Industrialiser l'infra, reproduire DEV/UAT/PROD, versionner policies et composants OCI.","tools.9":"Tracer prompts, tool calls, coûts, décisions agent, erreurs, qualité et auditabilité complète.",
+    "erp.label":"Expertise ERP","erp.h2":"Maîtrise des modules clés","erp.sub":"Couverture fonctionnelle et technique complète sur Oracle Fusion, avec agents IA connectés nativement à chaque module.",
+    "erp.1.title":"Finance & Comptabilité","erp.2.title":"PPM","erp.2.desc":"Projets, Portefeuille, Gouvernance","erp.3.title":"Supply Chain","erp.4.title":"Ressources Humaines","erp.5.title":"Intégrations & APIs","erp.6.title":"Order Management","erp.7.title":"Sécurité & Conformité",
+    "process.label":"Notre Approche","process.h2":"Un cadrage précis,<br>une exécution sans friction",
+    "p1.title":"Diagnostic","p1.desc":"Analyse de l'existant, identification des enjeux et définition du périmètre AI4ERP.",
+    "p2.title":"Architecture","p2.desc":"Design de la boucle agentique, sélection des groupes de composants et plan de déploiement.",
+    "p3.title":"Déploiement","p3.desc":"Implémentation agile, tests, guardrails, formation et accompagnement au changement.",
+    "p4.title":"Supervision IA","p4.desc":"Monitoring continu par agents, optimisation et support pérenne avec audit trail complet.",
+    "cta.label":"Parlons de votre projet","cta.h2":"Prêt à moderniser votre ERP<br>avec l'intelligence artificielle ?","cta.sub":"Nos experts sont disponibles pour un premier échange sans engagement. Décrivez votre contexte, nous revenons sous 24h.","cta.btn2":"Voir l'architecture AI4ERP",
+    "footer.legal":"Mentions légales","footer.privacy":"Confidentialité",
+    "g1.role":"La couche de raisonnement. Génère, vectorise et route vers le bon modèle.","g1.c1":"Le générateur. Prend le contexte et retourne une réponse ou un tool call.","g1.c2":"Transforme le texte en vecteurs. Alimente le RAG et la recherche sémantique.","g1.c3":"Choisit le modèle adapté. Gère fallback, cache, coût et rate limits.",
+    "g2.role":"Ce que le modèle connaît avant de générer. Corpus + memory + storage.","g2.c1":"Corpus contrôlé : docs Oracle, specs, schémas, procédures, tickets Jira.","g2.c2":"Short-term = conversation en cours. Long-term = contexte utilisateur/projet conservé entre sessions.","g2.c3":"État durable : base structurée, stockage fichiers, configuration rapide.",
+    "g3.role":"Ce que le modèle peut faire au-delà de parler : tools, sandbox, multimodal.","g3.c1":"MCP est un mode de transport ; function calling natif en est un autre. Les deux coexistent.","g3.c2":"Code interpreter, automation. L'agent travaille sans toucher directement la production.","g3.c3":"Voix entrante/sortante, vision. Module speech ElevenLabs pour interactions vocales AI4ERP.",
+    "g4.role":"La couche sécurité + policy. Ce que l'agent a le droit ou non de faire.","g4.c1":"Policy métier : qui peut faire quoi, quand, avec quelles contraintes BU/ledger.","g4.c2":"Filtrage input/output : PII, prompt injection, jailbreak, contenu non conforme.","g4.c3":"Qui est l'utilisateur, quelles BU/données il peut voir. Point critique en B2B/ERP.","g4.c4":"L'agent s'arrête et demande validation avant toute action sensible ou irréversible.",
+    "g5.role":"Le harnais autour de la boucle : durabilité, async, erreurs, streaming.","g5.c1":"Wrapper autour du LLM, décide la prochaine étape, déclenche les tools, maintient le scratchpad.","g5.c2":"Tâches longues : ESS jobs, OIC, rapprochements, suivis batch, reprise après erreur.","g5.c3":"Ingestion webhook, batch processing, retry, découplage des traitements longs.",
+    "g6.role":"Savoir si ça fonctionne : eval, trace, audit, coût.","g6.c1":"Tests de non-régression + scoring LLM-as-judge sur trafic réel.","g6.c2":"Chaque prompt, tool call, coût. Traces de bout en bout rejouables.","g6.c3":"Journal immuable. Pour audit, RGPD, AI Act, SOX-like controls.","g6.c4":"Suivi tokens par user/tenant, plafonds, throttling. Levier de contrôle des coûts.",
+    "g7.role":"Ce que l'utilisateur voit et comment il corrige ou valide.","g7.c1":"Portail AI4ERP, chat, écrans d'action, confirmations, citations, streaming, visualisation des tool calls, admin.","g7.c2":"Feedback utilisateur, corrections structurées, réinjectées dans evals et memory.",
+    "g8.role":"Le pipeline qui alimente le RAG. Sans lui, le modèle est aveugle.","g8.c1":"Parser PDF/HTML/transcripts, chunker, embedder, indexer, versionner et rafraîchir les contenus Oracle.",
+    "g9.role":"Où tourne l'interface, comment elle est déployée, sécurisée et exposée.","g9.c1":"Hébergement UI Next.js, preview deployments GitHub, API routes légères.","g9.c2":"Edge : DNS, CDN, WAF, Workers, AI Gateway, protection DDoS, endpoints sécurisés.","g9.c3":"Backend enterprise Oracle : IAM, OKE, API Gateway, Vault, Functions. DEV/UAT/PROD reproductibles."
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang] && i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+  const loopLabel = document.getElementById('loop-center-label');
+  if (loopLabel) loopLabel.textContent = lang === 'fr' ? 'LA BOUCLE' : 'THE LOOP';
+  const eyebrow = document.getElementById('loop-eyebrow-text');
+  if (eyebrow) eyebrow.textContent = lang === 'fr' ? 'AI4ERP · BOUCLE AGENTIQUE · SE RÉPÈTE À CHAQUE TOUR' : 'AI4ERP · AGENT LOOP · REPEATS EVERY TURN';
+}
+
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 65);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => obs.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
 </body>
 </html>
