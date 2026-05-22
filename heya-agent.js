@@ -253,7 +253,7 @@ Règles : réponds en français (ou langue du visiteur), concise (2-4 phrases), 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'claude-3-5-sonnet-20241022',
+            model: 'claude-haiku-4-5-20251001',
             max_tokens: 1000,
             system: SYSTEM,
             messages: history
