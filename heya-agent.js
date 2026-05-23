@@ -1,6 +1,6 @@
 /**
  * Heya — Agent conversationnel HeyCloud4ERP
- * Version proxy — appels  via heya-proxy.php (pas de clé API exposée)
+ * Version proxy — appels  via backend/php/heya-proxy.php (pas de clé API exposée)
  *
  * INTÉGRATION : une seule ligne juste avant </body>
  *   <script src="heya-agent.js"></script>
