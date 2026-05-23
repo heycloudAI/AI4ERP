@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeyCloud4ERP — Oracle AI Agent Studio & AI4ERP Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky:#0EA5E9;--sky-dark:#0284C7;--sky-light:#E0F2FE;
+    --navy:#0F172A;--slate:#334155;--muted:#64748B;
+    --border:#E2E8F0;--surface:#F8FAFC;--white:#FFFFFF;
+    --accent:#6366F1;--accent-light:#EEF2FF;--green:#10B981;
+    --oracle:#C74634;--oracle-light:#FEF2F0;
+    --c1:#a78bfa;--c2:#60a5fa;--c3:#2dd4bf;--c4:#f59e0b;
+    --c5:#4ade80;--c6:#fb7185;--c7:#94a3b8;--c8:#34d399;--c9:#22d3ee;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;color:var(--navy);background:var(--white);overflow-x:hidden;line-height:1.6}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:68px}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;color:var(--navy);letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:.5rem}
+  .logo span{color:var(--sky)}
+  .logo-tag{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--muted);border:1px solid var(--border);padding:.1rem .4rem;border-radius:4px;letter-spacing:.08em;font-weight:400}
+  .nav-links{display:flex;gap:1.4rem;list-style:none;align-items:center}
+  .nav-links a{font-size:.83rem;font-weight:500;color:var(--slate);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--sky)}
+  .nav-cta{background:var(--sky);color:var(--white)!important;padding:.42rem 1.1rem;border-radius:8px;font-weight:600!important}
+  .nav-cta:hover{background:var(--sky-dark)!important}
+  .lang-switcher{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-left:.5rem}
+  .lang-btn{background:var(--white);border:none;cursor:pointer;padding:.28rem .6rem;font-size:.72rem;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted);transition:background .15s,color .15s}
+  .lang-btn.active{background:var(--navy);color:var(--white)}
+  .lang-btn:hover:not(.active){background:var(--surface)}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 5% 80px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,#BAE6FD 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 80%,#EEF2FF 0%,transparent 50%)}
+  .hero-bg::after{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.45;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black,transparent)}
+  .hero-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.5rem;background:var(--white);border:1px solid var(--border);border-radius:100px;padding:.35rem 1rem;font-size:.78rem;font-weight:500;color:var(--slate);margin-bottom:2rem;box-shadow:0 2px 12px rgba(0,0,0,.06);animation:fadeUp .6s ease both}
+  .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.2)}
+  .hero h1{position:relative;z-index:1;font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.3rem,4.8vw,3.8rem);line-height:1.1;letter-spacing:-.03em;color:var(--navy);max-width:860px;margin-bottom:1.5rem;animation:fadeUp .6s .1s ease both}
+  .hl{color:var(--sky);position:relative}
+  .hl::after{content:'';position:absolute;bottom:4px;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--sky),var(--accent));border-radius:2px;opacity:.3}
+  .hero p{position:relative;z-index:1;font-size:1.08rem;font-weight:300;color:var(--muted);max-width:620px;margin-bottom:2.5rem;animation:fadeUp .6s .18s ease both}
+  .hero-actions{position:relative;z-index:1;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .6s .26s ease both}
+  .btn-primary{background:var(--sky);color:var(--white);padding:.82rem 1.9rem;border-radius:10px;font-size:.92rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(14,165,233,.35);transition:transform .2s,box-shadow .2s,background .2s}
+  .btn-primary:hover{background:var(--sky-dark);transform:translateY(-2px);box-shadow:0 8px 28px rgba(14,165,233,.4)}
+  .btn-secondary{background:var(--white);color:var(--navy);padding:.82rem 1.9rem;border-radius:10px;font-size:.92rem;font-weight:500;text-decoration:none;border:1.5px solid var(--border);cursor:pointer;transition:border-color .2s,transform .2s}
+  .btn-secondary:hover{border-color:var(--sky);transform:translateY(-2px)}
+  .trust-bar{margin-top:4.5rem;position:relative;z-index:1;animation:fadeUp .6s .36s ease both}
+  .trust-bar p{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.1rem}
+  .trust-logos{display:flex;gap:2rem;align-items:center;justify-content:center;flex-wrap:wrap}
+  .trust-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;color:#94A3B8;opacity:.65}
+
+  /* UTILS */
+  section{padding:96px 5%}
+  .section-label{font-size:.74rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--sky);margin-bottom:1rem}
+  .section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.7rem,2.8vw,2.5rem);line-height:1.15;letter-spacing:-.025em;color:var(--navy);margin-bottom:1rem}
+  .section-sub{font-size:1rem;color:var(--muted);font-weight:300;max-width:560px;line-height:1.7}
+  .center{text-align:center}.center .section-sub{margin:0 auto}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* 2 APPROACHES */
+  .approaches-section{background:var(--surface)}
+  .approaches-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+  .approach-card{border-radius:20px;padding:2.5rem;position:relative;overflow:hidden;border:2px solid transparent;background:var(--white)}
+  .approach-card.oracle{border-color:#E5C4BF}
+  .approach-card.custom{border-color:#C7D2FE}
+  .approach-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+  .approach-card.oracle::before{background:linear-gradient(90deg,var(--oracle),#E8825A)}
+  .approach-card.custom::before{background:linear-gradient(90deg,var(--sky),var(--accent))}
+  .approach-badge{display:inline-flex;align-items:center;gap:.5rem;border-radius:100px;padding:.3rem .9rem;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.5rem}
+  .approach-badge.oracle{background:var(--oracle-light);color:var(--oracle)}
+  .approach-badge.custom{background:var(--accent-light);color:var(--accent)}
+  .approach-badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .approach-card h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);margin-bottom:.6rem;letter-spacing:-.02em}
+  .approach-card .approach-sub{font-size:.87rem;color:var(--muted);line-height:1.65;margin-bottom:1.5rem}
+  .approach-features{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.75rem}
+  .approach-features li{display:flex;align-items:flex-start;gap:.65rem;font-size:.84rem;color:var(--slate)}
+  .af-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;margin-top:2px}
+  .oracle .af-dot{background:var(--oracle-light);color:var(--oracle)}
+  .custom .af-dot{background:var(--accent-light);color:var(--accent)}
+  .approach-footer{border-top:1px solid var(--border);padding-top:1.25rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+  .approach-tag{font-family:'DM Mono',monospace;font-size:.63rem;padding:.22rem .55rem;border-radius:5px;font-weight:500}
+  .oracle .approach-tag{background:var(--oracle-light);color:var(--oracle)}
+  .custom .approach-tag{background:var(--accent-light);color:var(--accent)}
+
+  /* WHY */
+  .why-section{background:var(--white)}
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;margin-top:3.5rem}
+  .why-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.75rem;text-align:center;transition:transform .2s,box-shadow .2s}
+  .why-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.07)}
+  .why-icon{font-size:2rem;margin-bottom:.9rem}
+  .why-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:var(--sky);line-height:1;margin-bottom:.3rem}
+  .why-num span{color:var(--accent)}
+  .why-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:.45rem}
+  .why-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
+
+  /* SERVICES */
+  .services{background:var(--surface)}
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem;margin-top:3.5rem}
+  .service-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:1.75rem;transition:transform .25s,box-shadow .25s,border-color .25s;position:relative;overflow:hidden}
+  .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sky),var(--accent));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .service-card:hover::before{transform:scaleX(1)}
+  .service-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08);border-color:var(--sky-light)}
+  .svc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:1rem}
+  .svc-icon.blue{background:var(--sky-light)}.svc-icon.indigo{background:var(--accent-light)}
+  .svc-icon.green{background:rgba(16,185,129,.1)}.svc-icon.orange{background:rgba(249,115,22,.1)}
+  .svc-icon.purple{background:rgba(167,139,250,.15)}.svc-icon.teal{background:rgba(45,212,191,.12)}
+  .svc-icon.red{background:var(--oracle-light)}
+  .svc-badge{display:inline-flex;align-items:center;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;padding:.18rem .5rem;border-radius:4px;margin-bottom:.65rem;text-transform:uppercase;letter-spacing:.06em}
+  .svc-badge.oracle{background:var(--oracle-light);color:var(--oracle)}
+  .svc-badge.custom{background:var(--accent-light);color:var(--accent)}
+  .svc-badge.both{background:var(--sky-light);color:var(--sky-dark)}
+  .service-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.98rem;margin-bottom:.45rem;color:var(--navy)}
+  .service-card p{font-size:.84rem;color:var(--muted);line-height:1.65}
+
+  /* AI SPLIT */
+  .ai-split{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .av-dark{background:#0a0a0a;border-radius:20px;padding:2.25rem;position:relative;overflow:hidden;min-height:340px;display:flex;flex-direction:column;gap:.85rem}
+  .av-dark::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.25),transparent 70%)}
+  .av-dark::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.2),transparent 70%)}
+  .av-label{color:rgba(255,255,255,.28);font-size:.63rem;text-transform:uppercase;letter-spacing:.18em;font-family:'DM Mono',monospace;margin-bottom:.15rem;position:relative;z-index:1}
+  .arow{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.75rem 1rem;display:flex;align-items:center;gap:.7rem;position:relative;z-index:1;transition:border-color .3s}
+  .arow:hover{border-color:rgba(14,165,233,.35)}
+  .adot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .adot.sky{background:#22d3ee;box-shadow:0 0 6px #22d3ee}
+  .adot.violet{background:#a78bfa;box-shadow:0 0 6px #a78bfa}
+  .adot.lime{background:#4ade80;box-shadow:0 0 6px #4ade80}
+  .adot.amber{background:#f59e0b;box-shadow:0 0 6px #f59e0b}
+  .adot.red{background:#f87171;box-shadow:0 0 6px #f87171}
+  .alabel{font-size:.8rem;color:rgba(255,255,255,.68)}
+  .astatus{margin-left:auto;font-size:.67rem;font-weight:600;white-space:nowrap}
+  .astatus.ok{color:#4ade80}.astatus.warn{color:#f59e0b}.astatus.run{color:#22d3ee}.astatus.orc{color:#f87171}
+  .ai-insight{margin-top:auto;position:relative;z-index:1;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);border-radius:10px;padding:.8rem 1rem}
+  .ai-insight-label{font-size:.63rem;color:#22d3ee;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.12em;margin-bottom:.28rem}
+  .ai-insight p{font-size:.78rem;color:rgba(255,255,255,.52);line-height:1.55}
+  .ai-features{list-style:none;margin-top:1.75rem;display:flex;flex-direction:column;gap:.85rem}
+  .ai-features li{display:flex;align-items:flex-start;gap:.7rem;font-size:.88rem;color:var(--slate)}
+  .ai-features li::before{content:'✓';width:20px;height:20px;border-radius:50%;background:var(--sky-light);color:var(--sky);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+  /* STATS */
+  .stats{background:var(--navy);display:flex;justify-content:center;padding:0}
+  .stat-item{flex:1;max-width:260px;text-align:center;padding:3.5rem 1.75rem;border-right:1px solid rgba(255,255,255,.08)}
+  .stat-item:last-child{border-right:none}
+  .stat-number{font-family:'Syne',sans-serif;font-weight:800;font-size:2.8rem;color:var(--white);letter-spacing:-.04em;line-height:1;margin-bottom:.5rem}
+  .stat-number span{color:var(--sky)}
+  .stat-desc{font-size:.82rem;color:rgba(255,255,255,.4);font-weight:300}
+
+  /* ══ USE CASE ADVISOR ══ */
+  .advisor-section{background:var(--surface)}
+  .usecases-carousel{position:relative;margin-top:3rem;margin-bottom:4rem}
+  .usecases-track-wrap{overflow:hidden;border-radius:16px}
+  .usecases-track{display:flex;gap:1.5rem;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
+  .uc-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--slate);box-shadow:0 2px 12px rgba(0,0,0,.1);transition:background .2s,border-color .2s,transform .2s;z-index:10}
+  .uc-arrow:hover{background:var(--sky);border-color:var(--sky);color:var(--white);transform:translateY(-50%) scale(1.08)}
+  .uc-arrow.prev{left:-22px}
+  .uc-arrow.next{right:-22px}
+  .uc-arrow:disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
+  .uc-dots{display:flex;gap:.5rem;justify-content:center;margin-top:1.5rem}
+  .uc-dot{width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer;transition:background .2s,transform .2s;padding:0}
+  .uc-dot.active{background:var(--sky);transform:scale(1.3)}
+  .uc-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.6rem;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .uc-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.08)}
+  .uc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--uc-color)}
+  .uc-tag{display:inline-flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:.22rem .65rem;border-radius:100px;margin-bottom:.9rem}
+  .uc-tag.oracle{background:var(--oracle-light);color:var(--oracle)}
+  .uc-tag.custom{background:var(--accent-light);color:var(--accent)}
+  .uc-tag.both{background:var(--sky-light);color:var(--sky-dark)}
+  .uc-sector{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem}
+  .uc-company{font-family:'Syne',sans-serif;font-weight:800;font-size:.98rem;color:var(--navy);margin-bottom:.25rem}
+  .uc-context{font-size:.8rem;color:var(--muted);margin-bottom:.85rem;font-style:italic}
+  .uc-challenge{font-size:.83rem;color:var(--slate);margin-bottom:.9rem;line-height:1.6}
+  .uc-rec{background:var(--surface);border-radius:8px;padding:.7rem .95rem;border-left:3px solid var(--uc-color)}
+  .uc-rec-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.2rem}
+  .uc-rec-text{font-size:.82rem;color:var(--navy);font-weight:500;line-height:1.5}
+
+  /* ADVISOR FORM */
+  .advisor-form-wrap{background:var(--white);border:2px solid var(--border);border-radius:20px;padding:2.5rem;max-width:800px;margin:0 auto;position:relative;overflow:hidden}
+  .advisor-form-wrap::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.08),transparent 70%)}
+  .advisor-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);margin-bottom:.35rem}
+  .advisor-sub{font-size:.86rem;color:var(--muted);margin-bottom:1.75rem}
+  .form-steps{display:flex;gap:.5rem;margin-bottom:1.75rem}
+  .form-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s,transform .3s}
+  .form-step-dot.active{background:var(--sky);transform:scale(1.3)}
+  .form-step-dot.done{background:var(--green)}
+  .form-question{display:none}
+  .form-question.active{display:block;animation:fadeQ .35s ease}
+  @keyframes fadeQ{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+  .q-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--sky);margin-bottom:.55rem}
+  .q-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1.08rem;color:var(--navy);margin-bottom:1.2rem;line-height:1.3}
+  .q-options{display:flex;flex-direction:column;gap:.6rem}
+  .q-option{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.85rem 1.1rem;cursor:pointer;transition:border-color .2s,background .2s,transform .15s;display:flex;align-items:flex-start;gap:.7rem}
+  .q-option:hover{border-color:var(--sky);background:var(--sky-light);transform:translateX(4px)}
+  .q-option.selected{border-color:var(--sky);background:var(--sky-light)}
+  .q-option-icon{font-size:1.15rem;flex-shrink:0;margin-top:.05rem}
+  .q-option-label{font-weight:500;font-size:.87rem;color:var(--navy);margin-bottom:.12rem}
+  .q-option-desc{font-size:.76rem;color:var(--muted);line-height:1.4}
+  .form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem}
+  .btn-nav{background:var(--navy);color:var(--white);border:none;padding:.65rem 1.4rem;border-radius:8px;font-size:.86rem;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+  .btn-nav:hover{background:var(--sky);transform:translateY(-1px)}
+  .btn-nav.ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
+  .btn-nav.ghost:hover{background:var(--surface);color:var(--navy)}
+  .btn-nav:disabled{opacity:.3;cursor:not-allowed;transform:none}
+  .advisor-result{display:none;animation:fadeQ .4s ease}
+  .advisor-result.show{display:block}
+  .result-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
+  .result-badge{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:.32rem .9rem;border-radius:100px}
+  .result-badge.oracle{background:var(--oracle-light);color:var(--oracle)}
+  .result-badge.custom{background:var(--accent-light);color:var(--accent)}
+  .result-badge.both{background:var(--sky-light);color:var(--sky-dark)}
+  .result-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--navy)}
+  .result-body{font-size:.88rem;color:var(--slate);line-height:1.7;margin-bottom:1.4rem}
+  .result-reasons{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.6rem}
+  .result-reason{display:flex;align-items:flex-start;gap:.65rem;font-size:.84rem;color:var(--slate)}
+  .result-reason::before{content:'✓';width:19px;height:19px;border-radius:50%;font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+  .result-reason.oracle::before{background:var(--oracle-light);color:var(--oracle)}
+  .result-reason.custom::before{background:var(--accent-light);color:var(--accent)}
+  .result-reason.both::before{background:var(--sky-light);color:var(--sky-dark)}
+  .result-cta{display:flex;gap:.75rem;flex-wrap:wrap}
+  .btn-result{padding:.72rem 1.4rem;border-radius:9px;font-size:.86rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
+  .btn-result.primary{background:var(--sky);color:var(--white);box-shadow:0 4px 16px rgba(14,165,233,.3)}
+  .btn-result.primary:hover{transform:translateY(-2px)}
+  .btn-result.ghost{background:var(--surface);color:var(--navy);border:1.5px solid var(--border)}
+  .btn-result.ghost:hover{border-color:var(--sky)}
+  .result-reset{font-size:.76rem;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:.9rem;display:inline-block}
+  .result-reset:hover{color:var(--sky)}
+
+  /* ══ ORACLE STUDIO SECTION ══ */
+  .oracle-section{background:var(--white)}
+  .oracle-intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4rem}
+  .oracle-ui-sim{background:#1a1a2e;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+  .oracle-ui-bar{background:#12122a;padding:.65rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+  .oracle-ui-dot{width:10px;height:10px;border-radius:50%}
+  .oracle-ui-title{font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.3);margin-left:.5rem;letter-spacing:.1em}
+  .oracle-ui-body{padding:1.5rem}
+  .oracle-ui-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem}
+  .oracle-logo-sim{background:var(--oracle);border-radius:6px;padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;color:var(--white);letter-spacing:.08em}
+  .oracle-ui-h{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;color:rgba(255,255,255,.85)}
+  .agent-list{display:flex;flex-direction:column;gap:.55rem}
+  .agent-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:.7rem .95rem;display:flex;align-items:center;gap:.7rem;transition:border-color .2s,background .2s;cursor:default}
+  .agent-item:hover{border-color:rgba(199,70,52,.4);background:rgba(199,70,52,.05)}
+  .agent-item-icon{width:30px;height:30px;border-radius:7px;background:rgba(199,70,52,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+  .agent-item-name{font-size:.8rem;font-weight:500;color:rgba(255,255,255,.75);margin-bottom:.08rem}
+  .agent-item-module{font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.32);letter-spacing:.06em}
+  .agent-item-status{margin-left:auto;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:600}
+  .agent-item-status.active{color:#4ade80}
+  .agent-item-status.ready{color:#f59e0b}
+  .oracle-ui-footer{margin-top:1rem;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between}
+  .oracle-ui-badge{font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.28);letter-spacing:.08em}
+  .oracle-ui-btn{background:var(--oracle);color:var(--white);border:none;padding:.32rem .85rem;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer}
+  .oracle-facts{display:flex;flex-direction:column;gap:.95rem}
+  .oracle-fact{display:flex;align-items:flex-start;gap:.8rem;padding:.85rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border)}
+  .oracle-fact-icon{font-size:1.25rem;flex-shrink:0}
+  .oracle-fact-title{font-weight:600;font-size:.86rem;color:var(--navy);margin-bottom:.12rem}
+  .oracle-fact-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+  .videos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1.75rem;margin-top:3rem}
+  .video-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .video-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.09)}
+  .video-embed{position:relative;width:100%;padding-bottom:56.25%;background:#000}
+  .video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+  .video-info{padding:1.2rem}
+  .video-tag{font-family:'DM Mono',monospace;font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--oracle);background:var(--oracle-light);padding:.16rem .5rem;border-radius:4px;display:inline-block;margin-bottom:.55rem}
+  .video-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;color:var(--navy);margin-bottom:.35rem;line-height:1.3}
+  .video-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+  .video-link{display:inline-flex;align-items:center;gap:.3rem;font-size:.76rem;font-weight:500;color:var(--sky);text-decoration:none;margin-top:.65rem;transition:gap .2s}
+  .video-link:hover{gap:.5rem}
+  .resources-bar{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .resource-link{display:inline-flex;align-items:center;gap:.4rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.42rem .85rem;font-size:.76rem;font-weight:500;color:var(--slate);text-decoration:none;transition:border-color .2s,color .2s}
+  .resource-link:hover{border-color:var(--oracle);color:var(--oracle)}
+
+  /* LOOP */
+  .loop-section{background:var(--surface)}
+  .loop-wrap{background:#0F172A;border-radius:20px;padding:2.75rem 2rem;margin:3rem 0 2rem;overflow:hidden}
+  .loop-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.2em;text-align:center;margin-bottom:1.5rem}
+  .loop-svg{width:100%;max-width:840px;display:block;margin:0 auto;height:auto}
+  .loop-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:1.2rem;margin-top:2.5rem}
+  .ll-item{border-left:2px solid var(--lc);padding:.25rem 0 .25rem 1rem}
+  .ll-step{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--lc);letter-spacing:.15em;margin-bottom:.28rem;font-weight:500}
+  .ll-name{font-weight:600;font-size:.9rem;color:var(--navy);margin-bottom:.2rem}
+  .ll-desc{font-size:.8rem;color:var(--muted);line-height:1.55}
+  .shortcut-box{background:var(--navy);border-radius:16px;padding:2.25rem;margin-top:3.5rem;position:relative;overflow:hidden}
+  .shortcut-box::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:480px;height:240px;border-radius:50%;background:radial-gradient(ellipse,rgba(14,165,233,.15),transparent 70%)}
+  .sc-eye{font-family:'DM Mono',monospace;font-size:.65rem;color:#22d3ee;letter-spacing:.15em;margin-bottom:.7rem;position:relative;z-index:1}
+  .shortcut-box h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--white);margin-bottom:.85rem;position:relative;z-index:1}
+  .shortcut-box p{color:rgba(255,255,255,.42);font-size:.84rem;margin-bottom:.7rem;position:relative;z-index:1}
+  .sc-loop{font-family:'DM Mono',monospace;font-size:.82rem;background:rgba(0,0,0,.4);padding:1rem 1.4rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);margin:1.1rem 0;overflow-x:auto;white-space:nowrap;position:relative;z-index:1;line-height:1.7}
+  .sl-1{color:#60a5fa}.sl-2{color:#2dd4bf}.sl-3{color:#f59e0b}.sl-4{color:#4ade80}.sl-5{color:#fb7185}
+  .sl-arrow{color:#22d3ee}.sl-punct{color:rgba(255,255,255,.2)}
+
+  /* GROUPS */
+  .groups-section{background:var(--white)}
+  .groups-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.4rem;margin-top:3rem}
+  .gcard{border:1px solid var(--border);border-radius:14px;padding:1.5rem;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .gcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gc)}
+  .gcard:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,0,0,.07)}
+  .gcard-num{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gc);letter-spacing:.18em;margin-bottom:.4rem;font-weight:500}
+  .gcard-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.3rem}
+  .gcard-role{font-size:.78rem;color:var(--muted);margin-bottom:1rem;padding-bottom:.85rem;border-bottom:1px solid var(--border)}
+  .gcard-comps{display:flex;flex-direction:column;gap:.55rem}
+  .gcomp{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.65rem .85rem;transition:border-color .15s}
+  .gcomp:hover{border-color:var(--gc)}
+  .gcomp-name{font-weight:500;font-size:.82rem;color:var(--navy);margin-bottom:.2rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+  .gtag{font-family:'DM Mono',monospace;font-size:.55rem;background:var(--white);border:1px solid var(--border);color:var(--muted);padding:.07rem .35rem;border-radius:3px;letter-spacing:.04em}
+  .gcomp-desc{font-size:.76rem;color:var(--muted);line-height:1.5}
+
+  /* ERP */
+  .erp-section{background:var(--surface)}
+  .erp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-top:3rem}
+  .erp-pill{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.1rem;text-align:center;transition:border-color .2s,transform .2s}
+  .erp-pill:hover{border-color:var(--sky);transform:translateY(-3px)}
+  .erp-pill .picon{font-size:1.65rem;margin-bottom:.4rem}
+  .erp-pill h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:var(--navy);margin-bottom:.15rem}
+  .erp-pill p{font-size:.7rem;color:var(--muted)}
+
+  /* PROCESS */
+  .process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:3.5rem;position:relative}
+  .process-steps::before{content:'';position:absolute;top:24px;left:12.5%;right:12.5%;height:1px;background:var(--border);z-index:0}
+  .pstep{text-align:center;position:relative;z-index:1}
+  .pnum{width:48px;height:48px;border-radius:50%;background:var(--white);border:2px solid var(--border);font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--sky);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem;transition:background .2s,border-color .2s}
+  .pstep:hover .pnum{background:var(--sky);border-color:var(--sky);color:var(--white)}
+  .pstep h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.32rem}
+  .pstep p{font-size:.78rem;color:var(--muted)}
+
+  /* CTA */
+  .cta-section{text-align:center;background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 100%);position:relative;overflow:hidden}
+  .cta-section::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(14,165,233,.2),transparent 70%)}
+  .cta-section .section-title{color:var(--white);position:relative;z-index:1}
+  .cta-section .section-sub{color:rgba(255,255,255,.5);margin:0 auto 2.5rem;position:relative;z-index:1}
+  .cta-section .section-label{position:relative;z-index:1}
+  .cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+  .btn-white{background:var(--white);color:var(--navy);padding:.82rem 1.9rem;border-radius:10px;font-size:.92rem;font-weight:600;text-decoration:none;transition:transform .2s,box-shadow .2s}
+  .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .btn-ghost{background:transparent;color:rgba(255,255,255,.7);padding:.82rem 1.9rem;border-radius:10px;font-size:.92rem;font-weight:500;text-decoration:none;border:1.5px solid rgba(255,255,255,.2);transition:border-color .2s,color .2s}
+  .btn-ghost:hover{border-color:rgba(255,255,255,.5);color:var(--white)}
+
+  /* FOOTER */
+  footer{background:var(--navy);color:rgba(255,255,255,.35);padding:2rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:.8rem}
+  footer .logo{color:var(--white);font-size:1.05rem}
+  footer a{color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
+  footer a:hover{color:var(--sky)}
+  .footer-links{display:flex;gap:1.5rem}
+  .footer-domains{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.18);margin-top:.3rem}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  @media(max-width:960px){
+    .approaches-grid,.ai-split,.oracle-intro-grid{grid-template-columns:1fr;gap:2.5rem}
+    .process-steps{grid-template-columns:repeat(2,1fr)}
+    .process-steps::before{display:none}
+    nav .nav-links li:not(:last-child):not(:nth-last-child(2)){display:none}
+    .stats{flex-wrap:wrap}
+    .stat-item{flex:1 1 50%;border:none;border-bottom:1px solid rgba(255,255,255,.08)}
+    .videos-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:560px){
+    .process-steps,.groups-grid{grid-template-columns:1fr}
+    .usecases-grid{grid-template-columns:1fr}
+  }
+
+  /* ── VOICE DEMO ── */
+  .voice-demo-section{background:var(--navy);padding:80px 5%}
+  .voice-demo-wrap{max-width:860px;margin:0 auto}
+  .voice-demo-label{font-family:'DM Mono',monospace;font-size:.68rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.18em;margin-bottom:1.5rem;text-align:center}
+  .voice-demo-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+  .voice-examples{display:flex;flex-wrap:wrap;gap:.65rem;justify-content:center;margin-bottom:.5rem}
+  .voice-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:.35rem 1rem;font-size:.8rem;color:rgba(255,255,255,.65);cursor:pointer;transition:background .2s,border-color .2s}
+  .voice-chip:hover,.voice-chip.active{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.4);color:#22d3ee}
+  .voice-mic-btn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.8rem;transition:transform .2s,box-shadow .2s;background:var(--sky);box-shadow:0 4px 24px rgba(14,165,233,.4)}
+  .voice-mic-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(14,165,233,.5)}
+  .voice-mic-btn.listening{background:var(--oracle);box-shadow:0 0 0 0 rgba(199,70,52,.4);animation:mic-pulse 1.2s ease-in-out infinite}
+  @keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(199,70,52,.4)}50%{box-shadow:0 0 0 16px rgba(199,70,52,0)}}
+  .voice-transcript{min-height:48px;text-align:center;font-size:.95rem;color:rgba(255,255,255,.8);font-style:italic;transition:opacity .3s}
+  .voice-response{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);border-radius:12px;padding:1.1rem 1.4rem;width:100%;display:none}
+  .voice-response.show{display:block;animation:fadeIn .4s ease}
+  .voice-response-label{font-family:'DM Mono',monospace;font-size:.62rem;color:#22d3ee;letter-spacing:.12em;margin-bottom:.4rem}
+  .voice-response-text{font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.6}
+  .voice-hint{font-size:.75rem;color:rgba(255,255,255,.3);text-align:center}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Hey<span>Cloud</span><span style="color:var(--navy)">4ERP</span> <span class="logo-tag">AI4ERP</span></a>
+  <ul class="nav-links">
+    <li><a href="#approaches" data-i18n="nav.approaches">Approaches</a></li>
+    <li><a href="#advisor" data-i18n="nav.advisor">Use Case Advisor</a></li>
+    <li><a href="#oracle-studio" data-i18n="nav.oracle">Oracle Studio</a></li>
+    <li><a href="#architecture" data-i18n="nav.arch">AI4ERP</a></li>
+    <li><a href="#voice-demo" data-i18n="nav.voice">Voice Demo</a></li>
+    <li><a href="#expertise" data-i18n="nav.expertise">Expertise</a></li>
+    <li><a href="#contact-form" class="nav-cta" data-i18n="nav.contact">Contact</a></li>
+    <li>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('fr')">FR</button>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge"><span class="dot"></span><span data-i18n="hero.badge">Cloud ERP Consulting & AI Agent Platform</span></div>
+  <h1 data-i18n="hero.h1">Two paths to<br><span class="hl">intelligent ERP operations</span></h1>
+  <p data-i18n="hero.sub">HeyCloud4ERP is a team of senior Cloud ERP and AI experts offering two complementary AI approaches: Oracle's native AI Agent Studio for a pre-packaged path, and the AI4ERP custom platform for a bespoke agentic architecture.</p>
+  <div class="hero-actions">
+    <a href="#approaches" class="btn-primary" data-i18n="hero.cta1">Discover our approaches →</a>
+    <a href="#advisor" class="btn-secondary" data-i18n="hero.cta2">Find my fit →</a>
+  </div>
+  <div class="trust-bar">
+    <p data-i18n="hero.trust">Trusted by leading organisations</p>
+    <div class="trust-logos">
+      <span class="trust-logo">Orange Business</span>
+      <span class="trust-logo">BNP Paribas</span>
+      <span class="trust-logo">TechnipFMC</span>
+      <span class="trust-logo">Faurecia</span>
+      <span class="trust-logo">RATP</span>
+      <span class="trust-logo">L'Oréal</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 APPROACHES -->
+<section class="approaches-section" id="approaches">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="app.label">Our 2 AI Approaches</div>
+    <h2 class="section-title" data-i18n="app.h2">Oracle AI Agent Studio<br>or AI4ERP custom platform?</h2>
+    <p class="section-sub" data-i18n="app.sub">Two complementary approaches. We help you choose the right one — or combine both — based on your Oracle maturity, timeline and ambition.</p>
+  </div>
+  <div class="approaches-grid" style="margin-top:3rem">
+    <div class="approach-card oracle reveal">
+      <div class="approach-badge oracle"><span class="approach-badge-dot"></span>Oracle Native</div>
+      <h3 data-i18n="ora.title">Oracle AI Agent Studio</h3>
+      <p class="approach-sub" data-i18n="ora.sub">Oracle's pre-packaged AI agents embedded natively in Oracle ERP Cloud. A progressive, low-risk path, staying entirely within the Oracle ecosystem.</p>
+      <ul class="approach-features">
+        <li><span class="af-dot">✓</span><span data-i18n="ora.f1">Pre-built agents for Finance, PPM, Procurement and Supply Chain — ready to activate</span></li>
+        <li><span class="af-dot">✓</span><span data-i18n="ora.f2">Native Oracle data model, security and role framework — no external connectors needed</span></li>
+        <li><span class="af-dot">✓</span><span data-i18n="ora.f3">Progressive rollout: activate one agent at a time, validate, then expand</span></li>
+        <li><span class="af-dot">✓</span><span data-i18n="ora.f4">Covered by Oracle support and roadmap — reduced operational risk</span></li>
+      </ul>
+      <div class="approach-footer">
+        <span class="approach-tag">Oracle ERP Cloud</span>
+        <span class="approach-tag">AI Agent Studio</span>
+        <span class="approach-tag">PPM · Finance · SCM</span>
+      </div>
+    </div>
+    <div class="approach-card custom reveal">
+      <div class="approach-badge custom"><span class="approach-badge-dot"></span>HeyCloud4ERP</div>
+      <h3 data-i18n="ai4.title">AI4ERP Custom Platform</h3>
+      <p class="approach-sub" data-i18n="ai4.sub">Our proprietary agentic platform, independent of Oracle's native AI stack. Built for organisations requiring custom agent logic, multi-ERP integration or advanced AI architecture.</p>
+      <ul class="approach-features">
+        <li><span class="af-dot">✓</span><span data-i18n="ai4.f1">6-step agentic loop: Input → Memory/RAG → LLM → Guardrails → Action → Learn</span></li>
+        <li><span class="af-dot">✓</span><span data-i18n="ai4.f2">Connect Oracle to billing, CRM, SAP or any platform via OIC, REST, SOAP or ETL</span></li>
+        <li><span class="af-dot">✓</span><span data-i18n="ai4.f3">Full control: custom business rules, guardrails, RBAC and human-in-the-loop</span></li>
+        <li><span class="af-dot">✓</span><span data-i18n="ai4.f4">Choice of LLM: Claude, GPT, Gemini — model-agnostic architecture</span></li>
+      </ul>
+      <div class="approach-footer">
+        <span class="approach-tag">Multi-ERP</span>
+        <span class="approach-tag">Custom agents</span>
+        <span class="approach-tag">LLM-agnostic</span>
+        <span class="approach-tag">OCI · Cloudflare</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="why.label">Why HeyCloud4ERP</div>
+    <h2 class="section-title" data-i18n="why.h2">Senior experts at the intersection<br>of ERP and AI</h2>
+    <p class="section-sub" data-i18n="why.sub">Deep Oracle Fusion expertise across Finance, PPM, Projects, Supply Chain and Procurement — on both Oracle-native and custom AI architectures.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal"><div class="why-num">25<span>+</span></div><h3 data-i18n="why.1.t">Years Oracle experience</h3><p data-i18n="why.1.d">Finance, PPM, Projects, Procurement and Supply Chain across Oracle Fusion Cloud and legacy platforms.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🔀</div><h3 data-i18n="why.2.t">Both AI paths mastered</h3><p data-i18n="why.2.d">Oracle AI Agent Studio for a native approach — AI4ERP custom platform for bespoke architecture. We help you choose and implement.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🌍</div><h3 data-i18n="why.3.t">International programmes</h3><p data-i18n="why.3.d">Delivered complex ERP rollouts across Europe, Middle East and Asia-Pacific for global organisations.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🏆</div><h3 data-i18n="why.4.t">Reference clients</h3><p data-i18n="why.4.d">Orange Business, BNP Paribas, TechnipFMC, Faurecia, RATP, L'Oréal — banking, energy, industry and services.</p></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="svc.label">Services</div>
+    <h2 class="section-title" data-i18n="svc.h2">Consulting & technology<br>for your Cloud ERP</h2>
+    <p class="section-sub" data-i18n="svc.sub">From implementation to continuous AI-driven optimisation — covering the full lifecycle of your Cloud ERP.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal"><div class="svc-badge oracle">⬡ Oracle Native</div><div class="svc-icon red">🤖</div><h3 data-i18n="svc.1.t">Oracle AI Agent Studio</h3><p data-i18n="svc.1.d">Progressive rollout of Oracle's pre-packaged AI agents across Finance, PPM, Procurement and Supply Chain — native, governed, Oracle-supported.</p></div>
+    <div class="service-card reveal"><div class="svc-badge custom">◈ AI4ERP Platform</div><div class="svc-icon indigo">🧠</div><h3 data-i18n="svc.2.t">AI4ERP Custom Agents</h3><p data-i18n="svc.2.d">Bespoke autonomous AI agents via our 6-step agentic loop — for complex, cross-functional or multi-ERP use cases.</p></div>
+    <div class="service-card reveal"><div class="svc-badge both">☁ ERP Cloud</div><div class="svc-icon blue">☁️</div><h3 data-i18n="svc.3.t">Cloud ERP Implementation</h3><p data-i18n="svc.3.d">Deployment and migration to Oracle Fusion, SAP S/4HANA or Microsoft D365. Proven methodology, controlled go-live.</p></div>
+    <div class="service-card reveal"><div class="svc-badge both">☁ ERP Cloud</div><div class="svc-icon purple">📋</div><h3 data-i18n="svc.4.t">PPM — Project Portfolio Management</h3><p data-i18n="svc.4.d">End-to-end PPM programme leadership: scoping, benchmarking, RFP, governance and Oracle PPM Cloud deployment.</p></div>
+    <div class="service-card reveal"><div class="svc-badge both">☁ ERP Cloud</div><div class="svc-icon green">⚡</div><h3 data-i18n="svc.5.t">Optimisation & Run</h3><p data-i18n="svc.5.d">AI supervision of ESS/batch jobs, performance audit, post-go-live support levels 2 and 3, hypercare management.</p></div>
+    <div class="service-card reveal"><div class="svc-badge both">☁ ERP Cloud</div><div class="svc-icon orange">📊</div><h3 data-i18n="svc.6.t">Data, Reporting & Governance</h3><p data-i18n="svc.6.d">BI architecture, BIP/OTBI dashboards, Oracle Fusion security, SOD controls, compliance audits.</p></div>
+    <div class="service-card reveal" style="border-color:rgba(167,139,250,.3)"><div class="svc-badge custom">◈ AI4ERP Platform</div><div class="svc-icon purple">🎙️</div><h3 data-i18n="svc.7.t">Voice & Natural Language ERP</h3><p data-i18n="svc.7.d">Interact with your ERP in natural language — spoken or typed. Ask questions, trigger workflows and get real-time answers from Oracle Fusion without touching the UI. Powered by AI4ERP's multimodal layer.</p></div>
+  </div>
+</section>
+
+<!-- AI4ERP PLATFORM -->
+<section style="background:var(--surface)" id="ai-platform">
+  <div class="ai-split">
+    <div class="av-dark reveal">
+      <div class="av-label">HeyCloud4ERP — Live agents</div>
+      <div class="arow"><span class="adot red"></span><span class="alabel">Oracle AI Agent Studio — Finance Close Agent</span><span class="astatus orc">● Oracle Native</span></div>
+      <div class="arow"><span class="adot sky"></span><span class="alabel">AI4ERP — ESS Supervision Agent</span><span class="astatus run">● Running</span></div>
+      <div class="arow"><span class="adot amber"></span><span class="alabel">AI4ERP — GL Anomaly Agent</span><span class="astatus warn">● Analysing</span></div>
+      <div class="arow"><span class="adot violet"></span><span class="alabel">Oracle AI Agent Studio — PPM Portfolio Agent</span><span class="astatus orc">● Oracle Native</span></div>
+      <div class="arow"><span class="adot lime"></span><span class="alabel">AI4ERP — Monthly Reporting BIP/OTBI</span><span class="astatus ok">● Done</span></div>
+      <div class="ai-insight">
+        <div class="ai-insight-label">AI4ERP INSIGHT · AUDIT TRAIL</div>
+        <p>3 ESS jobs failed at 04:12. Root cause: OIC timeout. Guardrail validated. Restart scheduled — human approval required before write.</p>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="section-label">AI4ERP Custom Platform</div>
+      <h2 class="section-title" data-i18n="ai.h2">Bespoke AI agents<br>when Oracle Studio isn't enough</h2>
+      <p class="section-sub" data-i18n="ai.sub">For complex, cross-functional or multi-ERP scenarios — full control over agent logic, LLM choice, guardrails and audit trail.</p>
+      <ul class="ai-features">
+        <li data-i18n="ai.f1">6-step agentic loop: Input → Memory/RAG → LLM → Guardrails → Action → Learn</li>
+        <li data-i18n="ai.f2">Native Oracle Fusion connectivity via OIC, ESS, BIP, OTBI, REST/SOAP</li>
+        <li data-i18n="ai.f3">Human-in-the-loop on all sensitive or irreversible actions</li>
+        <li data-i18n="ai.f4">Full observability: LangSmith / Braintrust / OpenTelemetry</li>
+        <li data-i18n="ai.f5">Immutable audit log — SOC2 / GDPR / AI Act compliant</li>
+        <li data-i18n="ai.f6">Enterprise deployment: OCI + Terraform, Cloudflare edge, Next.js on Vercel</li>
+      </ul>
+      <div style="margin-top:1.75rem"><a href="#architecture" class="btn-primary" data-i18n="ai.cta">View AI4ERP architecture →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICE DEMO -->
+<section class="voice-demo-section" id="voice-demo">
+  <div class="voice-demo-wrap">
+    <div class="voice-demo-label" data-i18n="vd.label">AI4ERP · Voice & Natural Language — Interactive Demo</div>
+    <div class="center" style="margin-bottom:2rem">
+      <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.5rem,2.5vw,2rem);color:var(--white);letter-spacing:-.02em;margin-bottom:.6rem" data-i18n="vd.h2">Talk to your ERP.<br>No keyboard needed.</h2>
+      <p style="font-size:.9rem;color:rgba(255,255,255,.45);max-width:480px;margin:0 auto" data-i18n="vd.sub">Click a prompt below or press the mic — see how an AI4ERP agent understands, queries Oracle Fusion and responds in natural language.</p>
+    </div>
+    <div class="voice-demo-box reveal">
+      <div class="voice-examples" id="voice-chips">
+        <span class="voice-chip" onclick="voicePrompt(0)" data-i18n="vd.p1">What&#39;s the status of PO-48291?</span>
+        <span class="voice-chip" onclick="voicePrompt(1)" data-i18n="vd.p2">How many ESS jobs failed last night?</span>
+        <span class="voice-chip" onclick="voicePrompt(2)" data-i18n="vd.p3">Show me open supplier invoices over 30 days</span>
+        <span class="voice-chip" onclick="voicePrompt(3)" data-i18n="vd.p4">What is the budget variance on project INFRA-2026?</span>
+        <span class="voice-chip" onclick="voicePrompt(4)" data-i18n="vd.p5">Summarise this week&#39;s PPM portfolio risks</span>
+      </div>
+      <div class="voice-transcript" id="voice-transcript" data-i18n="vd.hint.idle">← Click a prompt or press the mic to start</div>
+      <button class="voice-mic-btn" id="voice-mic" onclick="toggleMic()" title="Press to speak">🎙️</button>
+      <div class="voice-response" id="voice-response">
+        <div class="voice-response-label">AI4ERP AGENT · ORACLE FUSION</div>
+        <div class="voice-response-text" id="voice-response-text"></div>
+      </div>
+      <div class="voice-hint" data-i18n="vd.disclaimer">Simulated demo — in production, AI4ERP connects live to your Oracle Fusion instance via OIC + REST APIs</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat-item reveal"><div class="stat-number">25<span>+</span></div><div class="stat-desc" data-i18n="stat.1">Years Oracle experience</div></div>
+  <div class="stat-item reveal"><div class="stat-number">2</div><div class="stat-desc" data-i18n="stat.2">AI approaches mastered</div></div>
+  <div class="stat-item reveal"><div class="stat-number">9</div><div class="stat-desc" data-i18n="stat.3">AI4ERP component groups</div></div>
+  <div class="stat-item reveal"><div class="stat-number">3<span>x</span></div><div class="stat-desc" data-i18n="stat.4">Average productivity gain</div></div>
+</section>
+
+<!-- ══ USE CASE ADVISOR ══ -->
+<section class="advisor-section" id="advisor">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="adv.label">Use Case Advisor</div>
+    <h2 class="section-title" data-i18n="adv.h2">Which AI approach<br>fits your situation?</h2>
+    <p class="section-sub" data-i18n="adv.sub">Explore real-world use cases, then answer 4 questions to get a tailored recommendation.</p>
+  </div>
+
+  <!-- USE CASE CARDS -->
+  <div class="usecases-carousel">
+    <button class="uc-arrow prev" id="uc-prev" onclick="ucSlide(-1)" disabled>&#8592;</button>
+    <div class="usecases-track-wrap">
+    <div class="usecases-track" id="uc-track">
+    <div class="uc-card reveal" style="--uc-color:var(--accent)">
+      <div class="uc-tag custom">◈ AI4ERP Custom Platform</div>
+      <div class="uc-sector" data-i18n="uc1.sector">Energy &amp; Utilities</div>
+      <div class="uc-company" data-i18n="uc1.co">Large Energy group</div>
+      <div class="uc-context" data-i18n="uc1.ctx">Oracle HCM Cloud + legacy HR tools, ambitious AI roadmap, progressive platform migration</div>
+      <div class="uc-challenge" data-i18n="uc1.ch">The client is curious about agentic AI and wants to progressively build a proprietary HCM platform covering end-to-end HR processes: onboarding, workforce scheduling, performance cycles and payroll exceptions — going beyond what Oracle AI Agent Studio covers natively.</div>
+      <div class="uc-rec">
+        <div class="uc-rec-label" data-i18n="uc.rec">Recommendation</div>
+        <div class="uc-rec-text" data-i18n="uc1.rec">AI4ERP custom platform — bespoke HCM agent loop connecting Oracle HCM to payroll, scheduling and performance tools. Progressive rollout: one HR process at a time, with full audit trail and human-in-the-loop on sensitive decisions.</div>
+      </div>
+    </div>
+    <div class="uc-card reveal" style="--uc-color:var(--oracle)">
+      <div class="uc-tag oracle">⬡ Oracle AI Agent Studio</div>
+      <div class="uc-sector" data-i18n="uc2.sector">Telecom &amp; Media</div>
+      <div class="uc-company" data-i18n="uc2.co">International Telecom group</div>
+      <div class="uc-context" data-i18n="uc2.ctx">Oracle ERP Cloud, high-volume Procurement operations, thousands of purchase requests monthly</div>
+      <div class="uc-challenge" data-i18n="uc2.ch">The client processes thousands of purchase requests monthly across multiple business units. Manual approval routing, missing information and supplier mismatches create bottlenecks. They want AI to automate request validation, PO creation and approval routing — entirely within Oracle Procurement Cloud.</div>
+      <div class="uc-rec">
+        <div class="uc-rec-label" data-i18n="uc.rec">Recommendation</div>
+        <div class="uc-rec-text" data-i18n="uc2.rec">AI4ERP custom platform — multi-system orchestration via OIC + REST APIs, custom RAG on billing schemas, LLM-driven reconciliation loop with human-in-the-loop on disputes.</div>
+      </div>
+    </div>
+    <div class="uc-card reveal" style="--uc-color:var(--sky)">
+      <div class="uc-tag both">⬡◈ Both approaches</div>
+      <div class="uc-sector" data-i18n="uc3.sector">Global Manufacturing</div>
+      <div class="uc-company" data-i18n="uc3.co">Industrial Manufacturing group</div>
+      <div class="uc-context" data-i18n="uc3.ctx">Oracle ERP Cloud, SAP legacy plant systems, custom MES</div>
+      <div class="uc-challenge" data-i18n="uc3.ch">Standard Finance and HCM processes are suited for Oracle native agents. But supply chain orchestration across Oracle, SAP and a custom MES requires bespoke multi-agent logic beyond Oracle Studio's scope.</div>
+      <div class="uc-rec">
+        <div class="uc-rec-label" data-i18n="uc.rec">Recommendation</div>
+        <div class="uc-rec-text" data-i18n="uc3.rec">Oracle AI Agent Studio for Finance & HCM + AI4ERP custom agents for cross-system supply chain orchestration. Phased rollout — Oracle-native first, AI4ERP in phase 2.</div>
+      </div>
+    </div>
+    <div class="uc-card reveal" style="--uc-color:var(--oracle)">
+      <div class="uc-tag oracle">⬡ Oracle AI Agent Studio</div>
+      <div class="uc-sector" data-i18n="uc4.sector">Retail &amp; Distribution</div>
+      <div class="uc-company" data-i18n="uc4.co">Large Retail &amp; Distribution group</div>
+      <div class="uc-context" data-i18n="uc4.ctx">Oracle ERP Cloud, high-volume AP &amp; Procurement, fast-moving operations</div>
+      <div class="uc-challenge" data-i18n="uc4.ch">The client manages thousands of purchase orders and supplier invoices daily. They want AI agents to automate PO matching, invoice validation and payment scheduling — with fast time-to-value and no custom AI infrastructure to build or maintain.</div>
+      <div class="uc-rec">
+        <div class="uc-rec-label" data-i18n="uc.rec">Recommendation</div>
+        <div class="uc-rec-text" data-i18n="uc4.rec">Oracle AI Agent Studio — Payables Agent + Procurement Agent activated in 4 weeks. Pre-built templates for PO matching and invoice processing, straight-through processing rates up to 80%, zero custom development.</div>
+      </div>
+    </div>
+    <div class="uc-card reveal" style="--uc-color:var(--accent)">
+      <div class="uc-tag custom">◈ AI4ERP Custom Platform</div>
+      <div class="uc-sector" data-i18n="uc5.sector">Professional Services / Consulting</div>
+      <div class="uc-company" data-i18n="uc5.co">Mid-size Consulting & Advisory firm</div>
+      <div class="uc-context" data-i18n="uc5.ctx">Oracle ERP Cloud + Jira Service Management, Finance & IT operations teams</div>
+      <div class="uc-challenge" data-i18n="uc5.ch">The firm manages bank reconciliation manually across multiple client accounts and handles hundreds of Jira support tickets weekly. Both processes are high-volume, repetitive and rule-based — ideal for AI automation, but requiring Oracle ERP + Jira connections beyond Oracle AI Agent Studio's native scope.</div>
+      <div class="uc-rec">
+        <div class="uc-rec-label" data-i18n="uc.rec">Recommendation</div>
+        <div class="uc-rec-text" data-i18n="uc5.rec">AI4ERP custom platform — two connected agents: (1) Bank Reconciliation Agent linking Oracle GL to bank feeds via API, auto-matching transactions and flagging exceptions for human review; (2) Jira Support Agent triaging tickets, enriching with ERP context, routing to the right team and auto-closing resolved items.</div>
+      </div>
+    </div>
+  </div></div><!-- /track+wrap -->
+    <button class="uc-arrow next" id="uc-next" onclick="ucSlide(1)">&#8594;</button>
+    <div class="uc-dots" id="uc-dots"></div>
+  </div><!-- /carousel -->
+
+  <!-- INTERACTIVE FORM -->
+  <div class="advisor-form-wrap reveal">
+    <div class="advisor-title">🎯 <span data-i18n="form.title">Find your approach in 4 questions</span></div>
+    <div class="advisor-sub" data-i18n="form.sub">Answer honestly — we'll recommend the best fit for your context.</div>
+    <div class="form-steps">
+      <div class="form-step-dot active" id="dot-0"></div>
+      <div class="form-step-dot" id="dot-1"></div>
+      <div class="form-step-dot" id="dot-2"></div>
+      <div class="form-step-dot" id="dot-3"></div>
+      <div class="form-step-dot" id="dot-4"></div>
+    </div>
+    <!-- Q1 -->
+    <div class="form-question active" id="q0">
+      <div class="q-label" data-i18n="q1.label">Question 1 / 4</div>
+      <div class="q-text" data-i18n="q1.text">What is your current ERP landscape?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="selectOption(0,0)"><span class="q-option-icon">☁️</span><div><div class="q-option-label" data-i18n="q1.o1.l">Oracle ERP Cloud only</div><div class="q-option-desc" data-i18n="q1.o1.d">Single Oracle Fusion Cloud instance, all processes in Oracle</div></div></div>
+        <div class="q-option" onclick="selectOption(0,1)"><span class="q-option-icon">🔀</span><div><div class="q-option-label" data-i18n="q1.o2.l">Oracle + other platforms</div><div class="q-option-desc" data-i18n="q1.o2.d">Oracle ERP + billing, CRM, SAP, legacy systems or custom apps</div></div></div>
+        <div class="q-option" onclick="selectOption(0,2)"><span class="q-option-icon">🏭</span><div><div class="q-option-label" data-i18n="q1.o3.l">Non-Oracle ERP (SAP, D365…)</div><div class="q-option-desc" data-i18n="q1.o3.d">Primary ERP is not Oracle Fusion Cloud</div></div></div>
+      </div>
+      <div class="form-nav"><button class="btn-nav ghost" disabled>← <span data-i18n="nav.back">Back</span></button><button class="btn-nav" onclick="nextQ(1)" id="next-0" disabled><span data-i18n="nav.next">Next</span> →</button></div>
+    </div>
+    <!-- Q2 -->
+    <div class="form-question" id="q1">
+      <div class="q-label" data-i18n="q2.label">Question 2 / 4</div>
+      <div class="q-text" data-i18n="q2.text">How would you describe your AI maturity and appetite?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="selectOption(1,0)"><span class="q-option-icon">🐢</span><div><div class="q-option-label" data-i18n="q2.o1.l">Cautious / early stage</div><div class="q-option-desc" data-i18n="q2.o1.d">We want to start safely, with Oracle-backed AI governance</div></div></div>
+        <div class="q-option" onclick="selectOption(1,1)"><span class="q-option-icon">🚀</span><div><div class="q-option-label" data-i18n="q2.o2.l">Ready to go further</div><div class="q-option-desc" data-i18n="q2.o2.d">Comfortable with custom AI architecture and want full control</div></div></div>
+        <div class="q-option" onclick="selectOption(1,2)"><span class="q-option-icon">🔬</span><div><div class="q-option-label" data-i18n="q2.o3.l">Advanced / innovation-driven</div><div class="q-option-desc" data-i18n="q2.o3.d">We want to build proprietary AI capabilities with competitive differentiation</div></div></div>
+      </div>
+      <div class="form-nav"><button class="btn-nav ghost" onclick="nextQ(0)">← <span data-i18n="nav.back">Back</span></button><button class="btn-nav" onclick="nextQ(2)" id="next-1" disabled><span data-i18n="nav.next">Next</span> →</button></div>
+    </div>
+    <!-- Q3 -->
+    <div class="form-question" id="q2">
+      <div class="q-label" data-i18n="q3.label">Question 3 / 4</div>
+      <div class="q-text" data-i18n="q3.text">What is the scope of your AI use case?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="selectOption(2,0)"><span class="q-option-icon">📋</span><div><div class="q-option-label" data-i18n="q3.o1.l">Within Oracle only</div><div class="q-option-desc" data-i18n="q3.o1.d">Finance close, PPM, Procurement, HCM — all data lives in Oracle</div></div></div>
+        <div class="q-option" onclick="selectOption(2,1)"><span class="q-option-icon">🔗</span><div><div class="q-option-label" data-i18n="q3.o2.l">Cross-system / end-to-end</div><div class="q-option-desc" data-i18n="q3.o2.d">Agents must connect Oracle to billing, CRM, legacy or external platforms</div></div></div>
+        <div class="q-option" onclick="selectOption(2,2)"><span class="q-option-icon">🤔</span><div><div class="q-option-label" data-i18n="q3.o3.l">Mix — Oracle-only + cross-system</div><div class="q-option-desc" data-i18n="q3.o3.d">Some simple Oracle processes and some complex multi-platform workflows</div></div></div>
+      </div>
+      <div class="form-nav"><button class="btn-nav ghost" onclick="nextQ(1)">← <span data-i18n="nav.back">Back</span></button><button class="btn-nav" onclick="nextQ(3)" id="next-2" disabled><span data-i18n="nav.next">Next</span> →</button></div>
+    </div>
+    <!-- Q4 -->
+    <div class="form-question" id="q3">
+      <div class="q-label" data-i18n="q4.label">Question 4 / 4</div>
+      <div class="q-text" data-i18n="q4.text">What matters most to you in this AI project?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="selectOption(3,0)"><span class="q-option-icon">🛡️</span><div><div class="q-option-label" data-i18n="q4.o1.l">Speed, safety & Oracle support</div><div class="q-option-desc" data-i18n="q4.o1.d">Fast activation, Oracle-backed, no complex infra to manage</div></div></div>
+        <div class="q-option" onclick="selectOption(3,1)"><span class="q-option-icon">⚙️</span><div><div class="q-option-label" data-i18n="q4.o2.l">Customisation & control</div><div class="q-option-desc" data-i18n="q4.o2.d">Custom agent logic, choice of LLM, full audit trail and guardrails</div></div></div>
+        <div class="q-option" onclick="selectOption(3,2)"><span class="q-option-icon">🏗️</span><div><div class="q-option-label" data-i18n="q4.o3.l">Both — start safe, scale custom</div><div class="q-option-desc" data-i18n="q4.o3.d">Oracle Studio for quick wins, AI4ERP for advanced use cases</div></div></div>
+      </div>
+      <div class="form-nav"><button class="btn-nav ghost" onclick="nextQ(2)">← <span data-i18n="nav.back">Back</span></button><button class="btn-nav" onclick="nextQ(4)" id="next-3" disabled><span data-i18n="nav.next">Next</span> →</button></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="form-question" id="q4">
+      <div class="q-label" data-i18n="q5.label">Question 5 / 5</div>
+      <div class="q-text" data-i18n="q5.text">How would your teams prefer to interact with AI agents?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="selectOption(4,0)"><span class="q-option-icon">💬</span><div><div class="q-option-label" data-i18n="q5.o1.l">Chat / text interface</div><div class="q-option-desc" data-i18n="q5.o1.d">Users type their requests in a chat window inside or alongside the ERP</div></div></div>
+        <div class="q-option" onclick="selectOption(4,1)"><span class="q-option-icon">🎙️</span><div><div class="q-option-label" data-i18n="q5.o2.l">Voice — natural spoken language</div><div class="q-option-desc" data-i18n="q5.o2.d">Users speak to the agent hands-free — ideal for field teams, finance close calls or procurement reviews</div></div></div>
+        <div class="q-option" onclick="selectOption(4,2)"><span class="q-option-icon">🔀</span><div><div class="q-option-label" data-i18n="q5.o3.l">Both — chat and voice</div><div class="q-option-desc" data-i18n="q5.o3.d">Different teams have different preferences — we need flexibility</div></div></div>
+        <div class="q-option" onclick="selectOption(4,3)"><span class="q-option-icon">⚙️</span><div><div class="q-option-label" data-i18n="q5.o4.l">API / automated — no human interface</div><div class="q-option-desc" data-i18n="q5.o4.d">Agents run fully automated, triggered by events, schedules or other systems</div></div></div>
+      </div>
+      <div class="form-nav"><button class="btn-nav ghost" onclick="nextQ(3)">← <span data-i18n="nav.back">Back</span></button><button class="btn-nav" onclick="showResult()" id="next-4" disabled data-i18n="form.see">See my recommendation →</button></div>
+    </div>
+    <!-- RESULT -->
+    <div class="advisor-result" id="advisor-result">
+      <div class="result-header">
+        <div class="result-badge" id="result-badge"></div>
+        <div class="result-title" id="result-title"></div>
+      </div>
+      <div class="result-body" id="result-body"></div>
+      <div class="result-reasons" id="result-reasons"></div>
+      <div class="result-cta">
+        <a href="#contact-form" class="btn-result primary" data-i18n="form.cta1">📋 Contact our experts</a>
+        <a href="#oracle-studio" class="btn-result ghost" data-i18n="form.cta2">Explore Oracle AI Agent Studio</a>
+      </div>
+      <span class="result-reset" onclick="resetAdvisor()" data-i18n="form.reset">↺ Start over</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ORACLE AI AGENT STUDIO ══ -->
+<section class="oracle-section" id="oracle-studio">
+  <div class="center reveal">
+    <div class="section-label" style="color:var(--oracle)" data-i18n="orc.label">Oracle AI Agent Studio</div>
+    <h2 class="section-title" data-i18n="orc.h2">Oracle's native AI agent platform<br>for Fusion Cloud Applications</h2>
+    <p class="section-sub" data-i18n="orc.sub">Pre-built, extensible AI agents embedded natively in Oracle ERP, HCM, SCM and CX. No additional licensing. Progressive activation. Oracle-backed governance.</p>
+  </div>
+
+  <div class="oracle-intro-grid" style="margin-top:3.5rem">
+    <div class="oracle-ui-sim reveal">
+      <div class="oracle-ui-bar">
+        <div class="oracle-ui-dot" style="background:#ff5f57"></div>
+        <div class="oracle-ui-dot" style="background:#ffbd2e"></div>
+        <div class="oracle-ui-dot" style="background:#28c840"></div>
+        <div class="oracle-ui-title">ORACLE AI AGENT STUDIO — FUSION CLOUD</div>
+      </div>
+      <div class="oracle-ui-body">
+        <div class="oracle-ui-header">
+          <div class="oracle-logo-sim">ORACLE</div>
+          <div class="oracle-ui-h">AI Agent Studio — My Agents</div>
+        </div>
+        <div class="agent-list">
+          <div class="agent-item"><div class="agent-item-icon">💰</div><div><div class="agent-item-name">Payables Agent</div><div class="agent-item-module">ERP · Finance · AP</div></div><div class="agent-item-status active">● Active</div></div>
+          <div class="agent-item"><div class="agent-item-icon">📊</div><div><div class="agent-item-name">Ledger Agent</div><div class="agent-item-module">ERP · Finance · GL</div></div><div class="agent-item-status active">● Active</div></div>
+          <div class="agent-item"><div class="agent-item-icon">📋</div><div><div class="agent-item-name">PPM Portfolio Agent</div><div class="agent-item-module">PPM · Projects · Governance</div></div><div class="agent-item-status ready">● Ready</div></div>
+          <div class="agent-item"><div class="agent-item-icon">🏭</div><div><div class="agent-item-name">Procurement Agent</div><div class="agent-item-module">SCM · Procurement · PO</div></div><div class="agent-item-status ready">● Ready</div></div>
+          <div class="agent-item"><div class="agent-item-icon">👥</div><div><div class="agent-item-name">HR Talent Agent</div><div class="agent-item-module">HCM · Talent · Recruiting</div></div><div class="agent-item-status ready">● Ready</div></div>
+        </div>
+        <div class="oracle-ui-footer">
+          <div class="oracle-ui-badge">5 AGENTS · ORACLE FUSION CLOUD · NO EXTRA COST</div>
+          <button class="oracle-ui-btn">+ Create Agent</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.95rem" class="reveal">
+      <div class="oracle-fact"><div class="oracle-fact-icon">🆓</div><div><div class="oracle-fact-title" data-i18n="of1.t">Included in your Oracle subscription</div><div class="oracle-fact-desc" data-i18n="of1.d">No additional licensing cost for ERP, HCM, SCM or CX subscribers. Part of Oracle Fusion Cloud Applications.</div></div></div>
+      <div class="oracle-fact"><div class="oracle-fact-icon">🔌</div><div><div class="oracle-fact-title" data-i18n="of2.t">Native Oracle data model & security</div><div class="oracle-fact-desc" data-i18n="of2.d">Agents access Oracle business objects directly. Role-based access inherits from your existing Oracle security setup.</div></div></div>
+      <div class="oracle-fact"><div class="oracle-fact-icon">📦</div><div><div class="oracle-fact-title" data-i18n="of3.t">50+ pre-built & extensible agents</div><div class="oracle-fact-desc" data-i18n="of3.d">Templates across Finance, PPM, Procurement, HCM and CX. Customise prompts, add tools, create new agents — no advanced AI skills required.</div></div></div>
+      <div class="oracle-fact"><div class="oracle-fact-icon">🛡️</div><div><div class="oracle-fact-title" data-i18n="of4.t">Oracle-backed trust & governance</div><div class="oracle-fact-desc" data-i18n="of4.d">Covered by Oracle's roadmap, support and compliance certifications. Human-in-the-loop controls built in.</div></div></div>
+      <div class="oracle-fact"><div class="oracle-fact-icon">🎯</div><div><div class="oracle-fact-title" data-i18n="of5.t">HeyCloud4ERP implements progressively</div><div class="oracle-fact-desc" data-i18n="of5.d">We activate one agent at a time, validate business outcomes, train your teams and expand. Minimal risk, maximum adoption.</div></div></div>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div class="center reveal" style="margin-top:4rem;margin-bottom:2rem">
+    <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.45rem;color:var(--navy);margin-bottom:.5rem" data-i18n="vid.h3">Watch Oracle AI Agent Studio in action</h3>
+    <p style="font-size:.88rem;color:var(--muted)" data-i18n="vid.sub">Official Oracle demo videos — see the platform and agents working live inside Oracle Fusion Cloud Applications.</p>
+  </div>
+  <div class="videos-grid">
+    <div class="video-card reveal">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/SU_mrEgzg28" title="Oracle AI Agent Studio — Supplier Quote to Purchase Requisition Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">Oracle Official Demo · 2025</div>
+        <div class="video-title" data-i18n="vid1.t">Oracle AI Agent Studio — Fusion Cloud Demo</div>
+        <div class="video-desc" data-i18n="vid1.d">How easy it is to get started with AI agents in Oracle Fusion Cloud. Covers agent creation, configuration and activation across ERP and SCM processes.</div>
+        <a href="https://www.youtube.com/watch?v=SU_mrEgzg28" target="_blank" class="video-link" data-i18n="vid.watch">Watch on YouTube →</a>
+      </div>
+    </div>
+    <div class="video-card reveal">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/9JvMVyjKWus" title="Oracle Fusion AI Agent Studio 26A — Top Features & Live Demos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">Oracle Official · March 2026</div>
+        <div class="video-title" data-i18n="vid2.t">What's New & Next for Oracle AI in Fusion Applications</div>
+        <div class="video-desc" data-i18n="vid2.d">Oracle AI World 2025 — new agents for Finance, HR, Supply Chain and CX, plus expanded ecosystem, workflow agents and new trust & oversight tools.</div>
+        <a href="https://www.youtube.com/watch?v=9JvMVyjKWus" target="_blank" class="video-link" data-i18n="vid.watch">Watch on YouTube →</a>
+      </div>
+    </div>
+  </div>
+  <div class="resources-bar reveal">
+    <span style="font-size:.76rem;font-weight:600;color:var(--muted);margin-right:.25rem" data-i18n="res.label">Oracle official resources:</span>
+    <a href="https://www.oracle.com/applications/fusion-ai/ai-agents/" target="_blank" class="resource-link"><span>🔗</span> <span data-i18n="res.1">Oracle AI Agents page</span></a>
+    <a href="https://www.oracle.com/news/announcement/oracle-introduces-ai-agent-studio-2025-03-20/" target="_blank" class="resource-link"><span>📰</span> <span data-i18n="res.2">AI Agent Studio announcement</span></a>
+    <a href="https://blogs.oracle.com/fusioninsider/see-oracle-ai-agent-studio-in-action-demo-video" target="_blank" class="resource-link"><span>▶️</span> <span data-i18n="res.3">Fusion Insider demo article</span></a>
+    <a href="https://blogs.oracle.com/fusioninsider/ai-agent-studio-provides-new-tools-for-automation" target="_blank" class="resource-link"><span>🛠️</span> <span data-i18n="res.4">New tools for automation (Oct 2025)</span></a>
+  </div>
+</section>
+
+<!-- ARCHITECTURE AI4ERP -->
+<section class="loop-section" id="architecture">
+  <div class="center reveal">
+    <div class="section-label">AI4ERP Architecture</div>
+    <h2 class="section-title" data-i18n="arch.h2">The agentic loop<br>at the heart of the platform</h2>
+    <p class="section-sub" data-i18n="arch.sub">Every enterprise AI agent platform follows the same loop. AI4ERP implements it end-to-end, each component precisely positioned in the flow.</p>
+  </div>
+  <div class="loop-wrap reveal">
+    <div class="loop-eyebrow" id="loop-eyebrow-text">AI4ERP · AGENT LOOP · REPEATS EVERY TURN</div>
+    <svg class="loop-svg" viewBox="0 0 840 540" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#22d3ee" opacity=".7"/></marker></defs>
+      <path d="M 490 88 Q 660 106 680 190" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 702 268 Q 702 326 682 348" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 622 404 Q 562 440 514 424" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 326 424 Q 266 440 212 404" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 134 348 Q 116 282 134 208" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <path d="M 212 162 Q 262 110 346 96" stroke="#22d3ee" stroke-width="1.5" fill="none" opacity=".5" marker-end="url(#arr)"/>
+      <rect x="346" y="58" width="148" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/><text x="420" y="82" font-family="monospace" font-size="9" fill="#a78bfa" text-anchor="middle" letter-spacing="2">01 · INPUT</text><text x="420" y="100" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Trigger / User</text><text x="420" y="115" font-family="monospace" font-size="8.5" fill="#aaaaaa" text-anchor="middle">prompt · webhook · cron</text>
+      <rect x="592" y="162" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/><text x="677" y="186" font-family="monospace" font-size="9" fill="#60a5fa" text-anchor="middle" letter-spacing="2">02 · LOAD</text><text x="677" y="204" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Memory + RAG</text><text x="677" y="219" font-family="monospace" font-size="8.5" fill="#aaaaaa" text-anchor="middle">context · Oracle corpus</text>
+      <rect x="592" y="326" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/><text x="677" y="350" font-family="monospace" font-size="9" fill="#2dd4bf" text-anchor="middle" letter-spacing="2">03 · REASON</text><text x="677" y="368" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">LLM</text><text x="677" y="383" font-family="monospace" font-size="8.5" fill="#aaaaaa" text-anchor="middle">claude · gpt · gemini</text>
+      <rect x="346" y="400" width="148" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/><text x="420" y="424" font-family="monospace" font-size="9" fill="#f59e0b" text-anchor="middle" letter-spacing="2">04 · FILTER</text><text x="420" y="442" font-family="sans-serif" font-size="11.5" fill="#ededed" text-anchor="middle" font-weight="500">Tools + Guardrails</text><text x="420" y="457" font-family="monospace" font-size="8.5" fill="#aaaaaa" text-anchor="middle">rails · HITL · RBAC</text>
+      <rect x="78" y="326" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/><text x="163" y="350" font-family="monospace" font-size="9" fill="#4ade80" text-anchor="middle" letter-spacing="2">05 · ACT</text><text x="163" y="368" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Action / Execution</text><text x="163" y="383" font-family="monospace" font-size="8.5" fill="#aaaaaa" text-anchor="middle">API Fusion · OIC · write</text>
+      <rect x="78" y="162" width="170" height="64" rx="9" fill="#161616" stroke="#2a2a2a"/><text x="163" y="186" font-family="monospace" font-size="9" fill="#fb7185" text-anchor="middle" letter-spacing="2">06 · LEARN</text><text x="163" y="204" font-family="sans-serif" font-size="12" fill="#ededed" text-anchor="middle" font-weight="500">Audit + Eval</text><text x="163" y="219" font-family="monospace" font-size="8.5" fill="#aaaaaa" text-anchor="middle">trace · score · memory</text>
+      <text id="loop-center-label" x="420" y="256" font-family="monospace" font-size="11" fill="#ffffff" text-anchor="middle" letter-spacing="3">THE LOOP</text>
+      <text x="420" y="275" font-family="monospace" font-size="9" fill="#ffffff" text-anchor="middle" letter-spacing="3">AI4ERP</text>
+    </svg>
+  </div>
+  <div class="loop-legend">
+    <div class="ll-item reveal" style="--lc:#a78bfa"><div class="ll-step">01 · INPUT</div><div class="ll-name" data-i18n="loop.1.n">Trigger / User</div><div class="ll-desc" data-i18n="loop.1.d">A prompt, webhook, scheduled ESS job or inbound email. Something triggers a loop turn.</div></div>
+    <div class="ll-item reveal" style="--lc:#60a5fa"><div class="ll-step">02 · LOAD</div><div class="ll-name" data-i18n="loop.2.n">Memory + RAG</div><div class="ll-desc" data-i18n="loop.2.d">Load relevant context before reasoning. Memory = user/project state. RAG = Oracle docs, specs, procedures, Jira tickets.</div></div>
+    <div class="ll-item reveal" style="--lc:#2dd4bf"><div class="ll-step">03 · REASON</div><div class="ll-name" data-i18n="loop.3.n">LLM</div><div class="ll-desc" data-i18n="loop.3.d">The model decides: answer directly, call a tool, or plan a multi-step sequence.</div></div>
+    <div class="ll-item reveal" style="--lc:#f59e0b"><div class="ll-step">04 · FILTER</div><div class="ll-name" data-i18n="loop.4.n">Tools + Rails + Guardrails</div><div class="ll-desc" data-i18n="loop.4.d">Rails = business policy. Guardrails = PII/injection filtering. HITL = human approval before sensitive actions.</div></div>
+    <div class="ll-item reveal" style="--lc:#4ade80"><div class="ll-step">05 · ACT</div><div class="ll-name" data-i18n="loop.5.n">Action / Execution</div><div class="ll-desc" data-i18n="loop.5.d">Fusion/OIC API call, write, ESS restart, BIP report generated, or streamed response.</div></div>
+    <div class="ll-item reveal" style="--lc:#fb7185"><div class="ll-step">06 · LEARN</div><div class="ll-name" data-i18n="loop.6.n">Audit + Eval + Feedback</div><div class="ll-desc" data-i18n="loop.6.d">Trace the full turn, evaluate quality, log for SOC2/GDPR/AI Act, reinject learnings into memory.</div></div>
+  </div>
+  <div class="shortcut-box reveal">
+    <div class="sc-eye" data-i18n="sc.eye">MENTAL SHORTCUT · AI4ERP</div>
+    <h3 data-i18n="sc.h3">Every enterprise AI agent platform follows the same loop</h3>
+    <p data-i18n="sc.p">Keep this in mind to frame the AI4ERP architecture quickly:</p>
+    <div class="sc-loop"><span class="sl-punct">(</span><span class="sl-1">memory + RAG</span><span class="sl-punct">)</span><span class="sl-arrow"> → </span><span class="sl-2">LLM</span><span class="sl-arrow"> → </span><span class="sl-punct">(</span><span class="sl-3">tools + rails + guardrails</span><span class="sl-punct">)</span><span class="sl-arrow"> → </span><span class="sl-4">action</span><span class="sl-arrow"> → </span><span class="sl-punct">(</span><span class="sl-5">audit + eval + feedback</span><span class="sl-punct">)</span><span class="sl-arrow"> → </span><span class="sl-1">memory</span></div>
+    <p data-i18n="sc.p2">If a component is missing, there is an architecture risk. AI4ERP covers all 9 groups without overlap.</p>
+  </div>
+</section>
+
+<!-- 9 GROUPS -->
+<section class="groups-section">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="grp.label">9 Component Groups</div>
+    <h2 class="section-title" data-i18n="grp.h2">AI4ERP production-grade<br>architecture — no blind spots</h2>
+    <p class="section-sub" data-i18n="grp.sub">Every AI4ERP component fits into one of these 9 groups. Full agentic loop coverage for enterprise Oracle environments.</p>
+  </div>
+  <div class="groups-grid">
+    <div class="gcard reveal" style="--gc:var(--c1)"><div class="gcard-num">GROUP 01 · STAGE 03</div><div class="gcard-name">Reasoning Core</div><div class="gcard-role">The reasoning layer. Generates, vectorises and routes to the right model.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">LLM <span class="gtag">claude · gpt · gemini</span></div><div class="gcomp-desc">The generator. Takes context and returns a response or tool call.</div></div><div class="gcomp"><div class="gcomp-name">Embeddings <span class="gtag">vectors</span></div><div class="gcomp-desc">Transforms text into vectors. Feeds RAG and semantic search.</div></div><div class="gcomp"><div class="gcomp-name">Model routing <span class="gtag">cf ai gateway</span></div><div class="gcomp-desc">Selects the right model per task. Manages fallback, cache, cost and rate limits.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c2)"><div class="gcard-num">GROUP 02 · STAGE 02</div><div class="gcard-name">Knowledge & State</div><div class="gcard-role">What the model knows before generating. Corpus + memory + storage.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">RAG <span class="gtag">vectorize</span></div><div class="gcomp-desc">Controlled corpus: Oracle docs, specs, schemas, procedures, Jira tickets.</div></div><div class="gcomp"><div class="gcomp-name">Memory <span class="gtag">short + long term</span></div><div class="gcomp-desc">Short-term = current session. Long-term = user/project context persisted across sessions.</div></div><div class="gcomp"><div class="gcomp-name">Storage <span class="gtag">d1 · r2 · kv</span></div><div class="gcomp-desc">Durable state: structured database, file storage, fast config.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c3)"><div class="gcard-num">GROUP 03 · STAGE 04→05</div><div class="gcard-name">Capability</div><div class="gcard-role">What the model can do beyond talking: tools, sandbox, multimodal.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Tool use / function calling <span class="gtag">mcp · native</span></div><div class="gcomp-desc">MCP is one transport mode; native function calling is another. Both coexist.</div></div><div class="gcomp"><div class="gcomp-name">Sandbox / execution env <span class="gtag">iox</span></div><div class="gcomp-desc">Code interpreter, automation. Agent works without touching production directly.</div></div><div class="gcomp"><div class="gcomp-name">Multimodal layer <span class="gtag">stt · tts · vision</span></div><div class="gcomp-desc">Voice in/out, vision. ElevenLabs speech module for AI4ERP voice interactions.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c4)"><div class="gcard-num">GROUP 04 · STAGE 04</div><div class="gcard-name">Control</div><div class="gcard-role">The security + policy layer. What the agent is and isn't allowed to do.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Rails / rules <span class="gtag">policy</span></div><div class="gcomp-desc">Business policy: who can do what, when, with which BU/ledger constraints.</div></div><div class="gcomp"><div class="gcomp-name">Guardrails <span class="gtag">i/o filter</span></div><div class="gcomp-desc">Input/output filtering: PII, prompt injection, jailbreak, non-compliant content.</div></div><div class="gcomp"><div class="gcomp-name">Identity + RBAC <span class="gtag">authjs</span></div><div class="gcomp-desc">Who the user is, which BUs/data they can see. Critical in B2B/ERP contexts.</div></div><div class="gcomp"><div class="gcomp-name">Human-in-the-loop <span class="gtag">hitl</span></div><div class="gcomp-desc">Agent pauses and requests human approval before any sensitive or irreversible action.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c5)"><div class="gcard-num">GROUP 05 · WHOLE LOOP</div><div class="gcard-name">Orchestration</div><div class="gcard-role">The harness around the loop: durability, async, errors, streaming.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Agent loop / planner <span class="gtag">harness</span></div><div class="gcomp-desc">Wrapper around the LLM, decides next step, triggers tools, maintains scratchpad.</div></div><div class="gcomp"><div class="gcomp-name">Durable execution <span class="gtag">cf workflows</span></div><div class="gcomp-desc">Long-running tasks: ESS jobs, OIC, reconciliations, batch follow-ups, error recovery.</div></div><div class="gcomp"><div class="gcomp-name">Queues / async <span class="gtag">cf queues</span></div><div class="gcomp-desc">Webhook ingestion, batch processing, retry, decoupling of long-running processes.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c6)"><div class="gcard-num">GROUP 06 · STAGE 06</div><div class="gcard-name">Operations</div><div class="gcard-role">Knowing if it works: eval, trace, audit, cost.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Evals <span class="gtag">offline + online</span></div><div class="gcomp-desc">Regression tests + LLM-as-judge scoring on live traffic.</div></div><div class="gcomp"><div class="gcomp-name">Observability <span class="gtag">langsmith · braintrust</span></div><div class="gcomp-desc">Every prompt, tool call, cost. End-to-end replayable traces.</div></div><div class="gcomp"><div class="gcomp-name">Audit log <span class="gtag">soc2 · gdpr · ai act</span></div><div class="gcomp-desc">Immutable journal. For audit, GDPR, AI Act, SOX-like controls.</div></div><div class="gcomp"><div class="gcomp-name">Cost / metering <span class="gtag">tokens</span></div><div class="gcomp-desc">Token tracking per user/tenant, caps, throttling. Key cost control lever.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c7)"><div class="gcard-num">GROUP 07 · STAGE 01+05</div><div class="gcard-name">Surface</div><div class="gcard-role">What the user sees and how they correct or validate.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">UI / chat / action surface <span class="gtag">next.js · react · shadcn</span></div><div class="gcomp-desc">AI4ERP portal, chat, action screens, confirmations, citations, streaming, admin.</div></div><div class="gcomp"><div class="gcomp-name">Feedback loop <span class="gtag">thumbs · corrections</span></div><div class="gcomp-desc">User feedback, structured corrections, data reinjected into evals and memory.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c8)"><div class="gcard-num">GROUP 08 · FEEDS STAGE 02</div><div class="gcard-name">Data Ingestion</div><div class="gcard-role">The pipeline that feeds RAG. Without it, the model is blind.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Document pipeline <span class="gtag">parse · chunk · embed</span></div><div class="gcomp-desc">Parse PDF/HTML/transcripts, chunk, embed, index, version and refresh Oracle content.</div></div></div></div>
+    <div class="gcard reveal" style="--gc:var(--c9)"><div class="gcard-num">GROUP 09 · CROSS-CUTTING</div><div class="gcard-name">Hosting, Edge & Deployment</div><div class="gcard-role">Where the interface runs, how it's deployed, secured and exposed.</div><div class="gcard-comps"><div class="gcomp"><div class="gcomp-name">Vercel <span class="gtag">next.js hosting</span></div><div class="gcomp-desc">Next.js UI hosting, GitHub preview deployments, lightweight API routes.</div></div><div class="gcomp"><div class="gcomp-name">Cloudflare <span class="gtag">dns · cdn · workers · waf</span></div><div class="gcomp-desc">Edge: DNS, CDN, WAF, Workers, AI Gateway, DDoS protection, secure endpoints.</div></div><div class="gcomp"><div class="gcomp-name">OCI + Terraform <span class="gtag">enterprise infra · iac</span></div><div class="gcomp-desc">Enterprise Oracle backend: IAM, OKE, API Gateway, Vault, Functions. Reproducible DEV/UAT/PROD.</div></div></div></div>
+  </div>
+</section>
+
+<!-- EXPERTISE ERP -->
+<section class="erp-section" id="expertise">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="erp.label">ERP Expertise</div>
+    <h2 class="section-title" data-i18n="erp.h2">Mastery of key modules</h2>
+    <p class="section-sub" data-i18n="erp.sub">Full functional and technical coverage across Oracle Fusion, with both Oracle AI Agent Studio and AI4ERP custom agents available per module.</p>
+  </div>
+  <div class="erp-grid">
+    <div class="erp-pill reveal"><div class="picon">💰</div><h4 data-i18n="erp.1">Finance & Accounting</h4><p>GL, AP, AR, FA, Cash</p></div>
+    <div class="erp-pill reveal"><div class="picon">📋</div><h4 data-i18n="erp.2">PPM</h4><p data-i18n="erp.2d">Projects, Portfolio, Governance</p></div>
+    <div class="erp-pill reveal"><div class="picon">🏭</div><h4 data-i18n="erp.3">Supply Chain</h4><p>Procurement, Inventory, MFG</p></div>
+    <div class="erp-pill reveal"><div class="picon">👥</div><h4 data-i18n="erp.4">Human Resources</h4><p>HCM, Payroll, Talent</p></div>
+    <div class="erp-pill reveal"><div class="picon">🔧</div><h4 data-i18n="erp.5">Integrations & APIs</h4><p>OIC, REST, SOAP, ETL</p></div>
+    <div class="erp-pill reveal"><div class="picon">📦</div><h4 data-i18n="erp.6">Order Management</h4><p>OMS, Contracts, Billing</p></div>
+    <div class="erp-pill reveal"><div class="picon">🔐</div><h4 data-i18n="erp.7">Security & Compliance</h4><p>Roles, SOD, Audit Trail</p></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section style="background:var(--white)" id="process">
+  <div class="center reveal">
+    <div class="section-label" data-i18n="proc.label">Our Approach</div>
+    <h2 class="section-title" data-i18n="proc.h2">Precise scoping,<br>frictionless execution</h2>
+  </div>
+  <div class="process-steps">
+    <div class="pstep reveal"><div class="pnum">01</div><h4 data-i18n="p1.t">Diagnostic</h4><p data-i18n="p1.d">Current state analysis and AI path selection: Oracle Studio, AI4ERP, or both.</p></div>
+    <div class="pstep reveal"><div class="pnum">02</div><h4 data-i18n="p2.t">Architecture</h4><p data-i18n="p2.d">Agent design, component selection and phased deployment plan.</p></div>
+    <div class="pstep reveal"><div class="pnum">03</div><h4 data-i18n="p3.t">Deployment</h4><p data-i18n="p3.d">Agile implementation, testing, guardrails, training and change management.</p></div>
+    <div class="pstep reveal"><div class="pnum">04</div><h4 data-i18n="p4.t">AI Supervision</h4><p data-i18n="p4.d">Continuous AI agent monitoring, optimisation and ongoing support with full audit trail.</p></div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section style="background:var(--surface)" id="contact-form">
+  <div class="center reveal">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title" data-i18n="cf.h2">Tell us about your project</h2>
+    <p class="section-sub" data-i18n="cf.sub">Fill in the form below and one of our experts will get back to you within 24 hours — no commitment, no sales pitch.</p>
+  </div>
+
+  <div style="max-width:680px;margin:3rem auto 0;background:var(--white);border:1px solid var(--border);border-radius:20px;padding:2.5rem;position:relative;overflow:hidden" class="reveal">
+    <div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.08),transparent 70%)"></div>
+
+    <div id="cf-form">
+      <!-- Row 1 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div>
+          <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.name">Full name *</label>
+          <input id="cf-name" type="text" placeholder="First name / Last name" style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;transition:border-color .2s;background:var(--surface)" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div>
+          <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.company">Company *</label>
+          <input id="cf-company" type="text" placeholder="Your company" style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;transition:border-color .2s;background:var(--surface)" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+      </div>
+      <!-- Row 2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div>
+          <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.email">Professional email *</label>
+          <input id="cf-email" type="email" placeholder="name@company.com" style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;transition:border-color .2s;background:var(--surface)" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div>
+          <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.phone">Phone</label>
+          <input id="cf-phone" type="tel" placeholder="+33 6 00 00 00 00" style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;transition:border-color .2s;background:var(--surface)" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+      </div>
+      <!-- ERP + Approach -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div>
+          <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.erp">ERP platform</label>
+          <select id="cf-erp" style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;background:var(--surface);cursor:pointer" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'">
+            <option value="" data-i18n="cf.erp.0">Select your ERP</option>
+            <option value="oracle">Oracle Fusion Cloud</option>
+            <option value="sap">SAP S/4HANA</option>
+            <option value="d365">Microsoft D365</option>
+            <option value="workday">Workday</option>
+            <option value="other" data-i18n="cf.erp.other">Other / Mixed</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.approach">AI approach of interest</label>
+          <select id="cf-approach" style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;background:var(--surface);cursor:pointer" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'">
+            <option value="" data-i18n="cf.approach.0">Not sure yet</option>
+            <option value="oracle" data-i18n="cf.approach.1">Oracle AI Agent Studio</option>
+            <option value="ai4erp" data-i18n="cf.approach.2">AI4ERP Custom Platform</option>
+            <option value="both" data-i18n="cf.approach.3">Both / To be defined</option>
+          </select>
+        </div>
+      </div>
+      <!-- Message -->
+      <div style="margin-bottom:1.5rem">
+        <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:.45rem" data-i18n="cf.message">Describe your context *</label>
+        <textarea id="cf-message" rows="4" placeholder="Tell us about your ERP landscape, your main pain points and what you'd like to achieve with AI agents..." style="width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.7rem 1rem;font-size:.9rem;font-family:inherit;color:var(--navy);outline:none;resize:vertical;transition:border-color .2s;background:var(--surface)" onfocus="this.style.borderColor='var(--sky)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+      <!-- GDPR + Submit -->
+      <div style="display:flex;align-items:flex-start;gap:.65rem;margin-bottom:1.5rem">
+        <input type="checkbox" id="cf-gdpr" style="margin-top:.2rem;accent-color:var(--sky);width:15px;height:15px;flex-shrink:0;cursor:pointer">
+        <label for="cf-gdpr" style="font-size:.78rem;color:var(--muted);line-height:1.5;cursor:pointer" data-i18n="cf.gdpr">I agree that HeyCloud4ERP may process my data to respond to this request. No spam, no resale. <a href="#" style="color:var(--sky)">Privacy policy</a>.</label>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        <button onclick="submitForm()" style="background:var(--sky);color:var(--white);border:none;padding:.85rem 2.25rem;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(14,165,233,.35);transition:transform .15s,background .2s" onmouseover="this.style.background='var(--sky-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--sky)';this.style.transform='none'" data-i18n="cf.submit">Send my request →</button>
+        <div style="font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.4rem">
+          <span>🔒</span><span data-i18n="cf.privacy">Secure & confidential · Response within 24h</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success message -->
+    <div id="cf-success" style="display:none;text-align:center;padding:2rem 1rem">
+      <div style="font-size:3rem;margin-bottom:1rem">✅</div>
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--navy);margin-bottom:.6rem" data-i18n="cf.ok.title">Message sent!</h3>
+      <p style="font-size:.9rem;color:var(--muted)" data-i18n="cf.ok.sub">One of our experts will get back to you within 24 hours. In the meantime, explore our AI4ERP architecture or try the Use Case Advisor.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap">
+        <a href="#architecture" style="background:var(--sky);color:var(--white);padding:.65rem 1.4rem;border-radius:9px;text-decoration:none;font-size:.88rem;font-weight:600" data-i18n="cf.ok.cta1">View architecture</a>
+        <a href="#advisor" style="background:var(--surface);color:var(--navy);padding:.65rem 1.4rem;border-radius:9px;text-decoration:none;font-size:.88rem;font-weight:500;border:1.5px solid var(--border)" data-i18n="cf.ok.cta2">Use Case Advisor</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-label" data-i18n="cta.label">Let's talk about your project</div>
+  <h2 class="section-title" data-i18n="cta.h2">Ready to put AI<br>at the heart of your ERP?</h2>
+  <p class="section-sub" data-i18n="cta.sub">Our experts are available for a first no-commitment conversation. Oracle AI Agent Studio, AI4ERP custom platform, or both — we'll get back to you within 24 hours.</p>
+  <div class="cta-actions">
+    <a href="#contact-form" class="btn-white" data-i18n="cta.btn1">📋 Fill in the contact form</a>
+    <a href="#advisor" class="btn-ghost" data-i18n="cta.btn2">Find my fit →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a href="#" class="logo">Hey<span style="color:var(--sky)">Cloud</span><span style="color:rgba(255,255,255,.8)">4ERP</span></a>
+  </div>
+  <div class="footer-links">
+    <a href="#" data-i18n="ft.legal">Legal</a>
+    <a href="#" data-i18n="ft.privacy">Privacy</a>
+    <a href="mailto:contact@heycloud4erp.com">contact@heycloud4erp.com</a>
+  </div>
+  <div>© 2026 HeyCloud4ERP</div>
+</footer>
+
+<script>
+/* ── ADVISOR ── */
+const answers = [null,null,null,null,null];
+function selectOption(q,opt){
+  answers[q]=opt;
+  document.querySelectorAll(`#q${q} .q-option`).forEach((el,i)=>el.classList.toggle('selected',i===opt));
+  document.getElementById(`next-${q}`).disabled=false;
+}
+function nextQ(target){
+  document.querySelectorAll('.form-question').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.form-step-dot').forEach((el,i)=>{
+    el.classList.remove('active');
+    if(i<target)el.classList.add('done'); else el.classList.remove('done');
+  });
+  if(target<=4){document.getElementById('q'+target).classList.add('active');document.getElementById('dot-'+target).classList.add('active');}
+}
+function showResult(){
+  document.querySelectorAll('.form-question').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.form-step-dot').forEach(el=>{el.classList.remove('active');el.classList.add('done');});
+  document.getElementById('advisor-result').classList.add('show');
+  const [a0,a1,a2,a3,a4]=answers;
+  const isOracleOnly=a0===0, isMulti=a0===1||a0===2;
+  const isCautious=a1===0;
+  const isScopeCross=a2===1, isScopeBoth=a2===2;
+  const wantsCustom=a3===1, wantsBoth=a3===2;
+  const wantsVoice=a4===1||a4===2;
+  const isFR = lang==='fr';
+
+  let rec,badge,title,body,reasons=[];
+
+  if(isOracleOnly&&isCautious&&a2===0&&a3===0&&!wantsVoice){
+    rec='oracle';
+    badge='⬡ Oracle AI Agent Studio';
+    title=isFR?'Oracle AI Agent Studio — le bon choix':'Oracle AI Agent Studio — the right fit';
+    body=isFR?'Votre contexte est ideal pour Oracle AI Agent Studio. Perimetre Oracle uniquement, appetit IA prudent — le deploiement progressif est la voie naturelle.':'Your context is ideal for Oracle AI Agent Studio. Oracle-only landscape, cautious AI appetite — a progressive rollout is the natural path.';
+    reasons=[
+      {t:isFR?'Rester dans le perimetre de securite Oracle — aucun connecteur externe':'Stay within Oracle security perimeter — no external connectors needed',c:'oracle'},
+      {t:isFR?'Agents preconstruits pour Finance, PPM et Achats — prets a activer':'Pre-built agents for Finance, PPM and Procurement — ready to activate',c:'oracle'},
+      {t:isFR?'Couvert par le support Oracle — gouvernance simplifiee':'Covered by Oracle support — reduced governance burden',c:'oracle'},
+      {t:isFR?'HeyCloud4ERP deploie progressivement — un agent a la fois':'HeyCloud4ERP implements progressively — one agent at a time',c:'oracle'},
+    ];
+  }else if(isMulti||isScopeCross||wantsCustom||wantsVoice){
+    rec='custom';
+    badge='◈ AI4ERP Custom Platform';
+    title=isFR?'Plateforme AI4ERP Custom — pour votre complexite':'AI4ERP Custom Platform — built for your complexity';
+    body=isFR?'Votre situation necessite une architecture agentique sur mesure.'+(wantsVoice?' La couche multimodale AI4ERP permet des interactions vocales nativement — Oracle AI Agent Studio ne le supporte pas.':' Architecture multi-plateforme, logique agent custom et controle total.'):'Your situation calls for a bespoke agentic architecture.'+(wantsVoice?' AI4ERP multimodal layer enables native voice interactions — Oracle AI Agent Studio does not support this natively.':' Multi-platform landscape, custom agent logic and full control.');
+    reasons=[
+      {t:isFR?'Connexion Oracle a billing, CRM, SAP ou toute plateforme externe':'Connect Oracle to billing, CRM, SAP or any external platform',c:'custom'},
+      {t:isFR?'Logique agent custom — au-dela du perimetre natif Oracle Studio':'Custom agent logic — beyond Oracle AI Agent Studio native scope',c:'custom'},
+      ...(wantsVoice?[{t:isFR?'Couche multimodale : voix (STT/TTS) + vision integrees nativement dans la boucle agent':'Multimodal layer: voice (STT/TTS) + vision natively integrated in the agent loop',c:'custom'}]:[]),
+      {t:isFR?'Choix du LLM : Claude, GPT, Gemini — model-agnostic':'Choice of LLM: Claude, GPT, Gemini — model-agnostic',c:'custom'},
+      {t:isFR?'Audit trail complet et human-in-the-loop sur tous les systemes':'Full audit trail and human-in-the-loop across all systems',c:'custom'},
+    ];
+  }else{
+    rec='both';
+    badge='⬡◈ Both approaches';
+    title=isFR?'Approche combinee — le meilleur des deux mondes':'Combined approach — the best of both worlds';
+    body=isFR?'Oracle AI Agent Studio pour les processus Oracle standard, AI4ERP custom pour les cas avances et eventuellement la couche voix en phase 2.':'Oracle AI Agent Studio for standard Oracle processes, AI4ERP custom for advanced use cases and optionally the voice layer in phase 2.';
+    reasons=[
+      {t:isFR?'Phase 1 : Oracle Studio pour Finance, PPM et Achats — activation rapide':'Phase 1: Oracle Studio for Finance, PPM and Procurement — fast activation',c:'both'},
+      {t:isFR?'Phase 2 : agents AI4ERP custom pour les workflows multi-systemes':'Phase 2: AI4ERP custom agents for complex multi-system workflows',c:'both'},
+      {t:isFR?'Voice optionnel en phase 2 via couche multimodale AI4ERP':'Voice optionally added in phase 2 via AI4ERP multimodal layer',c:'both'},
+      {t:isFR?'HeyCloud4ERP gere les deux architectures — interlocuteur unique':'HeyCloud4ERP manages both architectures — single point of contact',c:'both'},
+    ];
+  }
+  document.getElementById("result-badge").className="result-badge "+rec;
+  document.getElementById("result-badge").textContent=badge;
+  document.getElementById("result-title").textContent=title;
+  document.getElementById("result-body").textContent=body;
+  document.getElementById("result-reasons").innerHTML=reasons.map(function(r){return "<div class=\"result-reason "+r.c+"\">"+r.t+"</div>";}).join("");
+}
+function resetAdvisor(){
+  answers.fill(null);
+  document.getElementById('advisor-result').classList.remove('show');
+  document.querySelectorAll('.form-step-dot').forEach((el,i)=>{el.classList.remove('active','done');if(i===0)el.classList.add('active');});
+  document.querySelectorAll('.form-question').forEach(el=>el.classList.remove('active'));
+  document.getElementById('q0').classList.add('active');
+  document.getElementById('next-4') && (document.getElementById('next-4').disabled=true);
+  document.querySelectorAll('.q-option').forEach(el=>el.classList.remove('selected'));
+  document.querySelectorAll('[id^="next-"]').forEach(el=>el.disabled=true);
+}
+
+/* ── I18N ── */
+let lang='en';
+const i18n={
+  en:{
+    "nav.approaches":"Approaches","nav.advisor":"Use Case Advisor","nav.oracle":"Oracle Studio","nav.arch":"AI4ERP","nav.voice":"Voice Demo","nav.expertise":"Expertise","nav.contact":"Contact",
+    "hero.badge":"Cloud ERP Consulting & AI Agent Platform",
+    "hero.h1":"Two paths to<br><span class='hl'>intelligent ERP operations</span>",
+    "hero.sub":"HeyCloud4ERP is a team of senior Cloud ERP and AI experts offering two complementary AI approaches: Oracle's native AI Agent Studio and the AI4ERP custom platform.",
+    "hero.cta1":"Discover our approaches →","hero.cta2":"Find my fit →","hero.trust":"Trusted by leading organisations",
+    "app.label":"Our 2 AI Approaches","app.h2":"Oracle AI Agent Studio<br>or AI4ERP custom platform?","app.sub":"Two complementary approaches. We help you choose — or combine both — based on your Oracle maturity, timeline and ambition.",
+    "ora.title":"Oracle AI Agent Studio","ora.sub":"Oracle's pre-packaged AI agents embedded natively in Oracle ERP Cloud. A progressive, low-risk path, staying entirely within the Oracle ecosystem.",
+    "ora.f1":"Pre-built agents for Finance, PPM, Procurement and Supply Chain — ready to activate","ora.f2":"Native Oracle data model, security and role framework — no external connectors needed","ora.f3":"Progressive rollout: activate one agent at a time, validate, then expand","ora.f4":"Covered by Oracle support and roadmap — reduced operational risk",
+    "ai4.title":"AI4ERP Custom Platform","ai4.sub":"Our proprietary agentic platform, independent of Oracle's native AI stack. Built for organisations requiring custom agent logic, multi-ERP integration or advanced AI architecture.",
+    "ai4.f1":"6-step agentic loop: Input → Memory/RAG → LLM → Guardrails → Action → Learn","ai4.f2":"Connect Oracle to billing, CRM, SAP or any platform via OIC, REST, SOAP or ETL","ai4.f3":"Full control: custom business rules, guardrails, RBAC and human-in-the-loop","ai4.f4":"Choice of LLM: Claude, GPT, Gemini — model-agnostic architecture",
+    "why.label":"Why HeyCloud4ERP","why.h2":"Senior experts at the intersection<br>of ERP and AI","why.sub":"Deep Oracle Fusion expertise across Finance, PPM, Projects, Supply Chain and Procurement — on both Oracle-native and custom AI architectures.",
+    "why.1.t":"Years Oracle experience","why.1.d":"Finance, PPM, Projects, Procurement and Supply Chain across Oracle Fusion Cloud and legacy platforms.",
+    "why.2.t":"Both AI paths mastered","why.2.d":"Oracle AI Agent Studio for a native approach — AI4ERP custom platform for bespoke architecture. We help you choose and implement.",
+    "why.3.t":"International programmes","why.3.d":"Delivered complex ERP rollouts across Europe, Middle East and Asia-Pacific for global organisations.",
+    "why.4.t":"Reference clients","why.4.d":"Orange Business, BNP Paribas, TechnipFMC, Faurecia, RATP, L'Oréal — banking, energy, industry and services.",
+    "svc.label":"Services","svc.h2":"Consulting & technology<br>for your Cloud ERP","svc.sub":"From implementation to continuous AI-driven optimisation — full lifecycle coverage.",
+    "svc.1.t":"Oracle AI Agent Studio","svc.1.d":"Progressive rollout of Oracle's pre-packaged AI agents across Finance, PPM, Procurement and Supply Chain — native, governed, Oracle-supported.",
+    "svc.2.t":"AI4ERP Custom Agents","svc.2.d":"Bespoke autonomous AI agents via our 6-step agentic loop — for complex, cross-functional or multi-ERP use cases.",
+    "svc.3.t":"Cloud ERP Implementation","svc.3.d":"Deployment and migration to Oracle Fusion, SAP S/4HANA or Microsoft D365. Proven methodology, controlled go-live.",
+    "svc.4.t":"PPM — Project Portfolio Management","svc.4.d":"End-to-end PPM programme leadership: scoping, benchmarking, RFP, governance and Oracle PPM Cloud deployment.",
+    "svc.5.t":"Optimisation & Run","svc.5.d":"AI supervision of ESS/batch jobs, performance audit, post-go-live support levels 2 and 3, hypercare management.",
+    "svc.6.t":"Data, Reporting & Governance","svc.6.d":"BI architecture, BIP/OTBI dashboards, Oracle Fusion security, SOD controls, compliance audits.","svc.7.t":"Voice & Natural Language ERP","svc.7.d":"Interact with your ERP in natural language — spoken or typed. Ask questions, trigger workflows and get real-time answers from Oracle Fusion without touching the UI. Powered by AI4ERP's multimodal layer.",
+    "ai.h2":"Bespoke AI agents<br>when Oracle Studio isn't enough","ai.sub":"For complex, cross-functional or multi-ERP scenarios — full control over agent logic, LLM choice, guardrails and audit trail.",
+    "ai.f1":"6-step agentic loop: Input → Memory/RAG → LLM → Guardrails → Action → Learn","ai.f2":"Native Oracle Fusion connectivity via OIC, ESS, BIP, OTBI, REST/SOAP","ai.f3":"Human-in-the-loop on all sensitive or irreversible actions","ai.f4":"Full observability: LangSmith / Braintrust / OpenTelemetry","ai.f5":"Immutable audit log — SOC2 / GDPR / AI Act compliant","ai.f6":"Enterprise deployment: OCI + Terraform, Cloudflare edge, Next.js on Vercel","ai.cta":"View AI4ERP architecture →",
+    "stat.1":"Years Oracle experience","stat.2":"AI approaches mastered","stat.3":"AI4ERP component groups","stat.4":"Average productivity gain",
+    "adv.label":"Use Case Advisor","adv.h2":"Which AI approach<br>fits your situation?","adv.sub":"Explore real-world use cases, then answer 4 questions to get a tailored recommendation.",
+    "uc1.sector":"Energy & Utilities","uc1.co":"Large Energy group","uc1.ctx":"Oracle HCM Cloud + legacy HR tools, ambitious AI roadmap, progressive platform migration",
+    "uc1.ch":"The client is curious about agentic AI and wants to progressively build a proprietary HCM platform covering end-to-end HR processes: onboarding, workforce scheduling, performance cycles and payroll exceptions — going beyond what Oracle AI Agent Studio covers natively.",
+    "uc1.rec":"AI4ERP custom platform — bespoke HCM agent loop connecting Oracle HCM to payroll, scheduling and performance tools. Progressive rollout: one HR process at a time, with full audit trail and human-in-the-loop on sensitive decisions.",
+    "uc2.sector":"Telecom & Media","uc2.co":"International Telecom group","uc2.ctx":"Oracle ERP Cloud, high-volume Procurement operations, thousands of purchase requests monthly",
+    "uc2.ch":"The client processes thousands of purchase requests monthly across multiple business units. Manual approval routing, missing information and supplier mismatches create bottlenecks. They want AI to automate request validation, PO creation and approval routing — entirely within Oracle Procurement Cloud.",
+    "uc2.rec":"Oracle AI Agent Studio — Procurement Agent activated on Oracle Procurement Cloud. Pre-built template handles request validation, supplier matching, PO creation and approval routing. Deployed in 3 weeks, fully native, Oracle-supported.",
+    "uc3.sector":"Global Manufacturing","uc3.co":"Industrial Manufacturing group","uc3.ctx":"Oracle ERP Cloud, SAP legacy plant systems, custom MES",
+    "uc3.ch":"Standard Finance and HCM are suited for Oracle native agents. But supply chain orchestration across Oracle, SAP and a custom MES requires bespoke multi-agent logic beyond Oracle Studio's scope.",
+    "uc3.rec":"Oracle AI Agent Studio for Finance & HCM + AI4ERP custom agents for cross-system supply chain. Phased rollout — Oracle-native first, AI4ERP in phase 2.",
+    "uc4.sector":"Retail & Distribution","uc4.co":"Large Retail & Distribution group","uc4.ctx":"Oracle ERP Cloud, high-volume Procurement & Supply Chain, fast-moving operations",
+    "uc4.ch":"The client manages thousands of purchase orders and supplier invoices daily. They want AI agents to automate PO matching, invoice validation and payment scheduling — but need fast time-to-value without building custom AI infrastructure.",
+    "uc4.rec":"Oracle AI Agent Studio — Payables Agent + Procurement Agent activated in 4 weeks. Pre-built templates for PO matching and invoice processing, straight-through processing rates up to 80%, zero custom development.",
+    "uc5.sector":"Professional Services / Consulting","uc5.co":"Mid-size Consulting & Advisory firm","uc5.ctx":"Oracle ERP Cloud + Jira Service Management, Finance & IT operations teams","uc5.ch":"The firm manages bank reconciliation manually across multiple client accounts and handles hundreds of Jira support tickets weekly. Both processes are high-volume, repetitive and rule-based — ideal candidates for AI automation, but requiring connections between Oracle ERP and Jira that go beyond Oracle AI Agent Studio's native scope.","uc5.rec":"AI4ERP custom platform — two connected agents: (1) Bank Reconciliation Agent connecting Oracle GL to bank feeds via API, auto-matching transactions and flagging exceptions for human review; (2) Jira Support Agent triaging tickets, enriching with ERP context, routing to the right team and auto-closing resolved items.","uc.rec":"Recommendation",
+    "form.title":"Find your approach in 4 questions","form.sub":"Answer honestly — we'll recommend the best fit for your context.","form.see":"See my recommendation →","form.cta1":"📩 Discuss with our experts","form.cta2":"Explore Oracle AI Agent Studio","form.reset":"↺ Start over",
+    "q1.label":"Question 1 / 4","q1.text":"What is your current ERP landscape?","q1.o1.l":"Oracle ERP Cloud only","q1.o1.d":"Single Oracle Fusion Cloud instance, all processes in Oracle","q1.o2.l":"Oracle + other platforms","q1.o2.d":"Oracle ERP + billing, CRM, SAP, legacy systems or custom apps","q1.o3.l":"Non-Oracle ERP (SAP, D365…)","q1.o3.d":"Primary ERP is not Oracle Fusion Cloud",
+    "q2.label":"Question 2 / 4","q2.text":"How would you describe your AI maturity and appetite?","q2.o1.l":"Cautious / early stage","q2.o1.d":"We want to start safely, with Oracle-backed AI governance","q2.o2.l":"Ready to go further","q2.o2.d":"Comfortable with custom AI architecture and want full control","q2.o3.l":"Advanced / innovation-driven","q2.o3.d":"We want to build proprietary AI capabilities with competitive differentiation",
+    "q3.label":"Question 3 / 4","q3.text":"What is the scope of your AI use case?","q3.o1.l":"Within Oracle only","q3.o1.d":"Finance close, PPM, Procurement, HCM — all data lives in Oracle","q3.o2.l":"Cross-system / end-to-end","q3.o2.d":"Agents must connect Oracle to billing, CRM, legacy or external platforms","q3.o3.l":"Mix — Oracle-only + cross-system","q3.o3.d":"Some simple Oracle processes and some complex multi-platform workflows",
+    "q4.label":"Question 4 / 4","q4.text":"What matters most to you in this AI project?","q4.o1.l":"Speed, safety & Oracle support","q4.o1.d":"Fast activation, Oracle-backed, no complex infra to manage","q4.o2.l":"Customisation & control","q4.o2.d":"Custom agent logic, choice of LLM, full audit trail and guardrails","q4.o3.l":"Both — start safe, scale custom","q4.o3.d":"Oracle Studio for quick wins, AI4ERP for advanced use cases",
+    "q5.label":"Question 5 / 5","q5.text":"How would your teams prefer to interact with AI agents?","q5.o1.l":"Chat / text interface","q5.o1.d":"Users type their requests in a chat window inside or alongside the ERP","q5.o2.l":"Voice — natural spoken language","q5.o2.d":"Users speak to the agent hands-free — ideal for field teams, finance close calls or procurement reviews","q5.o3.l":"Both — chat and voice","q5.o3.d":"Different teams have different preferences — we need flexibility","q5.o4.l":"API / automated — no human interface","q5.o4.d":"Agents run fully automated, triggered by events, schedules or other systems","vd.label":"AI4ERP · Voice & Natural Language — Interactive Demo","vd.h2":"Talk to your ERP.<br>No keyboard needed.","vd.sub":"Click a prompt below or press the mic — see how an AI4ERP agent understands, queries Oracle Fusion and responds in natural language.","vd.p1":"What's the status of PO-48291?","vd.p2":"How many ESS jobs failed last night?","vd.p3":"Show me open supplier invoices over 30 days","vd.p4":"What is the budget variance on project INFRA-2026?","vd.p5":"Summarise this week's PPM portfolio risks","vd.hint.idle":"← Click a prompt or press the mic to start","vd.disclaimer":"Simulated demo — in production, AI4ERP connects live to your Oracle Fusion instance via OIC + REST APIs","nav.back":"Back","nav.next":"Next",
+    "orc.label":"Oracle AI Agent Studio","orc.h2":"Oracle's native AI agent platform<br>for Fusion Cloud Applications","orc.sub":"Pre-built, extensible AI agents embedded natively in Oracle ERP, HCM, SCM and CX. No additional licensing. Progressive activation. Oracle-backed governance.",
+    "of1.t":"Included in your Oracle subscription","of1.d":"No additional licensing cost for ERP, HCM, SCM or CX subscribers. Part of Oracle Fusion Cloud Applications.",
+    "of2.t":"Native Oracle data model & security","of2.d":"Agents access Oracle business objects directly. Role-based access inherits from your existing Oracle security setup.",
+    "of3.t":"50+ pre-built & extensible agents","of3.d":"Templates across Finance, PPM, Procurement, HCM and CX. Customise prompts, add tools, create new agents — no advanced AI skills required.",
+    "of4.t":"Oracle-backed trust & governance","of4.d":"Covered by Oracle's roadmap, support and compliance certifications. Human-in-the-loop controls built in.",
+    "of5.t":"HeyCloud4ERP implements progressively","of5.d":"We activate one agent at a time, validate business outcomes, train your teams and expand. Minimal risk, maximum adoption.",
+    "vid.h3":"Watch Oracle AI Agent Studio in action","vid.sub":"Official Oracle demo videos — see the platform and agents working live inside Oracle Fusion Cloud Applications.",
+    "vid1.t":"Oracle AI Agent Studio — Supplier Quote to Purchase Requisition","vid1.d":"Marie, a power user, utilizes Oracle AI Agent Studio to customize an agent template for automating supplier quote processing. The workflow is adjusted to include human approval before creating a purchase requisition in Fusion Apps, enhancing operational control and efficiency.",
+    "vid2.t":"Oracle Fusion AI Agent Studio 26A — Top Features & Live Demos","vid2.d":"Release 26A deep dive (March 2026): MCP support, workflow agents with branching logic, Agent Marketplace, contextual memory and new observability tools inside Oracle Fusion Cloud.",
+    "vid.watch":"Watch on YouTube →",
+    "res.label":"Oracle official resources:","res.1":"Oracle AI Agents page","res.2":"AI Agent Studio announcement","res.3":"Fusion Insider demo article","res.4":"New tools for automation (Oct 2025)",
+    "arch.h2":"The agentic loop<br>at the heart of the platform","arch.sub":"Every enterprise AI agent platform follows the same loop. AI4ERP implements it end-to-end, each component precisely positioned in the flow.",
+    "loop.1.n":"Trigger / User","loop.1.d":"A prompt, webhook, scheduled ESS job or inbound email. Something triggers a loop turn.",
+    "loop.2.n":"Memory + RAG","loop.2.d":"Load relevant context before reasoning. Memory = user/project state. RAG = Oracle docs, specs, procedures, Jira tickets.",
+    "loop.3.n":"LLM","loop.3.d":"The model decides: answer directly, call a tool, or plan a multi-step sequence.",
+    "loop.4.n":"Tools + Rails + Guardrails","loop.4.d":"Rails = business policy. Guardrails = PII/injection filtering. HITL = human approval before sensitive actions.",
+    "loop.5.n":"Action / Execution","loop.5.d":"Fusion/OIC API call, write, ESS restart, BIP report generated, or streamed response.",
+    "loop.6.n":"Audit + Eval + Feedback","loop.6.d":"Trace the full turn, evaluate quality, log for SOC2/GDPR/AI Act, reinject learnings into memory.",
+    "sc.eye":"MENTAL SHORTCUT · AI4ERP","sc.h3":"Every enterprise AI agent platform follows the same loop","sc.p":"Keep this in mind to frame the AI4ERP architecture quickly:","sc.p2":"If a component is missing, there is an architecture risk. AI4ERP covers all 9 groups without overlap.",
+    "grp.label":"9 Component Groups","grp.h2":"AI4ERP production-grade<br>architecture — no blind spots","grp.sub":"Every AI4ERP component fits into one of these 9 groups. Full agentic loop coverage for enterprise Oracle environments.",
+    "erp.label":"ERP Expertise","erp.h2":"Mastery of key modules","erp.sub":"Full functional and technical coverage across Oracle Fusion, with both Oracle AI Agent Studio and AI4ERP custom agents available per module.",
+    "erp.1":"Finance & Accounting","erp.2":"PPM","erp.2d":"Projects, Portfolio, Governance","erp.3":"Supply Chain","erp.4":"Human Resources","erp.5":"Integrations & APIs","erp.6":"Order Management","erp.7":"Security & Compliance",
+    "proc.label":"Our Approach","proc.h2":"Precise scoping,<br>frictionless execution",
+    "p1.t":"Diagnostic","p1.d":"Current state analysis and AI path selection: Oracle Studio, AI4ERP, or both.",
+    "p2.t":"Architecture","p2.d":"Agent design, component selection and phased deployment plan.",
+    "p3.t":"Deployment","p3.d":"Agile implementation, testing, guardrails, training and change management.",
+    "p4.t":"AI Supervision","p4.d":"Continuous AI agent monitoring, optimisation and ongoing support with full audit trail.",
+    "cf.h2":"Tell us about your project","cf.sub":"Fill in the form below and one of our experts will get back to you within 24 hours — no commitment, no sales pitch.","cf.name":"Full name *","cf.company":"Company *","cf.email":"Professional email *","cf.phone":"Phone","cf.erp":"ERP platform","cf.erp.0":"Select your ERP","cf.erp.other":"Other / Mixed","cf.approach":"AI approach of interest","cf.approach.0":"Not sure yet","cf.approach.1":"Oracle AI Agent Studio","cf.approach.2":"AI4ERP Custom Platform","cf.approach.3":"Both / To be defined","cf.message":"Describe your context *","cf.gdpr":"I agree that HeyCloud4ERP may process my data to respond to this request. No spam, no resale.","cf.submit":"Send my request →","cf.privacy":"Secure & confidential · Response within 24h","cf.ok.title":"Message sent!","cf.ok.sub":"One of our experts will get back to you within 24 hours.","cf.ok.cta1":"View architecture","cf.ok.cta2":"Use Case Advisor","cta.btn1":"📋 Fill in the contact form","cta.label":"Let's talk about your project","cta.h2":"Ready to put AI<br>at the heart of your ERP?","cta.sub":"Our experts are available for a first no-commitment conversation. Oracle AI Agent Studio, AI4ERP, or both — we'll get back to you within 24 hours.","cta.btn2":"Find my fit →",
+    "ft.legal":"Legal","ft.privacy":"Privacy"
+  },
+  fr:{
+    "nav.approaches":"Approches","nav.advisor":"Use Case Advisor","nav.oracle":"Oracle Studio","nav.arch":"AI4ERP","nav.voice":"Voice Demo","nav.expertise":"Expertise","nav.contact":"Contact",
+    "hero.badge":"Consulting ERP Cloud & Plateforme d'Agents IA",
+    "hero.h1":"Deux voies vers des<br><span class='hl'>opérations ERP intelligentes</span>",
+    "hero.sub":"HeyCloud4ERP est une équipe d'experts seniors ERP Cloud et IA proposant deux approches IA complémentaires : Oracle AI Agent Studio natif et la plateforme AI4ERP custom.",
+    "hero.cta1":"Découvrir nos approches →","hero.cta2":"Trouver mon approche →","hero.trust":"Références clients",
+    "app.label":"Nos 2 Approches IA","app.h2":"Oracle AI Agent Studio<br>ou plateforme AI4ERP custom ?","app.sub":"Deux approches complémentaires. Nous vous aidons à choisir — ou combiner les deux — selon votre maturité Oracle et vos ambitions.",
+    "ora.title":"Oracle AI Agent Studio","ora.sub":"Les agents IA prépackagés d'Oracle, intégrés nativement dans Oracle ERP Cloud. Une voie progressive et à faible risque, entièrement dans l'écosystème Oracle.",
+    "ora.f1":"Agents préconstruits pour Finance, PPM, Achats et Supply Chain — prêts à activer","ora.f2":"Modèle de données Oracle natif, sécurité et rôles — aucun connecteur externe nécessaire","ora.f3":"Déploiement progressif : un agent à la fois, valider, puis étendre","ora.f4":"Couvert par le support et la roadmap Oracle — risque opérationnel réduit",
+    "ai4.title":"Plateforme AI4ERP Custom","ai4.sub":"Notre plateforme agentique propriétaire, indépendante du stack IA natif Oracle. Pour les organisations nécessitant une logique agent custom, une intégration multi-ERP ou une architecture IA avancée.",
+    "ai4.f1":"Boucle agentique en 6 étapes : Input → Memory/RAG → LLM → Guardrails → Action → Learn","ai4.f2":"Connecter Oracle au billing, CRM, SAP ou toute plateforme via OIC, REST, SOAP ou ETL","ai4.f3":"Contrôle total : règles métier custom, guardrails, RBAC et human-in-the-loop","ai4.f4":"Choix du LLM : Claude, GPT, Gemini — architecture model-agnostic",
+    "why.label":"Pourquoi HeyCloud4ERP","why.h2":"Des experts seniors à l'intersection<br>de l'ERP et de l'IA","why.sub":"Expertise profonde Oracle Fusion en Finance, PPM, Projets, Supply Chain et Achats — sur architecture Oracle-native et custom.",
+    "why.1.t":"Ans d'expérience Oracle","why.1.d":"Finance, PPM, Projets, Achats et Supply Chain sur Oracle Fusion Cloud et les plateformes legacy.",
+    "why.2.t":"Les 2 voies IA maîtrisées","why.2.d":"Oracle AI Agent Studio pour une approche native — plateforme AI4ERP custom pour une architecture sur mesure. Nous vous aidons à choisir et implémenter.",
+    "why.3.t":"Programmes internationaux","why.3.d":"Déploiements ERP complexes en Europe, Moyen-Orient et Asie-Pacifique pour des organisations mondiales.",
+    "why.4.t":"Clients de référence","why.4.d":"Orange Business, BNP Paribas, TechnipFMC, Faurecia, RATP, L'Oréal — banque, énergie, industrie et services.",
+    "svc.label":"Services","svc.h2":"Consulting & technologie<br>au service de votre ERP Cloud","svc.sub":"De l'implémentation à l'optimisation continue pilotée par l'IA — couverture complète du cycle de vie ERP.",
+    "svc.1.t":"Oracle AI Agent Studio","svc.1.d":"Déploiement progressif des agents IA prépackagés Oracle sur Finance, PPM, Achats et Supply Chain — natif, gouverné, supporté Oracle.",
+    "svc.2.t":"Agents AI4ERP Custom","svc.2.d":"Agents IA autonomes sur mesure via notre boucle agentique en 6 étapes — pour les cas d'usage complexes, transverses ou multi-ERP.",
+    "svc.3.t":"Implémentation ERP Cloud","svc.3.d":"Déploiement et migration vers Oracle Fusion, SAP S/4HANA ou Microsoft D365. Méthodologie éprouvée, go-live maîtrisé.",
+    "svc.4.t":"PPM — Gestion de Portefeuille Projets","svc.4.d":"Pilotage de bout en bout des programmes PPM : cadrage, benchmarking, RFP, gouvernance et déploiement Oracle PPM Cloud.",
+    "svc.5.t":"Optimisation & Run","svc.5.d":"Supervision IA des jobs ESS/batch, audit de performance, support post-go-live niveaux 2 et 3, gestion de l'hypercare.",
+    "svc.6.t":"Data, Reporting & Gouvernance","svc.6.d":"Architecture BI, tableaux de bord BIP/OTBI, sécurité Oracle Fusion, contrôles SOD, audits de conformité.","svc.7.t":"Voice & ERP en Langage Naturel","svc.7.d":"Interagissez avec votre ERP en langage naturel — oral ou écrit. Posez des questions, déclenchez des workflows et obtenez des réponses en temps réel depuis Oracle Fusion sans toucher à l'interface. Propulsé par la couche multimodale AI4ERP.",
+    "ai.h2":"Des agents IA sur mesure<br>quand Oracle Studio ne suffit pas","ai.sub":"Pour les scénarios complexes, transverses ou multi-ERP — contrôle total sur la logique agent, le choix du LLM, les guardrails et l'audit trail.",
+    "ai.f1":"Boucle agentique en 6 étapes : Input → Memory/RAG → LLM → Guardrails → Action → Learn","ai.f2":"Connexion native Oracle Fusion via OIC, ESS, BIP, OTBI, REST/SOAP","ai.f3":"Human-in-the-loop sur toutes les actions sensibles ou irréversibles","ai.f4":"Observabilité complète : LangSmith / Braintrust / OpenTelemetry","ai.f5":"Audit log immuable — SOC2 / RGPD / AI Act","ai.f6":"Déploiement enterprise : OCI + Terraform, edge Cloudflare, Next.js sur Vercel","ai.cta":"Voir l'architecture AI4ERP →",
+    "stat.1":"Ans d'expérience Oracle","stat.2":"Approches IA maîtrisées","stat.3":"Groupes de composants AI4ERP","stat.4":"Gain de productivité moyen",
+    "adv.label":"Use Case Advisor","adv.h2":"Quelle approche IA<br>correspond à votre situation ?","adv.sub":"Explorez des cas d'usage concrets, puis répondez à 4 questions pour obtenir une recommandation personnalisée.",
+    "uc1.sector":"Énergie & Utilities","uc1.co":"Grand groupe Énergie","uc1.ctx":"Oracle HCM Cloud + outils RH legacy, roadmap IA ambitieuse, migration plateforme progressive",
+    "uc1.ch":"Le client est curieux de l'IA agentique et veut progressivement construire une plateforme RH propriétaire couvrant les processus HCM de bout en bout : onboarding, planification des effectifs, cycles de performance et exceptions paie — au-delà de ce qu'Oracle AI Agent Studio couvre nativement.",
+    "uc1.rec":"Plateforme AI4ERP custom — boucle agent HCM sur mesure connectant Oracle HCM aux outils de paie, planification et performance. Déploiement progressif : un processus RH à la fois, avec audit trail complet et human-in-the-loop sur les décisions sensibles.",
+    "uc2.sector":"Télécom & Médias","uc2.co":"Groupe Télécom international","uc2.ctx":"Oracle ERP Cloud, opérations Achats à fort volume, milliers de demandes d'achat par mois",
+    "uc2.ch":"Le client traite des milliers de demandes d'achat par mois dans plusieurs BU. Le routage manuel des approbations, les informations manquantes et les erreurs fournisseurs créent des goulots d'étranglement. Il veut automatiser la validation, la création des PO et le routage des approbations — entièrement dans Oracle Procurement Cloud.",
+    "uc2.rec":"Oracle AI Agent Studio — Procurement Agent activé sur Oracle Procurement Cloud. Template préconstruit : validation des demandes, rapprochement fournisseur, création de PO et routage des approbations. Déployé en 3 semaines, entièrement natif Oracle.",
+    "uc3.sector":"Industrie Mondiale","uc3.co":"Groupe Industriel international","uc3.ctx":"Oracle ERP Cloud, systèmes SAP legacy usines, MES custom",
+    "uc3.ch":"Finance et HCM standard conviennent aux agents Oracle natifs. Mais l'orchestration supply chain entre Oracle, SAP et un MES custom nécessite une logique multi-agents sur mesure au-delà du périmètre d'Oracle Studio.",
+    "uc3.rec":"Oracle AI Agent Studio pour Finance & HCM + agents AI4ERP custom pour la supply chain cross-système. Déploiement phasé — Oracle-native d'abord, AI4ERP en phase 2.",
+    "uc4.sector":"Retail & Distribution","uc4.co":"Grand groupe Retail & Distribution","uc4.ctx":"Oracle ERP Cloud, Achats et Supply Chain à fort volume, opérations à rythme soutenu",
+    "uc4.ch":"Le client gère des milliers de bons de commande et factures fournisseurs quotidiennement. Il veut des agents IA pour automatiser le rapprochement PO, la validation des factures et le scheduling des paiements — avec un time-to-value rapide, sans infrastructure IA custom à construire.",
+    "uc4.rec":"Oracle AI Agent Studio — Payables Agent + Procurement Agent activés en 4 semaines. Templates préconstruits pour le rapprochement PO et le traitement des factures, taux de traitement automatique jusqu'à 80 %, zéro développement custom.",
+    "uc5.sector":"Services Professionnels / Conseil","uc5.co":"Cabinet de Conseil & Advisory","uc5.ctx":"Oracle ERP Cloud + Jira Service Management, équipes Finance & IT","uc5.ch":"Le cabinet gère manuellement le rapprochement bancaire sur de multiples comptes clients et traite des centaines de tickets Jira de support chaque semaine. Les deux processus sont à fort volume, répétitifs et basés sur des règles — candidats idéaux pour l'automatisation IA, mais nécessitant des connexions entre Oracle ERP et Jira qui dépassent le périmètre natif d'Oracle AI Agent Studio.","uc5.rec":"Plateforme AI4ERP custom — deux agents connectés : (1) Agent Rapprochement Bancaire connectant Oracle GL aux flux bancaires via API, rapprochement automatique des transactions et signalement des exceptions pour revue humaine ; (2) Agent Support Jira triant les tickets, les enrichissant avec le contexte ERP, les routant vers la bonne équipe et clôturant automatiquement les items résolus.","uc.rec":"Recommandation",
+    "form.title":"Trouvez votre approche en 4 questions","form.sub":"Répondez honnêtement — nous recommanderons le meilleur choix pour votre contexte.","form.see":"Voir ma recommandation →","form.cta1":"📩 Discuter avec nos experts","form.cta2":"Explorer Oracle AI Agent Studio","form.reset":"↺ Recommencer",
+    "q1.label":"Question 1 / 4","q1.text":"Quel est votre paysage ERP actuel ?","q1.o1.l":"Oracle ERP Cloud uniquement","q1.o1.d":"Instance Oracle Fusion Cloud unique, tous les processus dans Oracle","q1.o2.l":"Oracle + autres plateformes","q1.o2.d":"Oracle ERP + billing, CRM, SAP, systèmes legacy ou apps custom","q1.o3.l":"ERP non-Oracle (SAP, D365…)","q1.o3.d":"L'ERP principal n'est pas Oracle Fusion Cloud",
+    "q2.label":"Question 2 / 4","q2.text":"Comment décririez-vous votre maturité et appétit IA ?","q2.o1.l":"Prudent / débutant","q2.o1.d":"Nous voulons démarrer prudemment, avec la gouvernance IA Oracle","q2.o2.l":"Prêt à aller plus loin","q2.o2.d":"À l'aise avec l'architecture IA custom et souhait de contrôle total","q2.o3.l":"Avancé / orienté innovation","q2.o3.d":"Nous voulons construire des capacités IA propriétaires différenciantes",
+    "q3.label":"Question 3 / 4","q3.text":"Quel est le périmètre de votre cas d'usage IA ?","q3.o1.l":"Dans Oracle uniquement","q3.o1.d":"Clôture Finance, PPM, Achats, HCM — toutes les données dans Oracle","q3.o2.l":"Cross-système / bout en bout","q3.o2.d":"Les agents doivent connecter Oracle au billing, CRM, legacy ou plateformes externes","q3.o3.l":"Mix — Oracle + cross-système","q3.o3.d":"Certains processus Oracle simples et certains workflows multi-plateformes complexes",
+    "q4.label":"Question 4 / 4","q4.text":"Qu'est-ce qui compte le plus dans ce projet IA ?","q4.o1.l":"Rapidité, sécurité & support Oracle","q4.o1.d":"Activation rapide, Oracle-native, pas d'infra complexe à gérer","q4.o2.l":"Personnalisation & contrôle","q4.o2.d":"Logique agent custom, choix du LLM, audit trail complet et guardrails","q4.o3.l":"Les deux — démarrer safe, scaler custom","q4.o3.d":"Oracle Studio pour les quick wins, AI4ERP pour les cas avancés",
+    "q5.label":"Question 5 / 5","q5.text":"Comment vos équipes préfèrent-elles interagir avec les agents IA ?","q5.o1.l":"Chat / interface texte","q5.o1.d":"Les utilisateurs tapent leurs demandes dans une fenêtre de chat dans ou à côté de l'ERP","q5.o2.l":"Voix — langage naturel oral","q5.o2.d":"Les utilisateurs parlent à l'agent mains libres — idéal pour les équipes terrain, les clôtures Finance ou les revues Achats","q5.o3.l":"Les deux — chat et voix","q5.o3.d":"Les équipes ont des préférences différentes — nous avons besoin de flexibilité","q5.o4.l":"API / automatisé — sans interface humaine","q5.o4.d":"Les agents tournent entièrement en automatique, déclenchés par des événements, des plannings ou d'autres systèmes","vd.label":"AI4ERP · Voix & Langage Naturel — Démo Interactive","vd.h2":"Parlez à votre ERP.<br>Sans clavier.","vd.sub":"Cliquez un prompt ou appuyez sur le micro — voyez comment un agent AI4ERP comprend, interroge Oracle Fusion et répond en langage naturel.","vd.p1":"Quel est le statut du PO-48291 ?","vd.p2":"Combien de jobs ESS ont échoué la nuit dernière ?","vd.p3":"Montre-moi les factures fournisseurs ouvertes depuis plus de 30 jours","vd.p4":"Quel est l'écart budgétaire du projet INFRA-2026 ?","vd.p5":"Résume les risques du portefeuille PPM cette semaine","vd.hint.idle":"← Cliquez un prompt ou appuyez sur le micro","vd.disclaimer":"Démo simulée — en production, AI4ERP se connecte en direct à votre instance Oracle Fusion via OIC + REST APIs","nav.back":"Retour","nav.next":"Suivant",
+    "orc.label":"Oracle AI Agent Studio","orc.h2":"La plateforme d'agents IA native Oracle<br>pour Fusion Cloud Applications","orc.sub":"Agents IA préconstruits et extensibles, intégrés nativement dans Oracle ERP, HCM, SCM et CX. Sans licence supplémentaire. Activation progressive. Gouvernance Oracle.",
+    "of1.t":"Inclus dans votre abonnement Oracle","of1.d":"Aucun coût de licence supplémentaire pour les abonnés ERP, HCM, SCM ou CX. Fait partie d'Oracle Fusion Cloud Applications.",
+    "of2.t":"Modèle de données Oracle natif & sécurité","of2.d":"Les agents accèdent directement aux objets métier Oracle. Les accès basés sur les rôles héritent de votre configuration de sécurité Oracle existante.",
+    "of3.t":"50+ agents préconstruits & extensibles","of3.d":"Templates pour Finance, PPM, Achats, HCM et CX. Personnalisez les prompts, ajoutez des tools, créez de nouveaux agents — sans compétences IA avancées.",
+    "of4.t":"Confiance & gouvernance Oracle","of4.d":"Couvert par la roadmap, le support et les certifications de conformité Oracle. Contrôles human-in-the-loop intégrés.",
+    "of5.t":"HeyCloud4ERP déploie progressivement","of5.d":"Nous activons un agent à la fois, validons les résultats métier, formons vos équipes et élargissons. Risque minimal, adoption maximale.",
+    "vid.h3":"Voir Oracle AI Agent Studio en action","vid.sub":"Vidéos de démonstration officielles Oracle — la plateforme et les agents fonctionnant en live dans Oracle Fusion Cloud Applications.",
+    "vid1.t":"Oracle AI Agent Studio — Devis fournisseur vers Demande d'achat","vid1.d":"Marie, une power user, utilise Oracle AI Agent Studio pour personnaliser un template d'agent automatisant le traitement des devis fournisseurs. Le workflow est ajusté pour inclure une validation humaine avant la création d'une demande d'achat dans Fusion Apps, renforçant le contrôle opérationnel.",
+    "vid2.t":"Oracle Fusion AI Agent Studio 26A — Top Features & Live Demos","vid2.d":"Deep dive release 26A (mars 2026) : support MCP, agents workflow avec logique de branchement, Agent Marketplace, mémoire contextuelle et nouveaux outils d'observabilité dans Oracle Fusion Cloud.",
+    "vid.watch":"Voir sur YouTube →",
+    "res.label":"Ressources officielles Oracle :","res.1":"Page Oracle AI Agents","res.2":"Annonce AI Agent Studio","res.3":"Article démo Fusion Insider","res.4":"Nouveaux outils automation (Oct 2025)",
+    "arch.h2":"La boucle agentique<br>au cœur de la plateforme","arch.sub":"Toute plateforme agent IA enterprise suit la même boucle. AI4ERP l'implémente de bout en bout, chaque composant positionné précisément.",
+    "loop.1.n":"Trigger / Utilisateur","loop.1.d":"Un prompt, un webhook, un job ESS planifié ou un email entrant. Quelque chose déclenche un tour de boucle.",
+    "loop.2.n":"Memory + RAG","loop.2.d":"Chargement du contexte pertinent avant raisonnement. Memory = état utilisateur/projet. RAG = docs Oracle, specs, procédures, tickets Jira.",
+    "loop.3.n":"LLM","loop.3.d":"Le modèle décide : répondre directement, appeler un tool ou planifier une séquence multi-étapes.",
+    "loop.4.n":"Tools + Rails + Guardrails","loop.4.d":"Rails = policy métier. Guardrails = filtrage PII/injection. HITL = validation humaine avant action sensible.",
+    "loop.5.n":"Action / Exécution","loop.5.d":"Appel API Fusion/OIC, écriture, relance ESS, rapport BIP généré ou réponse streamée.",
+    "loop.6.n":"Audit + Eval + Feedback","loop.6.d":"Tracer tout le tour, évaluer la qualité, journaliser pour SOC2/RGPD/AI Act, réinjecter en mémoire.",
+    "sc.eye":"RACCOURCI MENTAL · AI4ERP","sc.h3":"Toute plateforme agent IA enterprise suit la même boucle","sc.p":"À retenir pour cadrer rapidement l'architecture AI4ERP :","sc.p2":"Si un composant manque, il y a un risque d'architecture. AI4ERP couvre les 9 groupes sans overlap.",
+    "grp.label":"9 Groupes de Composants","grp.h2":"Architecture AI4ERP production-grade<br>sans zone grise","grp.sub":"Chaque composant AI4ERP s'insère dans l'un de ces 9 groupes. Couverture complète de la boucle agentique enterprise Oracle.",
+    "erp.label":"Expertise ERP","erp.h2":"Maîtrise des modules clés","erp.sub":"Couverture fonctionnelle et technique complète sur Oracle Fusion, avec Oracle AI Agent Studio et agents AI4ERP custom disponibles par module.",
+    "erp.1":"Finance & Comptabilité","erp.2":"PPM","erp.2d":"Projets, Portefeuille, Gouvernance","erp.3":"Supply Chain","erp.4":"Ressources Humaines","erp.5":"Intégrations & APIs","erp.6":"Order Management","erp.7":"Sécurité & Conformité",
+    "proc.label":"Notre Approche","proc.h2":"Un cadrage précis,<br>une exécution sans friction",
+    "p1.t":"Diagnostic","p1.d":"Analyse de l'existant et sélection de la voie IA : Oracle Studio, AI4ERP, ou les deux.",
+    "p2.t":"Architecture","p2.d":"Conception des agents, sélection des composants et plan de déploiement phasé.",
+    "p3.t":"Déploiement","p3.d":"Implémentation agile, tests, guardrails, formation et accompagnement au changement.",
+    "p4.t":"Supervision IA","p4.d":"Monitoring continu par agents, optimisation et support pérenne avec audit trail complet.",
+    "cf.h2":"Parlez-nous de votre projet","cf.sub":"Remplissez le formulaire ci-dessous et l'un de nos experts vous répondra sous 24h — sans engagement, sans démo commerciale.","cf.name":"Nom complet *","cf.company":"Société *","cf.email":"Email professionnel *","cf.phone":"Téléphone","cf.erp":"Plateforme ERP","cf.erp.0":"Sélectionner votre ERP","cf.erp.other":"Autre / Mixte","cf.approach":"Approche IA d'intérêt","cf.approach.0":"Pas encore défini","cf.approach.1":"Oracle AI Agent Studio","cf.approach.2":"Plateforme AI4ERP Custom","cf.approach.3":"Les deux / À définir","cf.message":"Décrivez votre contexte *","cf.gdpr":"J'accepte que HeyCloud4ERP traite mes données pour répondre à cette demande. Pas de spam, pas de revente.","cf.submit":"Envoyer ma demande →","cf.privacy":"Sécurisé & confidentiel · Réponse sous 24h","cf.ok.title":"Message envoyé !","cf.ok.sub":"Un de nos experts vous répondra sous 24h.","cf.ok.cta1":"Voir l'architecture","cf.ok.cta2":"Use Case Advisor","cta.btn1":"📋 Remplir le formulaire de contact","cta.label":"Parlons de votre projet","cta.h2":"Prêt à mettre l'IA<br>au cœur de votre ERP ?","cta.sub":"Nos experts sont disponibles pour un premier échange sans engagement. Oracle AI Agent Studio, AI4ERP, ou les deux — nous revenons sous 24h.","cta.btn2":"Trouver mon approche →",
+    "ft.legal":"Mentions légales","ft.privacy":"Confidentialité"
+  }
+};
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(i18n[l]&&i18n[l][k]!==undefined)el.innerHTML=i18n[l][k];
+  });
+  const lc=document.getElementById('loop-center-label');
+  if(lc)lc.textContent=l==='fr'?'LA BOUCLE':'THE LOOP';
+  const ey=document.getElementById('loop-eyebrow-text');
+  if(ey)ey.textContent=l==='fr'?'AI4ERP · BOUCLE AGENTIQUE · SE RÉPÈTE À CHAQUE TOUR':'AI4ERP · AGENT LOOP · REPEATS EVERY TURN';
+}
+
+function submitForm() {
+  const name = document.getElementById('cf-name').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  const gdpr = document.getElementById('cf-gdpr').checked;
+
+  if (!name || !email || !message) {
+    alert(lang==='fr'?'Merci de remplir les champs obligatoires (Nom, Email, Contexte).':'Please fill in the required fields (Name, Email, Context).');
+    return;
+  }
+  if (!gdpr) {
+    alert(lang==='fr'?'Merci d\u0027accepter la politique de confidentialite.':'Please accept the privacy policy to proceed.');
+    return;
+  }
+  // Simulate form submission
+  document.getElementById('cf-form').style.display = 'none';
+  document.getElementById('cf-success').style.display = 'block';
+  // In production: replace with fetch('/api/contact', { method:'POST', body: JSON.stringify({name,email,message}) })
+}
+
+/* ── USE CASE CAROUSEL ── */
+(function(){
+  const track = document.getElementById('uc-track');
+  const prev  = document.getElementById('uc-prev');
+  const next  = document.getElementById('uc-next');
+  const dotsEl= document.getElementById('uc-dots');
+  if(!track) return;
+
+  const cards = Array.from(track.children);
+  const total = cards.length;
+  let current = 0;
+
+  // Set fixed width for each card based on container
+  function getCardWidth(){
+    const wrap = track.parentElement;
+    const gap = 24;
+    // Show 1 card on mobile, up to 2 on tablet, 1 wide on desktop for readability
+    const w = wrap.offsetWidth;
+    return w > 860 ? w * 0.72 : w > 560 ? w * 0.85 : w;
+  }
+
+  function buildDots(){
+    dotsEl.innerHTML = '';
+    cards.forEach((_,i)=>{
+      const d = document.createElement('button');
+      d.className = 'uc-dot' + (i===0?' active':'');
+      d.setAttribute('aria-label', 'Slide '+(i+1));
+      d.onclick = () => goTo(i);
+      dotsEl.appendChild(d);
+    });
+  }
+
+  function updateSizes(){
+    const cw = getCardWidth();
+    cards.forEach(c=>{
+      c.style.minWidth = cw + 'px';
+      c.style.maxWidth = cw + 'px';
+    });
+  }
+
+  function goTo(idx){
+    current = Math.max(0, Math.min(idx, total-1));
+    const cw = getCardWidth();
+    const gap = 24;
+    track.style.transform = 'translateX(-' + (current * (cw + gap)) + 'px)';
+    prev.disabled = current === 0;
+    next.disabled = current === total - 1;
+    dotsEl.querySelectorAll('.uc-dot').forEach((d,i)=>d.classList.toggle('active', i===current));
+  }
+
+  function ucSlide(dir){ goTo(current + dir); }
+  window.ucSlide = ucSlide;
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  track.parentElement.addEventListener('touchstart', e=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
+  track.parentElement.addEventListener('touchend', e=>{
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if(Math.abs(dx) > 50) ucSlide(dx < 0 ? 1 : -1);
+  }, {passive:true});
+
+  // Init
+  updateSizes();
+  buildDots();
+  goTo(0);
+  window.addEventListener('resize', ()=>{ updateSizes(); goTo(current); });
+})();
+
+/* ── VOICE DEMO ── */
+const voicePrompts = {
+  en: [
+    "What's the status of PO-48291?",
+    "How many ESS jobs failed last night?",
+    "Show me open supplier invoices over 30 days",
+    "What is the budget variance on project INFRA-2026?",
+    "Summarise this week's PPM portfolio risks"
+  ],
+  fr: [
+    "Quel est le statut du PO-48291 ?",
+    "Combien de jobs ESS ont échoué la nuit dernière ?",
+    "Montre-moi les factures fournisseurs ouvertes depuis plus de 30 jours",
+    "Quel est l'écart budgétaire du projet INFRA-2026 ?",
+    "Résume les risques du portefeuille PPM cette semaine"
+  ]
+};
+const voiceResponses = {
+  en: [
+    "PO-48291 — Oracle Procurement Cloud<br><br>Supplier: <strong>Accenture France</strong> · Amount: <strong>€142,500</strong><br>Status: <strong style='color:#f59e0b'>Pending approval</strong> — awaiting validation from Finance Director.<br><br>Last action: submitted 3 days ago. <em>Do you want me to send a reminder?</em>",
+    "ESS Job Supervision — Last night (00:00–06:00)<br><br>• <strong style='color:#fb7185'>4 jobs failed</strong> · Root cause: OIC timeout (3) + memory overflow (1)<br>• <strong style='color:#4ade80'>47 jobs completed</strong> successfully<br>• <strong style='color:#f59e0b'>2 jobs pending</strong> retry<br><br><em>Automatic restart scheduled at 06:30. Human approval required for XXOBS_CREATE_ACC_PF.</em>",
+    "Open Supplier Invoices · >30 days<br><br>Found <strong>23 invoices</strong> totalling <strong>€1.24M</strong><br><br>Top 3 by amount:<br>1. Capgemini — €380K — <span style='color:#fb7185'>47 days</span><br>2. Oracle Corp — €215K — <span style='color:#f59e0b'>34 days</span><br>3. Deloitte — €198K — <span style='color:#f59e0b'>31 days</span><br><br><em>Shall I initiate payment scheduling for the top 5?</em>",
+    "Project INFRA-2026 · Budget Variance<br><br>Approved budget: <strong>€4.2M</strong> · Spent to date: <strong>€3.1M</strong><br>Committed: <strong>€1.4M</strong> · <strong style='color:#fb7185'>Variance: -€300K over budget</strong><br><br>Main driver: infrastructure costs +18% vs plan.<br><em>Do you want a detailed breakdown by cost centre?</em>",
+    "PPM Portfolio — Week 20/2026 · Risk Summary<br><br>• <strong style='color:#fb7185'>3 projects at risk</strong> (RED): INFRA-2026, CRM-ROLLOUT, ERP-PHASE3<br>• <strong style='color:#f59e0b'>5 projects at attention</strong> (AMBER)<br>• <strong style='color:#4ade80'>12 projects on track</strong> (GREEN)<br><br>Top risk: ERP-PHASE3 — go-live delay, resource shortage.<br><em>Shall I generate the executive risk report?</em>"
+  ],
+  fr: [
+    "PO-48291 — Oracle Procurement Cloud<br><br>Fournisseur : <strong>Accenture France</strong> · Montant : <strong>142 500 €</strong><br>Statut : <strong style='color:#f59e0b'>En attente d'approbation</strong> — validation attendue du Directeur Finance.<br><br>Dernière action : soumis il y a 3 jours. <em>Voulez-vous que j'envoie une relance ?</em>",
+    "Supervision ESS — Nuit dernière (00h–06h)<br><br>• <strong style='color:#fb7185'>4 jobs en échec</strong> · Cause : timeout OIC (3) + dépassement mémoire (1)<br>• <strong style='color:#4ade80'>47 jobs terminés</strong> avec succès<br>• <strong style='color:#f59e0b'>2 jobs en attente</strong> de relance<br><br><em>Relance automatique programmée à 06h30. Validation humaine requise pour XXOBS_CREATE_ACC_PF.</em>",
+    "Factures fournisseurs ouvertes · >30 jours<br><br><strong>23 factures</strong> trouvées pour un total de <strong>1,24 M€</strong><br><br>Top 3 par montant :<br>1. Capgemini — 380 K€ — <span style='color:#fb7185'>47 jours</span><br>2. Oracle Corp — 215 K€ — <span style='color:#f59e0b'>34 jours</span><br>3. Deloitte — 198 K€ — <span style='color:#f59e0b'>31 jours</span><br><br><em>Voulez-vous que je lance le scheduling de paiement pour les 5 premières ?</em>",
+    "Projet INFRA-2026 · Écart budgétaire<br><br>Budget approuvé : <strong>4,2 M€</strong> · Dépensé : <strong>3,1 M€</strong><br>Engagé : <strong>1,4 M€</strong> · <strong style='color:#fb7185'>Écart : -300 K€ au-dessus du budget</strong><br><br>Principale cause : coûts infrastructure +18% vs plan.<br><em>Voulez-vous le détail par centre de coût ?</em>",
+    "Portefeuille PPM — Semaine 20/2026 · Résumé des risques<br><br>• <strong style='color:#fb7185'>3 projets en risque</strong> (ROUGE) : INFRA-2026, CRM-ROLLOUT, ERP-PHASE3<br>• <strong style='color:#f59e0b'>5 projets en attention</strong> (ORANGE)<br>• <strong style='color:#4ade80'>12 projets dans les clous</strong> (VERT)<br><br>Risque principal : ERP-PHASE3 — retard go-live, pénurie ressources.<br><em>Voulez-vous que je génère le rapport de risques pour le comité ?</em>"
+  ]
+};
+
+let micActive = false;
+let currentVoicePrompt = null;
+
+function voicePrompt(idx){
+  currentVoicePrompt = idx;
+  document.querySelectorAll('.voice-chip').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  const transcript = document.getElementById('voice-transcript');
+  const response = document.getElementById('voice-response');
+  const responseText = document.getElementById('voice-response-text');
+  // Show typing
+  transcript.textContent = voicePrompts[lang][idx];
+  response.classList.remove('show');
+  setTimeout(()=>{
+    responseText.innerHTML = voiceResponses[lang][idx];
+    response.classList.add('show');
+  }, 900);
+}
+
+function toggleMic(){
+  const btn = document.getElementById('voice-mic');
+  const transcript = document.getElementById('voice-transcript');
+  if(!micActive){
+    micActive = true;
+    btn.classList.add('listening');
+    btn.textContent = '⏹️';
+    transcript.textContent = lang==='fr' ? '🎙️ Écoute en cours...' : '🎙️ Listening...';
+    document.getElementById('voice-response').classList.remove('show');
+    // Simulate listening then pick a random prompt
+    setTimeout(()=>{
+      micActive = false;
+      btn.classList.remove('listening');
+      btn.textContent = '🎙️';
+      const idx = Math.floor(Math.random() * voicePrompts[lang].length);
+      voicePrompt(idx);
+    }, 2200);
+  } else {
+    micActive = false;
+    btn.classList.remove('listening');
+    btn.textContent = '🎙️';
+    transcript.textContent = lang==='fr' ? '← Cliquez un prompt ou appuyez sur le micro' : '← Click a prompt or press the mic to start';
+  }
+}
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+</script>
+
+<!-- ── Heya Agent ── -->
+<script src="heya-agent.js"></script>
+
+</body>
+</html>
